@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -18,7 +19,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.adapter.DrawerLayoutAdapter;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.view.CircleImageView;
@@ -26,8 +29,9 @@ import com.yuqirong.koku.view.CircleImageView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends BaseActivity {
+import java.util.List;
 
+public class MainActivity extends BaseActivity {
     /**
      * 抽屉
      */
@@ -64,9 +68,18 @@ public class MainActivity extends BaseActivity {
      * 用户昵称
      */
     private String screen_name;
+    /**
+     *
+     */
+    private ListView lv_left;
+    private DrawerLayoutAdapter adapter;
+    private List<String> list;
     @Override
     protected void initData() {
         bitmapUtils = new BitmapUtils(this);
+        list = CommonUtil.getStringFromArrays(R.array.user_operation);
+        adapter = new DrawerLayoutAdapter(this,list);
+        lv_left.setAdapter(adapter);
         getCache();
         String access_token = SharePrefUtil.getString(this, "access_token", "");
         String uid = SharePrefUtil.getString(this, "uid", "");
@@ -151,6 +164,7 @@ public class MainActivity extends BaseActivity {
         civ_avatar = (CircleImageView) dl_main.findViewById(R.id.civ_avatar);
         iv_cover = (ImageView) dl_main.findViewById(R.id.iv_cover);
         tv_screen_name = (TextView) dl_main.findViewById(R.id.tv_screen_name);
+        lv_left = (ListView) dl_main.findViewById(R.id.lv_left);
         vp_main = (ViewPager) findViewById(R.id.vp_main);
         tb_main = (Toolbar) findViewById(R.id.tb_main);
         fm = getSupportFragmentManager();
@@ -170,4 +184,6 @@ public class MainActivity extends BaseActivity {
         }
         return toggle.onOptionsItemSelected(item) | super.onOptionsItemSelected(item);
     }
+
+
 }

@@ -13,8 +13,8 @@
             android:id="@+id/iv_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/login_background_introduce"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/login_background_introduce" />
 
         <com.yuqirong.koku.view.CircleImageView
             android:id="@+id/civ_avatar"
@@ -22,8 +22,7 @@
             android:layout_height="80dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/left_drawer_marginLeft"
-            android:src="@drawable/img_empty_avatar"
-             />
+            android:src="@drawable/img_empty_avatar" />
 
         <TextView
             android:id="@+id/tv_screen_name"
@@ -37,11 +36,12 @@
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white" />
-
     </RelativeLayout>
 
     <ListView
         android:id="@+id/lv_left"
+        android:divider="@null"
+        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

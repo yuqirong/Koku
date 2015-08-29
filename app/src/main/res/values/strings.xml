@@ -10,4 +10,13 @@
     <string name="drawer_close">关闭抽屉</string>
     <string name="app_authorize">账号授权</string>
     <string name="load_error">加载失败，点击重试</string>
+
+    <string-array name="user_operation">
+        <item>搜索用户</item>
+        <item>周边动态</item>
+        <item>热门话题</item>
+        <item>我的收藏</item>
+        <item>草稿箱</item>
+    </string-array>
+
 </resources>
