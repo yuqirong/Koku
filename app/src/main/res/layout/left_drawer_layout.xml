@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_tab"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="165dp">
+
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/login_background_introduce"
+            android:scaleType="centerCrop" />
+
+        <com.yuqirong.koku.view.CircleImageView
+            android:id="@+id/civ_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/left_drawer_marginLeft"
+            android:src="@drawable/img_empty_avatar"
+             />
+
+        <TextView
+            android:id="@+id/tv_screen_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/civ_avatar"
+            android:layout_marginBottom="@dimen/left_drawer_marginBottom"
+            android:layout_marginLeft="@dimen/left_drawer_marginLeft"
+            android:layout_marginTop="@dimen/left_drawer_marginTop"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lv_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

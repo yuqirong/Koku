@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Koku</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">设置</string>
+    <string name="action_search">搜索</string>
+    <string name="action_about">关于</string>
+     <string name="action_remind">提醒</string>
+    <string name="drawer_open">打开抽屉</string>
+    <string name="drawer_close">关闭抽屉</string>
+    <string name="app_authorize">账号授权</string>
+    <string name="load_error">加载失败，点击重试</string>
+</resources>

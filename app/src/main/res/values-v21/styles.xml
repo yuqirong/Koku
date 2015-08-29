@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <!--状态栏颜色-->
+        <item name="colorPrimaryDark">@color/Indigo_colorPrimary</item>
+        <!--Navigation bar color-->
+        <item name="android:navigationBarColor">@color/Indigo_colorPrimary</item>
+    </style>
+
+    <!--Toolbar Style-->
+    <style name="MyToolBarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@android:color/white</item>
+        <!--Toolbar颜色-->
+        <item name="colorPrimary">@color/Indigo_colorPrimary</item>
+
+    </style>
+</resources>
+
