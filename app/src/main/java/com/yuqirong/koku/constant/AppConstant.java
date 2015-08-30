@@ -32,4 +32,10 @@ public class AppConstant {
      * 查询用户access_token的授权相关信息，包括授权时间，过期时间和scope权限。
      */
     public static final String GET_TOKEN_INFO_URL ="https://api.weibo.com/oauth2/get_token_info?access_token=";
+    /**
+     * 获取当前登录用户及其所关注用户的最新微博
+     */
+    public static final String FRIENDS_TIMELINE_URL ="https://api.weibo.com/2/statuses/home_timeline.json?access_token=";
+
+
 }

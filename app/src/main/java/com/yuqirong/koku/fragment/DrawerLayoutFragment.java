@@ -120,7 +120,7 @@ public class DrawerLayoutFragment extends BaseFragment {
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.left_drawer_layout, null);
+        View view = inflater.inflate(R.layout.fragment_left_drawer, null);
         civ_avatar = (CircleImageView) view.findViewById(R.id.civ_avatar);
         iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
         tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);

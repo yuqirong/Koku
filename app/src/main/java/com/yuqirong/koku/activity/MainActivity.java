@@ -1,7 +1,6 @@
 package com.yuqirong.koku.activity;
 
 import android.graphics.Color;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,7 +38,6 @@ public class MainActivity extends BaseActivity {
 
     private FrameLayout fl_main;
     private Toolbar tb_main;
-    private FragmentManager fm;
 
     @Override
     protected void initData() {
@@ -122,7 +120,6 @@ public class MainActivity extends BaseActivity {
         dl_main = (DrawerLayout) findViewById(R.id.dl_main);
         fl_main = (FrameLayout) findViewById(R.id.fl_main);
         tb_main = (Toolbar) findViewById(R.id.tb_main);
-        fm = getSupportFragmentManager();
     }
 
     @Override
