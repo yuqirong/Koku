@@ -1,5 +1,6 @@
 package com.yuqirong.koku.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
@@ -32,6 +33,11 @@ public class AuthorizeActivity extends BaseActivity {
     private WebView wv_main;
     private WebSettings settings;
     public static final String RESPONSE_URL = "https://api.weibo.com/oauth2/default.html?code=";
+
+    public static void actionStart(Context context){
+        Intent intent = new Intent(context,AuthorizeActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void initData() {

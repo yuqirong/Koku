@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class BaseActivity extends AppCompatActivity {
 
     public static final List<BaseActivity> activities = new LinkedList<>();
-    protected RequestQueue mQueue;
+    public RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -3,19 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/rl_main"
+    <FrameLayout
+        android:id="@+id/fl_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vp_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
 
-    <include
-        layout="@layout/left_drawer_layout"
+    <fragment
+        class="com.yuqirong.koku.fragment.DrawerLayoutFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="left" />

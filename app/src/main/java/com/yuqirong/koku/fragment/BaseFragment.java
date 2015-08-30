@@ -7,17 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lidroid.xutils.BitmapUtils;
+
 /**
  * Created by Anyway on 2015/8/28.
  */
 public abstract class BaseFragment extends Fragment {
 
     public Context context;
+    protected BitmapUtils bitmapUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        bitmapUtils = new BitmapUtils(context);
     }
 
     @Override
