@@ -7,8 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,8 +16,10 @@ import com.yuqirong.koku.activity.MainActivity;
 import com.yuqirong.koku.adapter.WeiboListViewAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
+import com.yuqirong.koku.view.AutoLoadListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,18 +51,40 @@ public class MainFragment extends BaseFragment {
     String text;
     boolean verified;
 
-    private ListView lv_main;
+    // 判断是否为第一次进入主页,若是则自动刷新
+    private boolean first = true;
+    // 判断是否上拉加载，默认为false
+    private boolean load = false;
+    // 返回结果的页码
+    private int page = 1;
+    // 自动加载的ListView
+    private AutoLoadListView lv_main;
+
+    private JsonObjectRequest jsonObjectRequest;
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        if (first){
+            srl_main.setProgressViewOffset(false, 0, CommonUtil.dip2px(context, 24));
+            srl_main.setRefreshing(true);
+            handler.sendEmptyMessageDelayed(0, 2000);
+            first = false;
+        }
+    }
 
-//        adapter.list.clear();
+    /**
+     * 从服务器上获取数据
+     */
+    private void getDataFromServer(){
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         if (access_token != "") {
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(AppConstant.FRIENDS_TIMELINE_URL + access_token, null, listener, errorListener);
+            if(srl_main.isRefreshing()){
+                page = 1;
+            }
+            String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&page="+page;
+            jsonObjectRequest = new JsonObjectRequest(url, null, listener, errorListener);
             ((MainActivity) context).mQueue.add(jsonObjectRequest);
         }
-
     }
 
     Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
@@ -82,6 +104,9 @@ public class MainFragment extends BaseFragment {
         try {
             JSONObject jsonObject;
             JSONArray jsonArray = new JSONArray(statuses);
+            if(srl_main.isRefreshing()){
+                list.clear();
+            }
             for (int i = 0; i < jsonArray.length(); i++) {
                 jsonObject = jsonArray.getJSONObject(i);
                 created_at = jsonObject.getString("created_at");
@@ -99,6 +124,11 @@ public class MainFragment extends BaseFragment {
                 list.add(item);
             }
             adapter.notifyDataSetChanged();
+            srl_main.setRefreshing(false);
+            if(load){
+                lv_main.completeLoadMore(true);
+                load = false;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -118,43 +148,39 @@ public class MainFragment extends BaseFragment {
         srl_main.setColorSchemeResources(AppConstant.SWIPE_REFRESH_LAYOUT_COLOR);
         srl_main.setOnRefreshListener(onRefreshListener);
 
-        lv_main = (ListView) view.findViewById(R.id.lv_main);
+        lv_main = (AutoLoadListView) view.findViewById(R.id.lv_main);
+        lv_main.setOnLoadingMoreListener(loadingMoreListener);
         adapter = new WeiboListViewAdapter(context,list);
         lv_main.setAdapter(adapter);
-//        rv_main = (RecyclerView) view.findViewById(R.id.rv_main);
-//        rv_main.setHasFixedSize(true);
-//        rv_main.setLayoutManager(new LinearLayoutManager(context));
-//        //设置Item增加、移除动画
-//        rv_main.setItemAnimator(new DefaultItemAnimator());
-//        adapter = new WeiboRecycleViewAdapter(context);
-//        rv_main.setAdapter(adapter);
-//        adapter.setOnItemClickLitener(new WeiboRecycleViewAdapter.OnItemClickLitener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                Toast.makeText(context,"click",Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onItemLongClick(View view, int position) {
-//                Toast.makeText(context,"long_click",Toast.LENGTH_SHORT).show();
-//            }
-//        });
         return view;
     }
 
+    AutoLoadListView.onLoadingMoreListener loadingMoreListener = new AutoLoadListView.onLoadingMoreListener() {
+        @Override
+        public void onLoadingMore() {
+            load = true;
+            page++;
+            getDataFromServer();
+        }
+    };
+
+    /**
+     * 下拉刷新Listener
+     */
     SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            handler.sendEmptyMessageDelayed(0,5000);
+            getDataFromServer();
         }
     };
 
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            Toast.makeText(context,"lalala",Toast.LENGTH_SHORT).show();
-            srl_main.setRefreshing(false);
+            getDataFromServer();
         }
     };
+
+
 
 }
