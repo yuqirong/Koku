@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/activity_bg_color"
-    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_main"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/srl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ListView
+        android:id="@+id/lv_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:cacheColorHint="@null"
+        android:divider="@drawable/shadow_bottom"
+        android:dividerHeight="6dp"
         android:scrollbars="none" />
 
-</LinearLayout>
+    <!--<android.support.v7.widget.RecyclerView-->
+    <!--android:id="@+id/rv_main"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:cacheColorHint="@null"-->
+    <!--android:scrollbars="none" />-->
+
+</android.support.v4.widget.SwipeRefreshLayout>

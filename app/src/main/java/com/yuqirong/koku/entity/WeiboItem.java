@@ -11,17 +11,19 @@ public class WeiboItem {
     public String comments_count;
     public String profile_image_url;
     public String name;
+    public String time;
     public boolean verified;
     public String text;
 
-    public WeiboItem(String created_at, String source, String reposts_count, String comments_count, String profile_image_url, String name, boolean verified,String text) {
+    public WeiboItem(String created_at, String source, String reposts_count, String comments_count, String profile_image_url, String name, String time, boolean verified, String text) {
         this.created_at = created_at;
         this.source = source;
+        this.time = time;
         this.reposts_count = reposts_count;
         this.comments_count = comments_count;
         this.profile_image_url = profile_image_url;
         this.name = name;
         this.verified = verified;
-        this.text =text;
+        this.text = text;
     }
 }

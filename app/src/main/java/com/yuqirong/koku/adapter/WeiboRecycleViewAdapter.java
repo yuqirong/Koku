@@ -38,12 +38,12 @@ public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleVi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // TODO: 2015/8/30
         WeiboItem weiboItem = list.get(position);
         holder.tv_screen_name.setText(weiboItem.name);
         bitmapUtils.display(holder.civ_avatar, weiboItem.profile_image_url);
-//        holder.tv_time.setText(web);
+        holder.tv_time.setText(weiboItem.time);
         holder.tv_device.setText(Html.fromHtml(weiboItem.source));
         if (weiboItem.verified) {
             holder.iv_verified.setImageResource(R.drawable.avatar_vip);
@@ -52,8 +52,27 @@ public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleVi
         }
         holder.tv_repost_count.setText(weiboItem.reposts_count);
         holder.tv_comment_count.setText(weiboItem.comments_count);
-
         holder.tv_text.setText(weiboItem.text);
+
+        // 如果设置了回调，则设置点击事件
+        if (mOnItemClickLitener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickLitener.onItemClick(holder.itemView, pos);
+                }
+            });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickLitener.onItemLongClick(holder.itemView, pos);
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
@@ -94,6 +113,18 @@ public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleVi
             tv_text = (TextView) itemView.findViewById(R.id.tv_text);
         }
 
+    }
+
+    public interface OnItemClickLitener {
+        void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
+    }
+
+    private OnItemClickLitener mOnItemClickLitener;
+
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
+        this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
 }

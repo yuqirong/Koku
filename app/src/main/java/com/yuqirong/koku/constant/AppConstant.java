@@ -19,7 +19,7 @@ public class AppConstant {
     /**
      * OAuth2的authorize接口
      */
-    public static final String AUTHORIZE_URL = "https://open.weibo.cn/oauth2/authorize?redirect_uri="+REDIRECT_URL+"&display=mobile&response_type=code"+"&client_id="+APP_KEY+"&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
+    public static final String AUTHORIZE_URL = "https://open.weibo.cn/oauth2/authorize?redirect_uri=" + REDIRECT_URL + "&display=mobile&response_type=code" + "&client_id=" + APP_KEY + "&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
     /**
      * OAuth2的access_token接口
      */
@@ -27,15 +27,16 @@ public class AppConstant {
     /**
      * 根据用户ID获取用户信息
      */
-    public static final String USERS_SHOW_URL ="https://api.weibo.com/2/users/show.json";
+    public static final String USERS_SHOW_URL = "https://api.weibo.com/2/users/show.json";
     /**
      * 查询用户access_token的授权相关信息，包括授权时间，过期时间和scope权限。
      */
-    public static final String GET_TOKEN_INFO_URL ="https://api.weibo.com/oauth2/get_token_info?access_token=";
+    public static final String GET_TOKEN_INFO_URL = "https://api.weibo.com/oauth2/get_token_info?access_token=";
     /**
      * 获取当前登录用户及其所关注用户的最新微博
      */
-    public static final String FRIENDS_TIMELINE_URL ="https://api.weibo.com/2/statuses/home_timeline.json?access_token=";
+    public static final String FRIENDS_TIMELINE_URL = "https://api.weibo.com/2/statuses/home_timeline.json?access_token=";
 
+    public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
 
 }
