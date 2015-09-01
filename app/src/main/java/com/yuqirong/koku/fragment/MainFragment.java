@@ -120,7 +120,7 @@ public class MainFragment extends BaseFragment {
                 profile_image_url = jsonObject.getString("avatar_large");
                 name = jsonObject.getString("name");
                 verified = jsonObject.getBoolean("verified");
-                item = new WeiboItem(created_at, source, reposts_count, comments_count, profile_image_url, name, DateUtils.getWeiboDate(time), verified, text);
+                item = new WeiboItem(created_at, source, CommonUtil.getNumString(reposts_count), CommonUtil.getNumString(comments_count), profile_image_url, name, DateUtils.getWeiboDate(time), verified, text);
                 list.add(item);
             }
             adapter.notifyDataSetChanged();
@@ -137,6 +137,7 @@ public class MainFragment extends BaseFragment {
     Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+
         }
     };
 

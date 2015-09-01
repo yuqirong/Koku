@@ -1,6 +1,7 @@
 package com.yuqirong.koku.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.application.MyApplication;
@@ -25,6 +26,18 @@ public class CommonUtil {
             list.add(s);
         }
         return list;
+    }
+
+    public static String getNumString(String num) {
+        if(!TextUtils.isEmpty(num)){
+            int number = Integer.parseInt(num)/10000;
+            if(number == 0){
+                return num;
+            }else{
+                return number + "万";
+            }
+        }
+        return "";
     }
 
     /**
