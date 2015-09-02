@@ -33,7 +33,7 @@ public class DrawerLayoutAdapter extends MBaseAdapter<String, ListView> {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_user_operation, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.listview_item_user_operation, parent, false);
             viewHolder.iv_icon = (ImageView) convertView.findViewById(R.id.iv_icon);
             viewHolder.tv_item_name = (TextView) convertView.findViewById(R.id.tv_item_name);
             convertView.setTag(viewHolder);

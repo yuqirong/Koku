@@ -4,24 +4,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.activity.MainActivity;
 import com.yuqirong.koku.adapter.WeiboListViewAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.WeiboItem;
 import com.yuqirong.koku.util.CommonUtil;
-import com.yuqirong.koku.util.DateUtils;
+import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.view.AutoLoadListView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +30,7 @@ import java.util.List;
  * 微博主页
  * Created by Anyway on 2015/8/30.
  */
-public class MainFragment extends BaseFragment {
+public class WeiboTimeLineFragment extends BaseFragment {
 
 //    private RecyclerView rv_main;
 //    private WeiboRecycleViewAdapter adapter;
@@ -60,8 +58,6 @@ public class MainFragment extends BaseFragment {
     // 自动加载的ListView
     private AutoLoadListView lv_main;
 
-    private JsonObjectRequest jsonObjectRequest;
-
     @Override
     public void initData(Bundle savedInstanceState) {
         if (first){
@@ -77,61 +73,41 @@ public class MainFragment extends BaseFragment {
      */
     private void getDataFromServer(){
         String access_token = SharePrefUtil.getString(context, "access_token", "");
-        if (access_token != "") {
+        if (!TextUtils.isEmpty(access_token)) {
             if(srl_main.isRefreshing()){
                 page = 1;
             }
             String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&page="+page;
-            jsonObjectRequest = new JsonObjectRequest(url, null, listener, errorListener);
-            ((MainActivity) context).mQueue.add(jsonObjectRequest);
+            getData(url, listener, errorListener);
         }
     }
 
-    Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+    Response.Listener<String> listener = new Response.Listener<String>() {
         @Override
-        public void onResponse(JSONObject jsonObject) {
+        public void onResponse(String stringResult) {
+            String statuses = null;
             try {
-                String statuses = jsonObject.getString("statuses");
-                processData(statuses);
+                JSONObject jsonObject = new JSONObject(stringResult);
+                statuses = jsonObject.getString("statuses");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            processData(statuses);
 
         }
     };
 
     private void processData(String statuses) {
-        try {
-            JSONObject jsonObject;
-            JSONArray jsonArray = new JSONArray(statuses);
             if(srl_main.isRefreshing()){
                 list.clear();
             }
-            for (int i = 0; i < jsonArray.length(); i++) {
-                jsonObject = jsonArray.getJSONObject(i);
-                created_at = jsonObject.getString("created_at");
-                source = jsonObject.getString("source");
-                reposts_count = jsonObject.getString("reposts_count");
-                comments_count = jsonObject.getString("comments_count");
-                text = jsonObject.getString("text");
-                time = jsonObject.getString("created_at");
-                String user = jsonObject.getString("user");
-                jsonObject = new JSONObject(user);
-                profile_image_url = jsonObject.getString("avatar_large");
-                name = jsonObject.getString("name");
-                verified = jsonObject.getBoolean("verified");
-                item = new WeiboItem(created_at, source, CommonUtil.getNumString(reposts_count), CommonUtil.getNumString(comments_count), profile_image_url, name, DateUtils.getWeiboDate(time), verified, text);
-                list.add(item);
-            }
+            list.addAll(JsonUtils.getListFromJson(statuses,WeiboItem.class));
             adapter.notifyDataSetChanged();
             srl_main.setRefreshing(false);
             if(load){
                 lv_main.completeLoadMore(true);
                 load = false;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     Response.ErrorListener errorListener = new Response.ErrorListener() {

@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <fragment
-            class="com.yuqirong.koku.fragment.MainFragment"
+            class="com.yuqirong.koku.fragment.WeiboTimeLineFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

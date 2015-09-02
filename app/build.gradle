@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.0.0'
     compile files('libs/volley.jar')
     compile project(':library-xutils')
+    compile files('libs/fastjson-1.2.7.jar')
 }

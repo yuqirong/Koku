@@ -7,7 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.lidroid.xutils.BitmapUtils;
+import com.yuqirong.koku.activity.MainActivity;
 
 /**
  * Created by Anyway on 2015/8/28.
@@ -39,4 +43,16 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected abstract View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+
+    /**
+     * 从服务器上获取数据
+     * @param url
+     * @param listener
+     * @param errorListener
+     */
+    protected void getData(String url,Response.Listener listener,Response.ErrorListener errorListener){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, listener,errorListener );
+        ((MainActivity) context).mQueue.add(stringRequest);
+    }
+
 }

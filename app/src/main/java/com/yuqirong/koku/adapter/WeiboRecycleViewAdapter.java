@@ -41,11 +41,11 @@ public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // TODO: 2015/8/30
         WeiboItem weiboItem = list.get(position);
-        holder.tv_screen_name.setText(weiboItem.name);
-        bitmapUtils.display(holder.civ_avatar, weiboItem.profile_image_url);
-        holder.tv_time.setText(weiboItem.time);
+        holder.tv_screen_name.setText(weiboItem.user.name);
+        bitmapUtils.display(holder.civ_avatar, weiboItem.user.profile_image_url);
+        holder.tv_time.setText(weiboItem.created_at);
         holder.tv_device.setText(Html.fromHtml(weiboItem.source));
-        if (weiboItem.verified) {
+        if (weiboItem.user.verified) {
             holder.iv_verified.setImageResource(R.drawable.avatar_vip);
 //            Drawable drawable = context.getResources().getDrawable(R.drawable.avatar_vip, null);
 //            holder.tv_screen_name.setCompoundDrawables(null, null, drawable, null);

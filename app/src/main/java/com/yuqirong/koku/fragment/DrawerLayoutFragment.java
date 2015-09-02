@@ -1,29 +1,28 @@
 package com.yuqirong.koku.fragment;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.activity.MainActivity;
 import com.yuqirong.koku.adapter.DrawerLayoutAdapter;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.entity.User;
 import com.yuqirong.koku.util.CommonUtil;
+import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.view.CircleImageView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -32,18 +31,6 @@ import java.util.List;
  */
 public class DrawerLayoutFragment extends BaseFragment {
 
-    /**
-     * 头像url
-     */
-    private String avatar_large;
-    /**
-     * 封面图url
-     */
-    private String cover_image_phone;
-    /**
-     * 用户昵称
-     */
-    private String screen_name;
     /**
      * 用户头像
      */
@@ -61,38 +48,32 @@ public class DrawerLayoutFragment extends BaseFragment {
      */
     private ListView lv_left;
     private DrawerLayoutAdapter adapter;
-    private List<String> list;
+    private List<String> list = new LinkedList<>();
+    private User user;
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        list = CommonUtil.getStringFromArrays(R.array.user_operation);
-        adapter = new DrawerLayoutAdapter(context, list);
-        lv_left.setAdapter(adapter);
+        list.addAll(CommonUtil.getStringFromArrays(R.array.user_operation));
+        adapter.notifyDataSetChanged();
+        // 加载缓存
         getCache();
-
+        // 更新数据
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         String uid = SharePrefUtil.getString(context, "uid", "");
-        if (access_token != "" && uid != "") {
+        if (!TextUtils.isEmpty(access_token) && !TextUtils.isEmpty(uid)) {
             String url = AppConstant.USERS_SHOW_URL + "?access_token=" + access_token + "&uid=" + uid;
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
-            ((MainActivity) context).mQueue.add(jsonObjectRequest);
+            getData(url, listener, errorListener);
         }
     }
 
-    Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+    Response.Listener<String> listener = new Response.Listener<String>() {
         @Override
-        public void onResponse(JSONObject jsonObject) {
-            try {
-                screen_name = jsonObject.getString("screen_name");
-                cover_image_phone = jsonObject.getString("cover_image_phone");
-                avatar_large = jsonObject.getString("avatar_large");
-                processData();
-                SharePrefUtil.saveString(context, "screen_name", screen_name);
-                SharePrefUtil.saveString(context, "cover_image_phone", cover_image_phone);
-                SharePrefUtil.saveString(context, "avatar_large", avatar_large);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        public void onResponse(String stringResult) {
+            user = JsonUtils.getBeanFromJson(stringResult, User.class);
+            processData(user);
+            SharePrefUtil.saveString(context, "screen_name", user.screen_name);
+            SharePrefUtil.saveString(context, "cover_image_phone", user.cover_image_phone);
+            SharePrefUtil.saveString(context, "avatar_large", user.avatar_large);
         }
     };
 
@@ -105,17 +86,18 @@ public class DrawerLayoutFragment extends BaseFragment {
 
     //得到缓存数据
     private void getCache() {
-        screen_name = SharePrefUtil.getString(context, "screen_name", "");
-        cover_image_phone = SharePrefUtil.getString(context, "cover_image_phone", "");
-        avatar_large = SharePrefUtil.getString(context, "avatar_large", "");
-        processData();
+        user = new User();
+        user.screen_name = SharePrefUtil.getString(context, "screen_name", "");
+        user.cover_image_phone = SharePrefUtil.getString(context, "cover_image_phone", "");
+        user.avatar_large = SharePrefUtil.getString(context, "avatar_large", "");
+        processData(user);
     }
 
     //处理数据
-    private void processData() {
-        tv_screen_name.setText(screen_name);
-        bitmapUtils.display(iv_cover, cover_image_phone);
-        bitmapUtils.display(civ_avatar, avatar_large);
+    private void processData(User user) {
+        tv_screen_name.setText(user.screen_name);
+        bitmapUtils.display(iv_cover, user.cover_image_phone);
+        bitmapUtils.display(civ_avatar, user.avatar_large);
     }
 
     @Override
@@ -125,6 +107,14 @@ public class DrawerLayoutFragment extends BaseFragment {
         iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
         tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);
         lv_left = (ListView) view.findViewById(R.id.lv_left);
+        iv_cover.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        adapter = new DrawerLayoutAdapter(context, list);
+        lv_left.setAdapter(adapter);
         return view;
     }
 }

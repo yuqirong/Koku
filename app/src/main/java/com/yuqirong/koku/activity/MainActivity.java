@@ -5,6 +5,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,10 @@ public class MainActivity extends BaseActivity {
 
     private FrameLayout fl_main;
     private Toolbar tb_main;
+    /**
+     * 判断DrawerLayout是否打开
+     */
+    private boolean isDrawerOpened = false;
 
     @Override
     protected void initData() {
@@ -49,15 +54,15 @@ public class MainActivity extends BaseActivity {
         final String access_token = SharePrefUtil.getString(this, "access_token", "");
         if (access_token != "") {
             String url = AppConstant.GET_TOKEN_INFO_URL + access_token;
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,url, null, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
                     try {
                         String expire_in = jsonObject.getString("expire_in");
                         int second = Integer.parseInt(expire_in);
-                        if(second>0){
-                            SharePrefUtil.saveString(MainActivity.this,"expire_in",expire_in);
-                        }else{
+                        if (second > 0) {
+                            SharePrefUtil.saveString(MainActivity.this, "expire_in", expire_in);
+                        } else {
                             goToAuthorizeActivity();
                         }
                     } catch (JSONException e) {
@@ -79,7 +84,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void goToAuthorizeActivity(){
+    private void goToAuthorizeActivity() {
         AuthorizeActivity.actionStart(this);
         finish();
     }
@@ -106,6 +111,8 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onDrawerOpened(View drawerView) {
+
+                isDrawerOpened = true;
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -118,6 +125,7 @@ public class MainActivity extends BaseActivity {
     protected void initView() {
         setContentView(R.layout.activity_main);
         dl_main = (DrawerLayout) findViewById(R.id.dl_main);
+        dl_main.setFocusableInTouchMode(true);
         fl_main = (FrameLayout) findViewById(R.id.fl_main);
         tb_main = (Toolbar) findViewById(R.id.tb_main);
     }
@@ -137,5 +145,13 @@ public class MainActivity extends BaseActivity {
         return toggle.onOptionsItemSelected(item) | super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (isDrawerOpened && keyCode == KeyEvent.KEYCODE_BACK) {
+            dl_main.closeDrawers();
+            isDrawerOpened = false;
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

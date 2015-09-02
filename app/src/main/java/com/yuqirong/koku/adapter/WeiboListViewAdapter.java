@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.util.CommonUtil;
+import com.yuqirong.koku.util.DateUtils;
 
 import java.util.List;
 
@@ -39,15 +41,15 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem,ListView> {
         }else{
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tv_screen_name.setText(weiboItem.name);
-        bitmapUtils.display(viewHolder.civ_avatar, weiboItem.profile_image_url);
-        viewHolder.tv_time.setText(weiboItem.time);
+        viewHolder.tv_screen_name.setText(weiboItem.user.name);
+        bitmapUtils.display(viewHolder.civ_avatar, weiboItem.user.profile_image_url);
+        viewHolder.tv_time.setText(DateUtils.getWeiboDate(weiboItem.created_at));
         viewHolder.tv_device.setText(Html.fromHtml(weiboItem.source));
-        if (weiboItem.verified) {
+        if (weiboItem.user.verified) {
             viewHolder.iv_verified.setImageResource(R.drawable.avatar_vip);
         }
-        viewHolder.tv_repost_count.setText(weiboItem.reposts_count);
-        viewHolder.tv_comment_count.setText(weiboItem.comments_count);
+        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(weiboItem.reposts_count));
+        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(weiboItem.comments_count));
         viewHolder.tv_text.setText(weiboItem.text);
         return convertView;
     }
