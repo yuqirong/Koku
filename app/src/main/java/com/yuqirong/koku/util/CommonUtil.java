@@ -28,6 +28,11 @@ public class CommonUtil {
         return list;
     }
 
+    /**
+     * 如果转发数或评论数超过一万，就简写成 n万
+     * @param num
+     * @return
+     */
     public static String getNumString(String num) {
         if(!TextUtils.isEmpty(num)){
             int number = Integer.parseInt(num)/10000;

@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.WeiboListViewAdapter;
+import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.WeiboItem;
 import com.yuqirong.koku.util.CommonUtil;
@@ -32,23 +33,10 @@ import java.util.List;
  */
 public class WeiboTimeLineFragment extends BaseFragment {
 
-//    private RecyclerView rv_main;
-//    private WeiboRecycleViewAdapter adapter;
-
     private SwipeRefreshLayout srl_main;
     private WeiboListViewAdapter adapter;
     private WeiboItem item;
     private List<WeiboItem> list = new LinkedList<>();
-    String created_at;
-    String source;
-    String reposts_count;
-    String comments_count;
-    String profile_image_url;
-    String name;
-    String time;
-    String text;
-    boolean verified;
-
     // 判断是否为第一次进入主页,若是则自动刷新
     private boolean first = true;
     // 判断是否上拉加载，默认为false
@@ -57,10 +45,20 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private int page = 1;
     // 自动加载的ListView
     private AutoLoadListView lv_main;
+    public static final String CACHE_FOLDER_NAME = "timeline";
+    public static final String TIME_LINE_CACHE_NAME = "timeline_cache";
+    protected ACache aCache;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        aCache = ACache.get(context, CACHE_FOLDER_NAME);
+    }
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        if (first){
+        getCache();
+        if (first) {
             srl_main.setProgressViewOffset(false, 0, CommonUtil.dip2px(context, 24));
             srl_main.setRefreshing(true);
             handler.sendEmptyMessageDelayed(0, 2000);
@@ -69,15 +67,32 @@ public class WeiboTimeLineFragment extends BaseFragment {
     }
 
     /**
+     * 获取缓存
+     */
+    private void getCache() {
+        String cache = aCache.getAsString(TIME_LINE_CACHE_NAME);
+        if (TextUtils.isEmpty(cache)) {
+            return;
+        }
+        try {
+            JSONObject jsonObject = new JSONObject(cache);
+            String statuses = jsonObject.getString("statuses");
+            processData(statuses);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 从服务器上获取数据
      */
-    private void getDataFromServer(){
+    private void getDataFromServer() {
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         if (!TextUtils.isEmpty(access_token)) {
-            if(srl_main.isRefreshing()){
+            if (srl_main.isRefreshing()) {
                 page = 1;
             }
-            String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&page="+page;
+            String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&page=" + page;
             getData(url, listener, errorListener);
         }
     }
@@ -89,25 +104,27 @@ public class WeiboTimeLineFragment extends BaseFragment {
             try {
                 JSONObject jsonObject = new JSONObject(stringResult);
                 statuses = jsonObject.getString("statuses");
+                if (srl_main.isRefreshing()) {
+                    aCache.put(TIME_LINE_CACHE_NAME, stringResult);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             processData(statuses);
-
         }
     };
 
     private void processData(String statuses) {
-            if(srl_main.isRefreshing()){
-                list.clear();
-            }
-            list.addAll(JsonUtils.getListFromJson(statuses,WeiboItem.class));
-            adapter.notifyDataSetChanged();
-            srl_main.setRefreshing(false);
-            if(load){
-                lv_main.completeLoadMore(true);
-                load = false;
-            }
+        if (srl_main.isRefreshing()) {
+            list.clear();
+        }
+        list.addAll(JsonUtils.getListFromJson(statuses, WeiboItem.class));
+        adapter.notifyDataSetChanged();
+        srl_main.setRefreshing(false);
+        if (load) {
+            lv_main.completeLoadMore(true);
+            load = false;
+        }
     }
 
     Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -127,7 +144,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
         lv_main = (AutoLoadListView) view.findViewById(R.id.lv_main);
         lv_main.setOnLoadingMoreListener(loadingMoreListener);
-        adapter = new WeiboListViewAdapter(context,list);
+        adapter = new WeiboListViewAdapter(context, list);
         lv_main.setAdapter(adapter);
         return view;
     }
@@ -151,13 +168,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
         }
     };
 
-    private Handler handler = new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             getDataFromServer();
         }
     };
-
-
 
 }
