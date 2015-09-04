@@ -67,7 +67,7 @@
             android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/tv_screen_name"
-            android:gravity="center"
+            android:layout_centerVertical="true"
             android:src="@drawable/ic_detail_overflow_dark" />
 
         <TextView
@@ -79,7 +79,7 @@
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/iv_overflow"
             android:drawableLeft="@drawable/ic_detail_comment_dark"
-            android:gravity="center"
+            android:layout_centerVertical="true"
             android:text="0" />
 
 
@@ -92,7 +92,7 @@
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/tv_comment_count"
             android:drawableLeft="@drawable/ic_detail_repost_dark"
-            android:gravity="center"
+            android:layout_centerVertical="true"
             android:text="0" />
 
     </RelativeLayout>
