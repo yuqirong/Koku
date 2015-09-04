@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,6 +19,7 @@ import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.WeiboItem;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.JsonUtils;
+import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.view.AutoLoadListView;
 
@@ -146,6 +148,12 @@ public class WeiboTimeLineFragment extends BaseFragment {
         lv_main.setOnLoadingMoreListener(loadingMoreListener);
         adapter = new WeiboListViewAdapter(context, list);
         lv_main.setAdapter(adapter);
+        lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LogUtils.i("click item");
+            }
+        });
         return view;
     }
 

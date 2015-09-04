@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/background_light"
@@ -20,9 +21,9 @@
             android:id="@+id/tv_screen_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@id/civ_avatar"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/civ_avatar"
-            android:layout_alignTop="@id/civ_avatar"
             android:text="AAA"
             android:textStyle="bold" />
 
@@ -32,39 +33,40 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignTop="@id/tv_screen_name"
-            android:layout_toRightOf="@id/tv_screen_name"
-            android:src="@drawable/avatar_vip" />
+            android:layout_toRightOf="@id/tv_screen_name" />
 
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_screen_name"
             android:layout_alignBottom="@id/civ_avatar"
-            android:gravity="center_vertical"
             android:layout_alignLeft="@id/tv_screen_name"
+            android:layout_below="@id/tv_screen_name"
             android:layout_toRightOf="@id/civ_avatar"
-            android:textSize="12sp"
-            android:text="15小时前"/>
+            android:gravity="center_vertical"
+            android:text="15小时前"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tv_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_screen_name"
-            android:textSize="12sp"
-            android:gravity="center_vertical"
-            android:text="iPhone 6 Plus"
-            android:layout_marginLeft="5dp"
             android:layout_alignBottom="@id/tv_time"
             android:layout_alignTop="@id/tv_time"
-            android:layout_toRightOf="@id/tv_time" />
+            android:layout_below="@id/tv_screen_name"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_time"
+            android:gravity="center_vertical"
+            android:text="iPhone 6 Plus"
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/iv_overflow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/tv_screen_name"
             android:gravity="center"
             android:src="@drawable/ic_detail_overflow_dark" />
 
@@ -72,33 +74,33 @@
             android:id="@+id/tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/iv_overflow"
-            android:drawableLeft="@drawable/ic_detail_comment_dark"
             android:layout_alignBottom="@id/iv_overflow"
             android:layout_alignTop="@id/iv_overflow"
             android:layout_marginRight="5dp"
-            android:text="0"
-            android:gravity="center" />
+            android:layout_toLeftOf="@id/iv_overflow"
+            android:drawableLeft="@drawable/ic_detail_comment_dark"
+            android:gravity="center"
+            android:text="0" />
 
 
         <TextView
             android:id="@+id/tv_repost_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/tv_comment_count"
-            android:drawableLeft="@drawable/ic_detail_repost_dark"
             android:layout_alignBottom="@id/iv_overflow"
             android:layout_alignTop="@id/iv_overflow"
             android:layout_marginRight="5dp"
-            android:text="0"
-            android:gravity="center" />
+            android:layout_toLeftOf="@id/tv_comment_count"
+            android:drawableLeft="@drawable/ic_detail_repost_dark"
+            android:gravity="center"
+            android:text="0" />
 
     </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_text"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" />
 
 </LinearLayout>

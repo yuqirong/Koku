@@ -32,7 +32,7 @@ public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleVi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycleview_weibo_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.weibo_original_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }

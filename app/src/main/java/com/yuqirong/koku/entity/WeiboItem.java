@@ -13,19 +13,27 @@ public class WeiboItem {
     public String reposts_count;
     // weibo评论数
     public String comments_count;
-    // weibo用户
+    // 微博作者的用户信息字段
     public User user;
-    // weibo内容
+    // 微博信息内容
     public String text;
+    //微博配图url
+    public String[] pic_urls;
+    public Retweeted_status retweeted_status;
 
-    public class User {
-
-        // 头像url
-        public String profile_image_url;
-        // 友好显示名称
-        public String name;
-        // 是否经认证
-        public boolean verified;
+    public class Retweeted_status {
+        // 字符串型的微博ID
+        public String idstr;
+        // 微博信息内容
+        public String text;
+        // 微博作者的用户信息字段
+        public User user;
+        //微博配图url
+        public String[] pic_urls;
+        // weibo转发数
+        public String reposts_count;
+        // weibo评论数
+        public String comments_count;
     }
 
 }

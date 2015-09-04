@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/activity_bg_color" />
+
+    <TextView
+        android:id="@+id/tv_retweeted_name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider"
+        android:text="AAA" />
+
+    <TextView
+        android:id="@+id/tv_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_retweeted_name_text" />
+
+    <TextView
+        android:id="@+id/tv_retweeted_comment_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_test"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/tv_test"
+        android:layout_below="@id/tv_retweeted_name_text"
+        android:drawableLeft="@drawable/ic_detail_comment_dark"
+        android:gravity="center"
+        android:text="0" />
+
+
+    <TextView
+        android:id="@+id/tv_retweeted_repost_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_retweeted_comment_count"
+        android:layout_alignTop="@id/tv_retweeted_comment_count"
+        android:layout_below="@id/tv_retweeted_name_text"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/tv_retweeted_comment_count"
+        android:drawableLeft="@drawable/ic_detail_repost_dark"
+        android:gravity="center"
+        android:text="0" />
+
+</RelativeLayout>

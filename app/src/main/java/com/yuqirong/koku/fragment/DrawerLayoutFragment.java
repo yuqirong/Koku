@@ -16,10 +16,10 @@ import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.DrawerLayoutAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.User;
-import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
+import com.yuqirong.koku.util.StringUtils;
 import com.yuqirong.koku.view.CircleImageView;
 
 import java.util.LinkedList;
@@ -53,7 +53,7 @@ public class DrawerLayoutFragment extends BaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        list.addAll(CommonUtil.getStringFromArrays(R.array.user_operation));
+        list.addAll(StringUtils.getStringFromArrays(R.array.user_operation));
         adapter.notifyDataSetChanged();
         // 加载缓存
         getCache();
