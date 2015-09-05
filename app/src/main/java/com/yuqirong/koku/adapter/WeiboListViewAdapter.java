@@ -3,12 +3,7 @@ package com.yuqirong.koku.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.TextPaint;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +18,9 @@ import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.WeiboItem;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
-import com.yuqirong.koku.util.LogUtils;
+import com.yuqirong.koku.util.StringUtils;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Anyway on 2015/8/31.
@@ -63,11 +56,16 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
         } else {
             viewHolder.iv_verified.setImageResource(android.R.drawable.screen_background_light_transparent);
         }
+        //设置微博 转发数和评论数
         viewHolder.tv_repost_count.setText(CommonUtil.getNumString(weiboItem.reposts_count));
         viewHolder.tv_comment_count.setText(CommonUtil.getNumString(weiboItem.comments_count));
-        processClickableText(viewHolder,weiboItem.text);
+
+        //设置微博内容
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, weiboItem.text, viewHolder.tv_text);
+        viewHolder.tv_text.setText(weiBoContent);
+
         if (weiboItem.retweeted_status != null) {
-            processRetweeted(convertView, viewHolder, weiboItem);
+            processRetweeted(viewHolder, weiboItem);
             viewHolder.ll_item.addView(viewHolder.view_retweeted);
         } else {
             if (viewHolder.view_retweeted != null)
@@ -77,12 +75,17 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
     }
 
     // 处理被转发的View
-    private void processRetweeted(View convertView, ViewHolder viewHolder, WeiboItem weiboItem) {
+    private void processRetweeted(ViewHolder viewHolder, WeiboItem weiboItem) {
         if (viewHolder.view_retweeted == null) {
             viewHolder.view_retweeted = LayoutInflater.from(context).inflate(R.layout.weibo_retweeted_item, null);
             viewHolder.initRetweetedView();
         }
-        setClickableSpan(viewHolder, weiboItem);
+
+        //设置被转发微博内容
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + weiboItem.retweeted_status.user.name + context.getResources().getString(R.string.colon) + weiboItem.retweeted_status.text, viewHolder.tv_text);
+        viewHolder.tv_retweeted_name_text.setText(weiBoContent);
+
+        //设置被转发微博 转发数和评论数
         viewHolder.tv_retweeted_repost_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.reposts_count));
         viewHolder.tv_retweeted_comment_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.comments_count));
 
@@ -91,49 +94,7 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
             ViewGroup group = (ViewGroup) parent;
             group.removeView(viewHolder.view_retweeted);
         }
-        convertView.setTag(viewHolder);
     }
-
-    // 设置文字中可点击span
-    private void setClickableSpan(ViewHolder viewHolder, WeiboItem weiboItem) {
-        SpannableStringBuilder spannable = new SpannableStringBuilder(AT + weiboItem.retweeted_status.user.name);
-        spannable.setSpan(clickableSpan, 0, weiboItem.retweeted_status.user.name.length() + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        viewHolder.tv_retweeted_name_text.setText(spannable);
-        viewHolder.tv_retweeted_name_text.append(context.getResources().getString(R.string.colon) + weiboItem.retweeted_status.text);
-        viewHolder.tv_retweeted_name_text.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    // 处理内容中@ 字段
-    public void processClickableText(ViewHolder viewHolder, String text) {
-        if (text.contains(AT)){
-            String substring = text.substring(text.indexOf(AT), text.indexOf(":", text.indexOf(AT)));
-            if(substring.length()>0){
-                Pattern p = Pattern.compile("@[a-zA-Z0-9\\u4e00-\\u9fa5_-]{4,30}");
-                Matcher m = p.matcher(substring);
-                if(m.matches()){
-                    SpannableString spannable = new SpannableString(substring);
-                    spannable.setSpan(clickableSpan, 0, substring.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    text.replace(spannable,substring);
-                }
-            }
-        }
-        viewHolder.tv_text.setText(text);
-    }
-
-
-    ClickableSpan clickableSpan = new ClickableSpan() {
-        @Override
-        public void onClick(View widget) {
-            LogUtils.i("click span");
-        }
-
-        @Override
-        public void updateDrawState(TextPaint ds) {
-            super.updateDrawState(ds);
-            ds.setColor(context.getResources().getColor(R.color.span_text_color));
-            ds.setUnderlineText(false);
-        }
-    };
 
     // ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
