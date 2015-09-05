@@ -14,11 +14,4 @@
         android:dividerHeight="6dp"
         android:scrollbars="none" />
 
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/rv_main"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:cacheColorHint="@null"-->
-    <!--android:scrollbars="none" />-->
-
 </android.support.v4.widget.SwipeRefreshLayout>

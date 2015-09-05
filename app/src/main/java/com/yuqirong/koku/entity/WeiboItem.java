@@ -1,6 +1,9 @@
 package com.yuqirong.koku.entity;
 
+import java.util.List;
+
 /**
+ * weibo实例类
  * Created by Anyway on 2015/8/30.
  */
 public class WeiboItem {
@@ -17,8 +20,9 @@ public class WeiboItem {
     public User user;
     // 微博信息内容
     public String text;
-    //微博配图url
-    public String[] pic_urls;
+    // 微博配图url
+    public List<Pic_urls> pic_urls;
+    // 转发微博状态
     public Retweeted_status retweeted_status;
 
     public class Retweeted_status {
@@ -28,12 +32,12 @@ public class WeiboItem {
         public String text;
         // 微博作者的用户信息字段
         public User user;
-        //微博配图url
-        public String[] pic_urls;
         // weibo转发数
         public String reposts_count;
         // weibo评论数
         public String comments_count;
+        // 微博配图url
+        public List<Pic_urls> pic_urls;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.yuqirong.koku.entity;
 
 /**
+ * 用户实例类
  * Created by Anyway on 2015/9/2.
  */
 public class User {

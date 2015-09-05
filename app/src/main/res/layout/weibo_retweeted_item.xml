@@ -16,13 +16,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/divider"
+        android:layout_marginBottom="5dp"
         android:text="AAA" />
+
+    <include
+        android:id="@+id/rl_pics"
+        layout="@layout/weibo_pic_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_retweeted_name_text" />
 
     <TextView
         android:id="@+id/tv_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_retweeted_name_text" />
+        android:layout_below="@id/rl_pics"
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/tv_retweeted_comment_count"
@@ -31,9 +40,9 @@
         android:layout_alignBottom="@id/tv_test"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/tv_test"
-        android:layout_below="@id/tv_retweeted_name_text"
-        android:drawableLeft="@drawable/ic_detail_comment_dark"
+        android:layout_below="@id/rl_pics"
         android:layout_centerVertical="true"
+        android:drawableLeft="@drawable/ic_detail_comment_dark"
         android:text="0" />
 
 
@@ -43,11 +52,11 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/tv_retweeted_comment_count"
         android:layout_alignTop="@id/tv_retweeted_comment_count"
-        android:layout_below="@id/tv_retweeted_name_text"
+        android:layout_below="@id/rl_pics"
+        android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/tv_retweeted_comment_count"
         android:drawableLeft="@drawable/ic_detail_repost_dark"
-        android:layout_centerVertical="true"
         android:text="0" />
 
 </RelativeLayout>

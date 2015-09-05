@@ -138,7 +138,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, null);
+        View view = inflater.inflate(R.layout.fragment_timeline, null);
         srl_main = (SwipeRefreshLayout) view.findViewById(R.id.srl_main);
         // 设置小箭头的颜色
         srl_main.setColorSchemeResources(AppConstant.SWIPE_REFRESH_LAYOUT_COLOR);
