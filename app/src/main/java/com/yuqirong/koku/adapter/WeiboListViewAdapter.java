@@ -22,6 +22,7 @@ import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,12 +33,16 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
 
     private BitmapUtils bitmapUtils;
     public static final String AT = "@";
+    public static final int DISK_CACHE_SIZE = 10 * 1024 * 1024;
 
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
 
     public WeiboListViewAdapter(Context context, List<WeiboItem> list) {
         super(context, list);
-        bitmapUtils = new BitmapUtils(context);
+        String bitmap_cache_dir = context.getCacheDir() + File.separator + "bitmap";
+        int cache = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024 * 8));
+        bitmapUtils = new BitmapUtils(context, bitmap_cache_dir, cache, DISK_CACHE_SIZE);
+        bitmapUtils.configDefaultLoadingImage(context.getResources().getDrawable(R.drawable.thumbnail_default));
     }
 
     @Override
@@ -69,7 +74,7 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
         viewHolder.tv_text.setText(weiBoContent);
 
         if (weiboItem.pic_urls != null && weiboItem.pic_urls.size() > 0) {
-            viewHolder.initImageView(viewHolder.rl_pics,viewHolder.iv_arrays, weiboItem.pic_urls);
+            viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, weiboItem.pic_urls);
         } else {
             if (viewHolder.iv_arrays != null)
                 viewHolder.rl_pics.setVisibility(View.GONE);
@@ -97,7 +102,7 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
         viewHolder.tv_retweeted_name_text.setText(weiBoContent);
 
         if (weiboItem.retweeted_status.pic_urls != null && weiboItem.retweeted_status.pic_urls.size() > 0) {
-            viewHolder.initImageView(viewHolder.rl_retweeted_pics,viewHolder.iv_retweeted_arrays, weiboItem.retweeted_status.pic_urls);
+            viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, weiboItem.retweeted_status.pic_urls);
         } else {
             if (viewHolder.iv_retweeted_arrays != null)
                 viewHolder.rl_retweeted_pics.setVisibility(View.GONE);
@@ -135,7 +140,7 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
         public RelativeLayout rl_pics;
         public RelativeLayout rl_retweeted_pics;
 
-        private void initImageView(RelativeLayout rl,List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {
+        private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {
             rl.setVisibility(View.VISIBLE);
             for (int i = 0; i < iv_arrays.size(); i++) {
                 if (i < pic_urls.size()) {

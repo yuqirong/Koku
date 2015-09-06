@@ -1,6 +1,8 @@
 package com.yuqirong.koku.view;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
     private int footerMeasuredHeight; // 加载更多布局的高度
     private TextView tv_load_fail;
     private LinearLayout ll_load_more;
+    private boolean loadSuccess = true;
 
     public AutoLoadListView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -55,10 +58,13 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
         mFooterLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ll_load_more.setVisibility(View.VISIBLE);
-                tv_load_fail.setVisibility(View.INVISIBLE);
-                if (listener != null) {
-                    listener.onLoadingMore();
+                if (!loadSuccess) {
+                    loadSuccess = !loadSuccess;
+                    ll_load_more.setVisibility(View.VISIBLE);
+                    tv_load_fail.setVisibility(View.INVISIBLE);
+                    if (listener != null) {
+                        listener.onLoadingMore();
+                    }
                 }
             }
         });
@@ -67,6 +73,7 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
 
     // 是否成功加载更多，加载失败显示 “加载失败，点击重试”
     public void completeLoadMore(boolean success) {
+        loadSuccess = success;
         if (success) {
             ll_load_more.setVisibility(View.VISIBLE);
             tv_load_fail.setVisibility(View.INVISIBLE);
@@ -74,8 +81,18 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
             isLoadingMore = false;
         } else {
             ll_load_more.setVisibility(View.INVISIBLE);
+            tv_load_fail.setText(getContext().getResources().getString(R.string.load_fail));
             tv_load_fail.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * 设置成 “没有更多微博了”
+     */
+    public void setNoMoreWeibo(){
+        completeLoadMore(false);
+        tv_load_fail.setText(getContext().getResources().getString(R.string.no_more_weibo));
+        loadSuccess = true;
     }
 
 
@@ -104,11 +121,17 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
             isLoadingMore = true;
             mFooterLayout.setPadding(0, 0, 0, 0);// 显示出footerView
             setSelection(getCount());// 让listview最后一条显示出来
-
             if (listener != null) {
-                listener.onLoadingMore();
+               handler.sendEmptyMessageDelayed(0,500);
             }
         }
     }
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            listener.onLoadingMore();
+        }
+    };
 
 }

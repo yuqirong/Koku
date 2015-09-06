@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -35,6 +36,7 @@ import java.util.List;
  */
 public class WeiboTimeLineFragment extends BaseFragment {
 
+    // 下拉刷新组件
     private SwipeRefreshLayout srl_main;
     private WeiboListViewAdapter adapter;
     private WeiboItem item;
@@ -43,13 +45,14 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private boolean first = true;
     // 判断是否上拉加载，默认为false
     private boolean load = false;
-    // 返回结果的页码
-    private int page = 1;
     // 自动加载的ListView
     private AutoLoadListView lv_main;
     public static final String CACHE_FOLDER_NAME = "timeline";
     public static final String TIME_LINE_CACHE_NAME = "timeline_cache";
     protected ACache aCache;
+    //若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
+    private String max_id = "0";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
         if (first) {
             srl_main.setProgressViewOffset(false, 0, CommonUtil.dip2px(context, 24));
             srl_main.setRefreshing(true);
-            handler.sendEmptyMessageDelayed(0, 2000);
+            handler.sendEmptyMessageDelayed(0, 1000);
             first = false;
         }
     }
@@ -78,6 +81,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
         }
         try {
             JSONObject jsonObject = new JSONObject(cache);
+            max_id = jsonObject.getString("max_id");
             String statuses = jsonObject.getString("statuses");
             processData(statuses);
         } catch (JSONException e) {
@@ -92,9 +96,10 @@ public class WeiboTimeLineFragment extends BaseFragment {
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         if (!TextUtils.isEmpty(access_token)) {
             if (srl_main.isRefreshing()) {
-                page = 1;
+                max_id = "0";
             }
-            String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&page=" + page;
+            String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&max_id=" + max_id;
+            LogUtils.i("url  : " + url);
             getData(url, listener, errorListener);
         }
     }
@@ -105,6 +110,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
             String statuses = null;
             try {
                 JSONObject jsonObject = new JSONObject(stringResult);
+                max_id = jsonObject.getString("max_id");
                 statuses = jsonObject.getString("statuses");
                 if (srl_main.isRefreshing()) {
                     aCache.put(TIME_LINE_CACHE_NAME, stringResult);
@@ -125,6 +131,9 @@ public class WeiboTimeLineFragment extends BaseFragment {
         srl_main.setRefreshing(false);
         if (load) {
             lv_main.completeLoadMore(true);
+            if ("0".equals(max_id)) {
+                lv_main.setNoMoreWeibo();
+            }
             load = false;
         }
     }
@@ -132,6 +141,12 @@ public class WeiboTimeLineFragment extends BaseFragment {
     Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+            Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
+            srl_main.setRefreshing(false);
+            if (load) {
+                handler.sendEmptyMessageDelayed(1, 1000);
+                load = false;
+            }
 
         }
     };
@@ -161,8 +176,8 @@ public class WeiboTimeLineFragment extends BaseFragment {
         @Override
         public void onLoadingMore() {
             load = true;
-            page++;
-            getDataFromServer();
+            if (!"0".equals(max_id))
+                getDataFromServer();
         }
     };
 
@@ -179,7 +194,16 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            getDataFromServer();
+
+            switch (msg.what) {
+                case 0:
+                    getDataFromServer();
+                    break;
+                case 1:
+                    lv_main.completeLoadMore(false);
+                    break;
+            }
+
         }
     };
 
