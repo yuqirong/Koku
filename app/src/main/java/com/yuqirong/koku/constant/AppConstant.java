@@ -36,7 +36,13 @@ public class AppConstant {
      * 获取当前登录用户及其所关注用户的最新微博
      */
     public static final String FRIENDS_TIMELINE_URL = "https://api.weibo.com/2/statuses/home_timeline.json?access_token=";
+    /**
+     * 搜索用户时的联想搜索建议
+     */
+    public static final String SEARCH_USER_URL = "https://api.weibo.com/2/search/suggestions/users.json";
 
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
+
+
 
 }

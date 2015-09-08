@@ -6,6 +6,9 @@ package com.yuqirong.koku.entity;
  */
 public class User {
 
+    public String id;
+
+    public String uid;
     // 用户昵称
     public String screen_name;
     // 封面图url
@@ -20,6 +23,8 @@ public class User {
     public boolean verified;
     // 认证原因
     public String verified_reason;
+    // 粉丝数
+    public String followers_count;
 
 }
 

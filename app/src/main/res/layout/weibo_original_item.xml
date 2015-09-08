@@ -15,7 +15,8 @@
             android:id="@+id/civ_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/img_empty_avatar" />
+            android:src="@drawable/thumbnail_default"
+            android:scaleType="fitXY"/>
 
         <TextView
             android:id="@+id/tv_screen_name"

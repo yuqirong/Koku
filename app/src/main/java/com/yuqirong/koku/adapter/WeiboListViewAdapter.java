@@ -42,7 +42,8 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
         String bitmap_cache_dir = context.getCacheDir() + File.separator + "bitmap";
         int cache = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024 * 8));
         bitmapUtils = new BitmapUtils(context, bitmap_cache_dir, cache, DISK_CACHE_SIZE);
-        bitmapUtils.configDefaultLoadingImage(context.getResources().getDrawable(R.drawable.thumbnail_default));
+        bitmapUtils.configDefaultLoadFailedImage(R.drawable.thumbnail_default);
+        bitmapUtils.configDefaultLoadFailedImage(R.drawable.timeline_image_failure);
     }
 
     @Override
