@@ -18,7 +18,6 @@ import com.yuqirong.koku.adapter.WeiboListViewAdapter;
 import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.WeiboItem;
-import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
@@ -64,10 +63,14 @@ public class WeiboTimeLineFragment extends BaseFragment {
     public void initData(Bundle savedInstanceState) {
         getCache();
         if (first) {
-            srl_main.setProgressViewOffset(false, 0, CommonUtil.dip2px(context, 24));
-            srl_main.setRefreshing(true);
-            handler.sendEmptyMessageDelayed(0, 1000);
-            first = false;
+            srl_main.post(new Runnable() {
+                @Override
+                public void run() {
+                    srl_main.setRefreshing(true);
+                    handler.sendEmptyMessageDelayed(0, 1000);
+                    first = false;
+                }
+            });
         }
     }
 

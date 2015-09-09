@@ -52,9 +52,9 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
         ll_load_more = (LinearLayout) mFooterLayout
                 .findViewById(R.id.ll_load_more);
         tv_load_fail = (TextView) mFooterLayout.findViewById(R.id.tv_load_fail);
-        mFooterLayout.measure(0, 0);// 主动通知系统去测量该view;
-        footerMeasuredHeight = mFooterLayout.getMeasuredHeight();
-        mFooterLayout.setPadding(0, -footerMeasuredHeight, 0, 0);
+//        mFooterLayout.measure(0, 0);// 主动通知系统去测量该view;
+//        footerMeasuredHeight = mFooterLayout.getMeasuredHeight();
+//        mFooterLayout.setPadding(0, -footerMeasuredHeight, 0, 0);
         mFooterLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +77,7 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
         if (success) {
             ll_load_more.setVisibility(View.VISIBLE);
             tv_load_fail.setVisibility(View.INVISIBLE);
-            mFooterLayout.setPadding(0, -footerMeasuredHeight, 0, 0);
+//            mFooterLayout.setPadding(0, -footerMeasuredHeight, 0, 0);
             isLoadingMore = false;
         } else {
             ll_load_more.setVisibility(View.INVISIBLE);
@@ -89,7 +89,7 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
     /**
      * 设置成 “没有更多微博了”
      */
-    public void setNoMoreWeibo(){
+    public void setNoMoreWeibo() {
         completeLoadMore(false);
         tv_load_fail.setText(getContext().getResources().getString(R.string.no_more_weibo));
         loadSuccess = true;
@@ -104,7 +104,7 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
      * 刷新的监听器
      */
     public interface onLoadingMoreListener {
-        public void onLoadingMore();
+        void onLoadingMore();
     }
 
     @Override
@@ -119,15 +119,15 @@ public class AutoLoadListView extends ListView implements OnScrollListener {
                 && getLastVisiblePosition() == (getCount() - 1)
                 && !isLoadingMore) {
             isLoadingMore = true;
-            mFooterLayout.setPadding(0, 0, 0, 0);// 显示出footerView
-            setSelection(getCount());// 让listview最后一条显示出来
+//            mFooterLayout.setPadding(0, 0, 0, 0);// 显示出footerView
+//            setSelection(getCount());// 让listview最后一条显示出来
             if (listener != null) {
-               handler.sendEmptyMessageDelayed(0,500);
+                handler.sendEmptyMessageDelayed(0, 500);
             }
         }
     }
 
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             listener.onLoadingMore();

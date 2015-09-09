@@ -104,10 +104,10 @@ public class SearchUserActivity extends BaseActivity {
     Response.Listener<String> listener = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-
+            adapter.clearData();
             user = JsonUtils.getListFromJson(response, User.class);
-            for (User u:user){
-                adapter.addData(adapter.list.size(),u);
+            for (User u : user) {
+                adapter.addData(adapter.list.size(), u);
             }
 
         }

@@ -55,6 +55,13 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
         notifyItemRemoved(position);
     }
 
+    public void clearData(){
+        int size = list.size();
+        for(int i=0;i<size;i++){
+            removeData(0);
+        }
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_screen_name;
