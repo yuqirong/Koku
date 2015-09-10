@@ -58,7 +58,7 @@ public class SearchUserActivity extends BaseActivity {
     @Override
     protected void initView() {
         setContentView(R.layout.activity_search_user);
-        tb_main = (Toolbar) findViewById(R.id.tb_main);
+        tb_main = (Toolbar) findViewById(R.id.mToolbar);
         rv_list = (RecyclerView) findViewById(R.id.rv_list);
         //创建默认的线性LayoutManager
         rv_list.setLayoutManager(new LinearLayoutManager(this));

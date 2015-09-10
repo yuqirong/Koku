@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/tool_bar"/>
+    <include layout="@layout/layout_toolbar"/>
 
     <WebView
         android:id="@+id/wv_main"

@@ -59,7 +59,7 @@ public class AuthorizeActivity extends BaseActivity {
     protected void initView() {
         setContentView(R.layout.activity_authorize);
         wv_main = (WebView) findViewById(R.id.wv_main);
-        tb_main = (Toolbar) findViewById(R.id.tb_main);
+        tb_main = (Toolbar) findViewById(R.id.mToolbar);
         settings = wv_main.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);

@@ -1,6 +1,10 @@
 package com.yuqirong.koku.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -28,17 +32,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends BaseActivity {
+
     /**
      * 抽屉
      */
-    private DrawerLayout dl_main;
+    private DrawerLayout mDrawerLayout;
     /**
      * 在ActionBar上的抽屉按钮
      */
     private ActionBarDrawerToggle toggle;
 
     private FrameLayout fl_main;
-    private Toolbar tb_main;
+    private Toolbar mToolbar;
     /**
      * 判断DrawerLayout是否打开
      */
@@ -98,12 +103,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initToolBar() {
-        tb_main.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(tb_main);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        toggle = new ActionBarDrawerToggle(this, dl_main, R.string.drawer_open, R.string.drawer_close) {
+
+        toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -111,23 +116,67 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-
                 isDrawerOpened = true;
                 super.onDrawerOpened(drawerView);
             }
         };
         //把toggle和ActionBar同步状态
-        dl_main.setDrawerListener(toggle);
+        mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
     }
+
+    NavigationView mNavigationView;
+    FloatingActionButton fab;
 
     @Override
     protected void initView() {
         setContentView(R.layout.activity_main);
-        dl_main = (DrawerLayout) findViewById(R.id.dl_main);
-        dl_main.setFocusableInTouchMode(true);
-        fl_main = (FrameLayout) findViewById(R.id.fl_main);
-        tb_main = (Toolbar) findViewById(R.id.tb_main);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.mDrawerLayout);
+        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+        mNavigationView = (NavigationView) findViewById(R.id.mNavigationView);
+        if (mNavigationView != null) {
+            setupDrawerContent(mNavigationView);
+        }
+        fab = (FloatingActionButton) findViewById(R.id.mFloatingActionButton);
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+        }
+    }
+
+    private void setupDrawerContent(NavigationView navigationView) {
+
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setCheckable(true);
+                        mDrawerLayout.closeDrawers();
+
+                        switch (menuItem.getItemId()) {
+                            case 0:
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                startActivity(new Intent(MainActivity.this, SearchUserActivity.class));
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            case 4:
+                                break;
+                        }
+
+
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -148,7 +197,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (isDrawerOpened && keyCode == KeyEvent.KEYCODE_BACK) {
-            dl_main.closeDrawers();
+            mDrawerLayout.closeDrawers();
             isDrawerOpened = false;
             return true;
         }

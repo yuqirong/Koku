@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search_dark"
+            android:title="@string/serach_user" />
+        <item
+            android:id="@+id/nav_nearly"
+            android:icon="@drawable/ic_nearly_dark"
+            android:title="@string/nearly_dynamic" />
+        <item
+            android:id="@+id/nav_hot"
+            android:icon="@drawable/ic_hot_dark"
+            android:title="@string/hot_topic" />
+        <item
+            android:id="@+id/nav_favorite"
+            android:icon="@drawable/ic_favorite_dark"
+            android:title="@string/my_favorite" />
+        <item
+            android:id="@+id/nav_draft"
+            android:icon="@drawable/ic_draft_dark"
+            android:title="@string/draft" />
+    </group>
+
+</menu>

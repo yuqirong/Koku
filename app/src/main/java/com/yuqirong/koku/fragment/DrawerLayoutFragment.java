@@ -1,34 +1,23 @@
 package com.yuqirong.koku.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.activity.MainActivity;
-import com.yuqirong.koku.activity.SearchUserActivity;
-import com.yuqirong.koku.adapter.DrawerLayoutAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.User;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
-import com.yuqirong.koku.util.StringUtils;
 import com.yuqirong.koku.view.CircleImageView;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * 侧拉抽屉
@@ -49,25 +38,12 @@ public class DrawerLayoutFragment extends BaseFragment {
      */
     private ImageView iv_cover;
     /**
-     * 列表：搜索用户，周边动态等
+     * 用户
      */
-    private ListView lv_left;
-    private DrawerLayoutAdapter adapter;
-    private List<String> list = new LinkedList<>();
     private User user;
-    private List<String> sourceString;
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        sourceString = StringUtils.getStringFromArrays(R.array.user_operation);
-    }
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        list.clear();
-        list.addAll(sourceString);
-        adapter.notifyDataSetChanged();
         // 加载缓存
         getCache();
         // 更新数据
@@ -119,40 +95,13 @@ public class DrawerLayoutFragment extends BaseFragment {
         civ_avatar = (CircleImageView) view.findViewById(R.id.civ_avatar);
         iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
         tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);
-        lv_left = (ListView) view.findViewById(R.id.lv_left);
         iv_cover.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return true;
             }
         });
-        adapter = new DrawerLayoutAdapter(context, list);
-        lv_left.setAdapter(adapter);
-        lv_left.setOnItemClickListener(onItemClickListener);
         return view;
     }
 
-    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String s = list.get(position);
-            int i = sourceString.lastIndexOf(s);
-            switch (i){
-                case 0:
-                    ((MainActivity)context).overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(new Intent(context, SearchUserActivity.class));
-                    break;
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 4:
-                    break;
-
-            }
-
-        }
-    };
 }

@@ -13,15 +13,10 @@
     <string name="load_fail">加载失败，点击重试</string>
     <string name="no_more_weibo">没有更多微博了</string>
     <string name="colon"> : </string>
-    <string-array name="user_operation">
-        <item>搜索用户</item>
-        <item>周边动态</item>
-        <item>热门话题</item>
-        <item>我的收藏</item>
-        <item>草稿箱</item>
-    </string-array>
     <string name="serach_user_warning">温馨提示：新浪接口功能搜索的范围是：V用户、粉丝500以上的达人、粉丝600以上的普通用户</string>
     <string name="serach_user">搜索用户</string>
-
-
+    <string name="nearly_dynamic">搜索用户</string>
+    <string name="hot_topic">周边动态</string>
+    <string name="my_favorite">我的收藏</string>
+    <string name="draft">草稿箱</string>
 </resources>

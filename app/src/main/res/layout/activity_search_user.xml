@@ -5,7 +5,7 @@
     android:background="@color/activity_bg_color"
     android:orientation="vertical">
 
-    <include layout="@layout/tool_bar" />
+    <include layout="@layout/layout_toolbar" />
 
     <TextView
         android:layout_width="match_parent"
