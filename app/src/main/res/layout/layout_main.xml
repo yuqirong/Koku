@@ -7,12 +7,11 @@
 
     <include layout="@layout/layout_toolbar" />
 
-    <fragment
-        android:id="@+id/layout_timeline"
-        class="com.yuqirong.koku.fragment.WeiboTimeLineFragment"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/mFloatingActionButton"
@@ -21,8 +20,11 @@
         android:layout_gravity="right|bottom"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_done"
+        app:backgroundTint="@color/Indigo_colorPrimary"
         app:fabSize="normal"
-        app:layout_anchor="@id/layout_timeline"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchor="@id/mViewPager"
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior="com.yuqirong.koku.view.ScrollAwareFABBehavior"
+        app:rippleColor="@color/fab_press_color" />
 
 </android.support.design.widget.CoordinatorLayout>

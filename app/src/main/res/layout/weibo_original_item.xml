@@ -5,6 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@android:color/background_light"
     android:orientation="vertical"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
     android:padding="@dimen/activity_vertical_margin">
 
     <RelativeLayout

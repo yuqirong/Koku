@@ -8,25 +8,23 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.adapter.WeiboListViewAdapter;
+import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.WeiboItem;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
-import com.yuqirong.koku.view.AutoLoadListView;
+import com.yuqirong.koku.view.AutoLoadRecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -36,16 +34,16 @@ import java.util.List;
 public class WeiboTimeLineFragment extends BaseFragment {
 
     // 下拉刷新组件
-    private SwipeRefreshLayout srl_main;
-    private WeiboListViewAdapter adapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private WeiboRecycleViewAdapter adapter;
     private WeiboItem item;
-    private List<WeiboItem> list = new LinkedList<>();
     // 判断是否为第一次进入主页,若是则自动刷新
     private boolean first = true;
     // 判断是否上拉加载，默认为false
     private boolean load = false;
-    // 自动加载的ListView
-    private AutoLoadListView lv_main;
+
+    private List<WeiboItem> list;
+    private AutoLoadRecyclerView mRecyclerView;
     public static final String CACHE_FOLDER_NAME = "timeline";
     public static final String TIME_LINE_CACHE_NAME = "timeline_cache";
     protected ACache aCache;
@@ -63,10 +61,10 @@ public class WeiboTimeLineFragment extends BaseFragment {
     public void initData(Bundle savedInstanceState) {
         getCache();
         if (first) {
-            srl_main.post(new Runnable() {
+            mSwipeRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
-                    srl_main.setRefreshing(true);
+                    mSwipeRefreshLayout.setRefreshing(true);
                     handler.sendEmptyMessageDelayed(0, 1000);
                     first = false;
                 }
@@ -98,8 +96,9 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private void getDataFromServer() {
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         if (!TextUtils.isEmpty(access_token)) {
-            if (srl_main.isRefreshing()) {
+            if (mSwipeRefreshLayout.isRefreshing()) {
                 max_id = "0";
+                adapter.initFooterViewHolder();
             }
             String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&max_id=" + max_id;
             LogUtils.i("url  : " + url);
@@ -115,7 +114,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                 JSONObject jsonObject = new JSONObject(stringResult);
                 max_id = jsonObject.getString("max_id");
                 statuses = jsonObject.getString("statuses");
-                if (srl_main.isRefreshing()) {
+                if (mSwipeRefreshLayout.isRefreshing()) {
                     aCache.put(TIME_LINE_CACHE_NAME, stringResult);
                 }
             } catch (JSONException e) {
@@ -126,16 +125,17 @@ public class WeiboTimeLineFragment extends BaseFragment {
     };
 
     private void processData(String statuses) {
-        if (srl_main.isRefreshing()) {
-            list.clear();
+        if (mSwipeRefreshLayout.isRefreshing()) {
+            adapter.clearData();
+            adapter.list.add(new WeiboItem());
         }
-        list.addAll(JsonUtils.getListFromJson(statuses, WeiboItem.class));
+        adapter.list.addAll(adapter.list.size()-1,JsonUtils.getListFromJson(statuses, WeiboItem.class));
         adapter.notifyDataSetChanged();
-        srl_main.setRefreshing(false);
+        mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
-            lv_main.completeLoadMore(true);
+            adapter.completeLoadMore(true);
             if ("0".equals(max_id)) {
-                lv_main.setNoMoreWeibo();
+                adapter.setNoMoreWeibo();
             }
             load = false;
         }
@@ -145,7 +145,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
             Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
-            srl_main.setRefreshing(false);
+            mSwipeRefreshLayout.setRefreshing(false);
             if (load) {
                 handler.sendEmptyMessageDelayed(1, 1000);
                 load = false;
@@ -157,25 +157,24 @@ public class WeiboTimeLineFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_timeline, null);
-        srl_main = (SwipeRefreshLayout) view.findViewById(R.id.srl_main);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);
         // 设置小箭头的颜色
-        srl_main.setColorSchemeResources(AppConstant.SWIPE_REFRESH_LAYOUT_COLOR);
-        srl_main.setOnRefreshListener(onRefreshListener);
-
-        lv_main = (AutoLoadListView) view.findViewById(R.id.lv_main);
-        lv_main.setOnLoadingMoreListener(loadingMoreListener);
-        adapter = new WeiboListViewAdapter(context, list);
-        lv_main.setAdapter(adapter);
-        lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                LogUtils.i("click item");
-            }
-        });
+        mSwipeRefreshLayout.setColorSchemeResources(AppConstant.SWIPE_REFRESH_LAYOUT_COLOR);
+        mSwipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+        mRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mRecyclerView);
+        if (mRecyclerView != null) {
+            setupRecyclerView(mRecyclerView);
+        }
         return view;
     }
 
-    AutoLoadListView.onLoadingMoreListener loadingMoreListener = new AutoLoadListView.onLoadingMoreListener() {
+    private void setupRecyclerView(AutoLoadRecyclerView mRecyclerView) {
+        adapter = new WeiboRecycleViewAdapter(context);
+        adapter.setOnLoadingMoreListener(loadingMoreListener);
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    WeiboRecycleViewAdapter.OnLoadingMoreListener loadingMoreListener = new WeiboRecycleViewAdapter.OnLoadingMoreListener() {
         @Override
         public void onLoadingMore() {
             load = true;
@@ -203,7 +202,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                     getDataFromServer();
                     break;
                 case 1:
-                    lv_main.completeLoadMore(false);
+                    adapter.completeLoadMore(false);
                     break;
             }
 

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/srl_main"
+    android:id="@+id/mSwipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.yuqirong.koku.view.AutoLoadListView
-        android:id="@+id/lv_main"
+    <com.yuqirong.koku.view.AutoLoadRecyclerView
+        android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#dddddd"
         android:cacheColorHint="@null"
-        android:divider="@drawable/shadow_bottom"
-        android:dividerHeight="6dp"
-        android:scrollbars="none" />
+        android:fadeScrollbars="true"/>
 
 </android.support.v4.widget.SwipeRefreshLayout>

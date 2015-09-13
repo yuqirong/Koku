@@ -15,8 +15,8 @@
     <string name="colon"> : </string>
     <string name="serach_user_warning">温馨提示：新浪接口功能搜索的范围是：V用户、粉丝500以上的达人、粉丝600以上的普通用户</string>
     <string name="serach_user">搜索用户</string>
-    <string name="nearly_dynamic">搜索用户</string>
-    <string name="hot_topic">周边动态</string>
+    <string name="nearly_dynamic">周边动态</string>
+    <string name="hot_topic">热门话题</string>
     <string name="my_favorite">我的收藏</string>
     <string name="draft">草稿箱</string>
 </resources>

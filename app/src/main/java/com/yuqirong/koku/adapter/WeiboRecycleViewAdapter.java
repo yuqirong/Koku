@@ -3,95 +3,143 @@ package com.yuqirong.koku.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.util.CommonUtil;
+import com.yuqirong.koku.util.DateUtils;
+import com.yuqirong.koku.util.StringUtils;
 
-import java.util.LinkedList;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Anyway on 2015/8/30.
  */
-public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleViewAdapter.ViewHolder> {
+public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
 
-    public List<WeiboItem> list = new LinkedList<>();
     private Context context;
     private BitmapUtils bitmapUtils;
+    public static final String AT = "@";
+    public static final int DISK_CACHE_SIZE = 10 * 1024 * 1024;
+
+    private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
 
     public WeiboRecycleViewAdapter(Context context) {
         this.context = context;
-        bitmapUtils = new BitmapUtils(context);
+        String bitmap_cache_dir = context.getCacheDir() + File.separator + "bitmap";
+        int cache = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024 * 8));
+        bitmapUtils = new BitmapUtils(context, bitmap_cache_dir, cache, DISK_CACHE_SIZE);
+        bitmapUtils.configDefaultLoadFailedImage(R.drawable.thumbnail_default);
+        bitmapUtils.configDefaultLoadFailedImage(R.drawable.timeline_image_failure);
+        list.add(new WeiboItem());
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder createCustomViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.weibo_original_item, parent, false);
-        ViewHolder holder = new ViewHolder(view);
+        WeiboViewHolder holder = new WeiboViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        // TODO: 2015/8/30
+    public void bindCustomViewHolder(RecyclerView.ViewHolder holder, int position) {
         WeiboItem weiboItem = list.get(position);
-        holder.tv_screen_name.setText(weiboItem.user.name);
-        bitmapUtils.display(holder.civ_avatar, weiboItem.user.profile_image_url);
-        holder.tv_time.setText(weiboItem.created_at);
-        holder.tv_device.setText(Html.fromHtml(weiboItem.source));
+        WeiboViewHolder viewHolder = (WeiboViewHolder) holder;
+        viewHolder.tv_screen_name.setText(weiboItem.user.name);
+        bitmapUtils.display(viewHolder.civ_avatar, weiboItem.user.profile_image_url);
+        viewHolder.tv_time.setText(DateUtils.getWeiboDate(weiboItem.created_at));
+        viewHolder.tv_device.setText(Html.fromHtml(weiboItem.source));
         if (weiboItem.user.verified) {
-            holder.iv_verified.setImageResource(R.drawable.avatar_vip);
-//            Drawable drawable = context.getResources().getDrawable(R.drawable.avatar_vip, null);
-//            holder.tv_screen_name.setCompoundDrawables(null, null, drawable, null);
+            viewHolder.iv_verified.setImageResource(R.drawable.avatar_vip);
+        } else {
+            viewHolder.iv_verified.setImageResource(android.R.drawable.screen_background_light_transparent);
         }
-        holder.tv_repost_count.setText(weiboItem.reposts_count);
-        holder.tv_comment_count.setText(weiboItem.comments_count);
-        holder.tv_text.setText(weiboItem.text);
+        //设置微博 转发数和评论数
+        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(weiboItem.reposts_count));
+        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(weiboItem.comments_count));
 
-        // 如果设置了回调，则设置点击事件
-        if (mOnItemClickLitener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickLitener.onItemClick(holder.itemView, pos);
-                }
-            });
+        //设置微博内容
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, weiboItem.text, viewHolder.tv_text);
+        viewHolder.tv_text.setText(weiBoContent);
 
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int pos = holder.getLayoutPosition();
-                    mOnItemClickLitener.onItemLongClick(holder.itemView, pos);
-                    return false;
-                }
-            });
+        if (weiboItem.pic_urls != null && weiboItem.pic_urls.size() > 0) {
+            viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, weiboItem.pic_urls);
+        } else {
+            if (viewHolder.iv_arrays != null)
+                viewHolder.rl_pics.setVisibility(View.GONE);
+        }
+        if (weiboItem.retweeted_status != null) {
+            processRetweeted(viewHolder, weiboItem);
+            viewHolder.ll_item.addView(viewHolder.view_retweeted);
+        } else {
+            if (viewHolder.view_retweeted != null)
+                viewHolder.ll_item.removeView(viewHolder.view_retweeted);
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
+    // 处理被转发的View
+    private void processRetweeted(RecyclerView.ViewHolder holder, WeiboItem weiboItem) {
+        WeiboViewHolder viewHolder = (WeiboViewHolder) holder;
+        if (viewHolder.view_retweeted == null) {
+            viewHolder.view_retweeted = LayoutInflater.from(context).inflate(R.layout.weibo_retweeted_item, null);
+            viewHolder.initRetweetedView();
+        }
+
+        //设置被转发微博内容
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + weiboItem.retweeted_status.user.name + context.getResources().getString(R.string.colon) + weiboItem.retweeted_status.text, viewHolder.tv_retweeted_name_text);
+        viewHolder.tv_retweeted_name_text.setText(weiBoContent);
+
+        if (weiboItem.retweeted_status.pic_urls != null && weiboItem.retweeted_status.pic_urls.size() > 0) {
+            viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, weiboItem.retweeted_status.pic_urls);
+        } else {
+            if (viewHolder.iv_retweeted_arrays != null)
+                viewHolder.rl_retweeted_pics.setVisibility(View.GONE);
+        }
+        //设置被转发微博 转发数和评论数
+        viewHolder.tv_retweeted_repost_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.reposts_count));
+        viewHolder.tv_retweeted_comment_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.comments_count));
+
+        ViewParent parent = viewHolder.view_retweeted.getParent();
+        if (parent != null) {
+            ViewGroup group = (ViewGroup) parent;
+            group.removeView(viewHolder.view_retweeted);
+        }
     }
 
-    public void addData(int position, WeiboItem weiboItem) {
-        list.add(position, weiboItem);
-        notifyItemInserted(position);
+    /**
+     * 设置成 “没有更多微博了”
+     */
+    public void setNoMoreWeibo() {
+        completeLoadMore(false);
+        loadSuccess = true;
+        if (mFooterViewHolder != null)
+            mFooterViewHolder.tv_load_fail.setText(context.getResources().getString(R.string.no_more_weibo));
     }
 
-    public void removeData(int position) {
-        list.remove(position);
-        notifyItemRemoved(position);
+    public void initFooterViewHolder() {
+        if (mFooterViewHolder != null) {
+            mFooterViewHolder.tv_load_fail.setVisibility(View.INVISIBLE);
+            mFooterViewHolder.ll_load_more.setVisibility(View.VISIBLE);
+        }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    // weibo item ViewHolder
+    public class WeiboViewHolder extends RecyclerView.ViewHolder {
 
+        public LinearLayout ll_item;
         public TextView tv_screen_name;
         public ImageView civ_avatar;
         public TextView tv_time;
@@ -100,9 +148,41 @@ public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleVi
         public TextView tv_repost_count;
         public TextView tv_comment_count;
         public TextView tv_text;
+        public List<ImageView> iv_arrays = new ArrayList<>();
+        public List<ImageView> iv_retweeted_arrays = new ArrayList<>();
+        public TextView tv_retweeted_name_text;
+        public View view_retweeted;
+        public TextView tv_retweeted_repost_count;
+        public TextView tv_retweeted_comment_count;
+        public RelativeLayout rl_pics;
+        public RelativeLayout rl_retweeted_pics;
 
-        public ViewHolder(View itemView) {
+        private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {
+            rl.setVisibility(View.VISIBLE);
+            for (int i = 0; i < iv_arrays.size(); i++) {
+                if (i < pic_urls.size()) {
+                    iv_arrays.get(i).setVisibility(View.VISIBLE);
+                    bitmapUtils.display(iv_arrays.get(i), pic_urls.get(i).thumbnail_pic);
+                } else {
+                    iv_arrays.get(i).setVisibility(View.GONE);
+                }
+            }
+        }
+
+        private void initRetweetedView() {
+            tv_retweeted_name_text = (TextView) view_retweeted.findViewById(R.id.tv_retweeted_name_text);
+            tv_retweeted_repost_count = (TextView) view_retweeted.findViewById(R.id.tv_retweeted_repost_count);
+            tv_retweeted_comment_count = (TextView) view_retweeted.findViewById(R.id.tv_retweeted_comment_count);
+            rl_retweeted_pics = (RelativeLayout) view_retweeted.findViewById(R.id.rl_pics);
+            for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
+                ImageView iv = (ImageView) view_retweeted.findViewById(IMAGEVIEW_IDS[i]);
+                iv_retweeted_arrays.add(iv);
+            }
+        }
+
+        public WeiboViewHolder(View itemView) {
             super(itemView);
+            ll_item = (LinearLayout) itemView.findViewById(R.id.ll_item);
             civ_avatar = (ImageView) itemView.findViewById(R.id.civ_avatar);
             tv_screen_name = (TextView) itemView.findViewById(R.id.tv_screen_name);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
@@ -111,11 +191,17 @@ public class WeiboRecycleViewAdapter extends RecyclerView.Adapter<WeiboRecycleVi
             tv_repost_count = (TextView) itemView.findViewById(R.id.tv_repost_count);
             tv_comment_count = (TextView) itemView.findViewById(R.id.tv_comment_count);
             tv_text = (TextView) itemView.findViewById(R.id.tv_text);
+            rl_pics = (RelativeLayout) itemView.findViewById(R.id.rl_pics);
+            for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
+                ImageView iv = (ImageView) itemView.findViewById(IMAGEVIEW_IDS[i]);
+                iv_arrays.add(iv);
+            }
         }
 
     }
 
     public interface OnItemClickLitener {
+
         void onItemClick(View view, int position);
 
         void onItemLongClick(View view, int position);

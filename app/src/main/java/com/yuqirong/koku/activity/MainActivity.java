@@ -5,6 +5,11 @@ import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,7 +18,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -22,13 +26,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.fragment.WeiboTimeLineFragment;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends BaseActivity {
@@ -42,12 +50,21 @@ public class MainActivity extends BaseActivity {
      */
     private ActionBarDrawerToggle toggle;
 
-    private FrameLayout fl_main;
     private Toolbar mToolbar;
+
+    private TabLayout mTabLayout;
     /**
      * 判断DrawerLayout是否打开
      */
     private boolean isDrawerOpened = false;
+
+    private NavigationView mNavigationView;
+    private FloatingActionButton mFloatingActionButton;
+
+    private ViewPager mViewPager;
+
+    private FragmentAdapter adapter;
+    private FragmentManager fm;
 
     @Override
     protected void initData() {
@@ -125,30 +142,63 @@ public class MainActivity extends BaseActivity {
         toggle.syncState();
     }
 
-    NavigationView mNavigationView;
-    FloatingActionButton fab;
 
     @Override
     protected void initView() {
         setContentView(R.layout.activity_main);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.mDrawerLayout);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+        mTabLayout = (TabLayout) findViewById(R.id.mTabLayout);
+        if(mTabLayout!=null){
+            setupTabLayoutContent(mTabLayout);
+        }
+
+
         mNavigationView = (NavigationView) findViewById(R.id.mNavigationView);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.mFloatingActionButton);
+        mViewPager = (ViewPager) findViewById(R.id.mViewPager);
+        if (adapter == null) {
+            setupViewPagerContent();
+        }
         if (mNavigationView != null) {
             setupDrawerContent(mNavigationView);
         }
-        fab = (FloatingActionButton) findViewById(R.id.mFloatingActionButton);
-        if (fab != null) {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
+        if (mFloatingActionButton != null) {
+            setupFloatingActionButtonContent(mFloatingActionButton);
         }
     }
 
+    private void setupTabLayoutContent(TabLayout mTabLayout) {
+        mTabLayout.setVisibility(View.VISIBLE);
+        mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
+        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
+        mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color),getResources().getColor(android.R.color.white));
+    }
+
+    private void setupFloatingActionButtonContent(FloatingActionButton mFloatingActionButton) {
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+
+    }
+
+    //设置ViewPager内容
+    private void setupViewPagerContent() {
+        fm = getSupportFragmentManager();
+        adapter = new FragmentAdapter(fm);
+        adapter.addFragment(new WeiboTimeLineFragment(), "全部微博");
+        adapter.addFragment(new WeiboTimeLineFragment(), "全部微博");
+        adapter.addFragment(new WeiboTimeLineFragment(), "全部微博");
+        mViewPager.setAdapter(adapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    //设置navigationView内容
     private void setupDrawerContent(NavigationView navigationView) {
 
         navigationView.setNavigationItemSelectedListener(
@@ -157,23 +207,21 @@ public class MainActivity extends BaseActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         menuItem.setCheckable(true);
                         mDrawerLayout.closeDrawers();
-
+                        LogUtils.i(menuItem.getItemId() + "");
                         switch (menuItem.getItemId()) {
-                            case 0:
+                            case R.id.nav_search:
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                 startActivity(new Intent(MainActivity.this, SearchUserActivity.class));
                                 break;
-                            case 1:
+                            case R.id.nav_nearly:
                                 break;
-                            case 2:
+                            case R.id.nav_hot:
                                 break;
-                            case 3:
+                            case R.id.nav_favorite:
                                 break;
-                            case 4:
+                            case R.id.nav_draft:
                                 break;
                         }
-
-
                         return true;
                     }
                 });
@@ -202,5 +250,34 @@ public class MainActivity extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public static class FragmentAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public FragmentAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
     }
 }
