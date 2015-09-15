@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -65,6 +64,7 @@ public class MainActivity extends BaseActivity {
 
     private FragmentAdapter adapter;
     private FragmentManager fm;
+    private static final int SEND_NEW_WEIBO = 1001;
 
     @Override
     protected void initData() {
@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity {
     Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
-            LogUtils.e("Network Error");
+            LogUtils.i(volleyError.toString());
         }
     };
 
@@ -149,11 +149,9 @@ public class MainActivity extends BaseActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.mDrawerLayout);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
         mTabLayout = (TabLayout) findViewById(R.id.mTabLayout);
-        if(mTabLayout!=null){
+        if (mTabLayout != null) {
             setupTabLayoutContent(mTabLayout);
         }
-
-
         mNavigationView = (NavigationView) findViewById(R.id.mNavigationView);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.mFloatingActionButton);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
@@ -168,19 +166,30 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case SEND_NEW_WEIBO:
+                if (resultCode == PublishActivity.SEND_WEIBO_SUCCESS) {
+                    // 发布广播
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void setupTabLayoutContent(TabLayout mTabLayout) {
         mTabLayout.setVisibility(View.VISIBLE);
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
         mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
-        mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color),getResources().getColor(android.R.color.white));
+        mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(android.R.color.white));
     }
 
     private void setupFloatingActionButtonContent(FloatingActionButton mFloatingActionButton) {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivityForResult(new Intent(MainActivity.this, PublishActivity.class), SEND_NEW_WEIBO);
             }
         });
 
@@ -191,8 +200,6 @@ public class MainActivity extends BaseActivity {
     private void setupViewPagerContent() {
         fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm);
-        adapter.addFragment(new WeiboTimeLineFragment(), "全部微博");
-        adapter.addFragment(new WeiboTimeLineFragment(), "全部微博");
         adapter.addFragment(new WeiboTimeLineFragment(), "全部微博");
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);

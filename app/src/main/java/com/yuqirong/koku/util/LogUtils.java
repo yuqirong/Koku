@@ -31,7 +31,7 @@ public class LogUtils {
 
 	/** 日志输出时的TAG */
 
-	private static String mTag = "googleplay";
+	private static String mTag = "koku";
 
 	/** 是否允许输出log */
 

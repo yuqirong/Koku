@@ -5,7 +5,7 @@
       <color name="Indigo_colorPrimary">#3f51b5</color>
       <color name="fab_press_color">#000c7a</color>
       <color name="Indigo_nav_color">#4675FF</color>
-      <color name="activity_bg_color">#d7d7d7</color>
-      <color name="unselected_text_color">#cccccc</color>
+      <color name="activity_bg_color">#dddddd</color>
+      <color name="unselected_text_color">#d8d8d8</color>
       <color name="span_text_color">#507daf</color>
 </resources>

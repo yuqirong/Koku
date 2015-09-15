@@ -11,11 +11,9 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.SearchUserAdapter;
@@ -35,8 +33,8 @@ import java.util.List;
  */
 public class SearchUserActivity extends BaseActivity {
 
-    private Toolbar tb_main;
-    private RecyclerView rv_list;
+    private Toolbar mToolbar;
+    private RecyclerView mRecyclerView;
     private RequestQueue mQueue;
     private List<User> user;
     private SearchUserAdapter adapter;
@@ -48,9 +46,9 @@ public class SearchUserActivity extends BaseActivity {
 
     @Override
     protected void initToolBar() {
-        tb_main.setTitle(R.string.serach_user);
-        tb_main.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(tb_main);
+        mToolbar.setTitle(R.string.serach_user);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
@@ -58,17 +56,17 @@ public class SearchUserActivity extends BaseActivity {
     @Override
     protected void initView() {
         setContentView(R.layout.activity_search_user);
-        tb_main = (Toolbar) findViewById(R.id.mToolbar);
-        rv_list = (RecyclerView) findViewById(R.id.rv_list);
+        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_list);
         //创建默认的线性LayoutManager
-        rv_list.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
-        rv_list.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
         //设置Item增加、移除动画
-        rv_list.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         //创建并设置Adapter
         adapter = new SearchUserAdapter(this);
-        rv_list.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -86,8 +84,7 @@ public class SearchUserActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(s)) {
                     String url = AppConstant.SEARCH_USER_URL + "?count=20&q=" + URLEncoder.encode(s, "UTF-8") + "&access_token=" + SharePrefUtil.getString(SearchUserActivity.this, "access_token", "");
                     LogUtils.i(url);
-                    StringRequest stringRequest = new StringRequest(Request.Method.GET, url, listener, errorListener);
-                    mQueue.add(stringRequest);
+                    getData(url,listener,errorListener);
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -123,6 +120,13 @@ public class SearchUserActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            default:
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 }

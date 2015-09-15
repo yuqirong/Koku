@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg_color">
 
     <include layout="@layout/layout_toolbar" />
 
@@ -19,12 +20,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_done"
+        android:src="@drawable/ic_create_light"
         app:backgroundTint="@color/Indigo_colorPrimary"
         app:fabSize="normal"
         app:layout_anchor="@id/mViewPager"
-        app:layout_anchorGravity="bottom|right|end"
         app:layout_behavior="com.yuqirong.koku.view.ScrollAwareFABBehavior"
+        app:layout_anchorGravity="bottom|right|end"
         app:rippleColor="@color/fab_press_color" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -38,7 +38,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private WeiboRecycleViewAdapter adapter;
     private WeiboItem item;
     // 判断是否为第一次进入主页,若是则自动刷新
-    private boolean first = true;
+    private boolean first = false;   //true
     // 判断是否上拉加载，默认为false
     private boolean load = false;
 
@@ -144,6 +144,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
     Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError volleyError) {
+            LogUtils.i(volleyError.toString());
             Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
             mSwipeRefreshLayout.setRefreshing(false);
             if (load) {

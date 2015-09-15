@@ -41,8 +41,16 @@ public class AppConstant {
      */
     public static final String SEARCH_USER_URL = "https://api.weibo.com/2/search/suggestions/users.json";
 
-    public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
+    /**
+     * 根据地理信息坐标返回实际地址
+     */
+    public static final String GEO_TO_ADDRESS_URL = "https://api.weibo.com/2/location/geo/geo_to_address.json";
+    /**
+     * 发布一条新微博
+     */
+    public static final String STATUSES_UPDATE_URL = "https://api.weibo.com/2/statuses/update.json";
 
+    public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
 
 
 }

@@ -5,7 +5,7 @@
     <string name="action_settings">设置</string>
     <string name="action_search">搜索</string>
     <string name="action_about">关于</string>
-     <string name="action_remind">提醒</string>
+    <string name="action_remind">提醒</string>
     <string name="drawer_open">打开抽屉</string>
     <string name="drawer_close">关闭抽屉</string>
     <string name="app_authorize">账号授权</string>
@@ -19,4 +19,16 @@
     <string name="hot_topic">热门话题</string>
     <string name="my_favorite">我的收藏</string>
     <string name="draft">草稿箱</string>
+    <string name="share_new">分享新鲜事</string>
+    <string name="publish_weibo">发微博</string>
+    <array name="photo_items">
+        <item>拍照</item>
+        <item>最后一次拍照</item>
+        <item>从相册中选择</item>
+    </array>
+    <string name="location_not_available">定位不可用</string>
+    <string name="unknown_address">未知地址</string>
+    <string name="no_location_permission">没有定位权限</string>
+    <string name="no_more_pictures">一次最多只能上传9张图片</string>
+    <string name="content_cannot_be_empty">微博内容不能为空！</string>
 </resources>
