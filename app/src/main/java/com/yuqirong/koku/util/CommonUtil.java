@@ -1,11 +1,13 @@
 package com.yuqirong.koku.util;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -118,6 +120,7 @@ public class CommonUtil {
 
     /**
      * 显示Toast
+     *
      * @param context
      * @param message
      */
@@ -127,6 +130,26 @@ public class CommonUtil {
 
     public static void showToast(Context context, int resId) {
         Toast.makeText(context, resId, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     *
+     * @param context
+     * @param milliseconds 震动的时长，单位是毫秒
+     */
+    public static void setVubator(Context context,long milliseconds) {
+        Vibrator vibator = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE); // 取得震动服务
+        vibator.vibrate(milliseconds);
+    }
+
+    /**
+     * Context context
+     * long[] pattern  ：自定义震动模式 。数组中数字的含义依次是[静止时长，震动时长，静止时长，震动时长。。。]时长的单位是毫秒
+     * boolean isRepeat ： 是否反复震动，如果是true，反复震动，如果是false，只震动一次
+     */
+    public static void setVubator(Context context, long[] pattern,boolean isRepeat) {
+        Vibrator vib = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE);
+        vib.vibrate(pattern, isRepeat ? 1 : -1);
     }
 
 }

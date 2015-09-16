@@ -25,8 +25,6 @@ import com.yuqirong.koku.view.AutoLoadRecyclerView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
 /**
  * 微博主页
  * Created by Anyway on 2015/8/30.
@@ -36,40 +34,50 @@ public class WeiboTimeLineFragment extends BaseFragment {
     // 下拉刷新组件
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private WeiboRecycleViewAdapter adapter;
-    private WeiboItem item;
     // 判断是否为第一次进入主页,若是则自动刷新
     private boolean first = false;   //true
     // 判断是否上拉加载，默认为false
     private boolean load = false;
 
-    private List<WeiboItem> list;
     private AutoLoadRecyclerView mRecyclerView;
-    public static final String CACHE_FOLDER_NAME = "timeline";
-    public static final String TIME_LINE_CACHE_NAME = "timeline_cache";
+    private String baseUrl = "";
+    public String CACHE_FOLDER_NAME = "timeline";
+    public String TIME_LINE_CACHE_NAME = "timeline_cache";
     protected ACache aCache;
     //若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
     private String max_id = "0";
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         aCache = ACache.get(context, CACHE_FOLDER_NAME);
+        Bundle args = getArguments();
+        if (args != null) {
+            baseUrl = args.getString("url");
+            TIME_LINE_CACHE_NAME += baseUrl;
+        }
     }
 
     @Override
     public void initData(Bundle savedInstanceState) {
         getCache();
         if (first) {
-            mSwipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    mSwipeRefreshLayout.setRefreshing(true);
-                    handler.sendEmptyMessageDelayed(0, 1000);
-                    first = false;
-                }
-            });
+            refreshWeibo();
         }
+    }
+
+    /**
+     * 刷新微博
+     */
+    public void refreshWeibo() {
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+                handler.sendEmptyMessageDelayed(0, 1000);
+                first = false;
+            }
+        });
     }
 
     /**
@@ -100,7 +108,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                 max_id = "0";
                 adapter.initFooterViewHolder();
             }
-            String url = AppConstant.FRIENDS_TIMELINE_URL + access_token + "&max_id=" + max_id;
+            String url = this.baseUrl + "?access_token=" + access_token + "&max_id=" + max_id;
             LogUtils.i("url  : " + url);
             getData(url, listener, errorListener);
         }
@@ -129,7 +137,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
             adapter.clearData();
             adapter.list.add(new WeiboItem());
         }
-        adapter.list.addAll(adapter.list.size()-1,JsonUtils.getListFromJson(statuses, WeiboItem.class));
+        adapter.list.addAll(adapter.list.size() - 1, JsonUtils.getListFromJson(statuses, WeiboItem.class));
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {

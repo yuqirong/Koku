@@ -156,13 +156,13 @@ public class PublishActivity extends BaseActivity {
                     processLocation();
                     break;
                 case R.id.iv_photo:
-                    processPhoto();
+                    processPhoto(v);
                     break;
                 case R.id.iv_sharp:
                     processTopic();
                     break;
                 case R.id.iv_add:
-                    processPhoto();
+                    processPhoto(v);
                     break;
                 case R.id.iv_send:
                     processSendWeibo(v);
@@ -173,22 +173,20 @@ public class PublishActivity extends BaseActivity {
 
     // 发布微博
     private void processSendWeibo(View v) {
-        String content = et_content.getText().toString();
+        final String content = et_content.getText().toString();
+        StringRequest stringRequest;
         if (TextUtils.isEmpty(content.trim())) {
             Snackbar.make(v, R.string.content_cannot_be_empty, Snackbar.LENGTH_SHORT).show();
             return;
         }
         if (imageMap.size() > 0) {
-
-        } else {
-            final String encoderContent = content;
-//                        URLEncoder.encode(content, "UTF-8");
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConstant.STATUSES_UPDATE_URL, sendWeiboListener, errorListener) {
+            stringRequest = new StringRequest(Request.Method.POST, AppConstant.STATUSES_UPLOAD_URL, sendWeiboListener, errorListener) {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("access_token", SharePrefUtil.getString(PublishActivity.this, "access_token", ""));
-                    map.put("status", encoderContent);
+                    map.put("status", content);
+                    // TODO
                     if (isLocation) {
                         map.put("lat", String.valueOf(latitude));
                         map.put("long", String.valueOf(longitude));
@@ -196,9 +194,22 @@ public class PublishActivity extends BaseActivity {
                     return map;
                 }
             };
-            mQueue.add(stringRequest);
+        } else {
+            stringRequest = new StringRequest(Request.Method.POST, AppConstant.STATUSES_UPDATE_URL, sendWeiboListener, errorListener) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("access_token", SharePrefUtil.getString(PublishActivity.this, "access_token", ""));
+                    map.put("status", content);
+                    if (isLocation) {
+                        map.put("lat", String.valueOf(latitude));
+                        map.put("long", String.valueOf(longitude));
+                    }
+                    return map;
+                }
+            };
         }
-
+        mQueue.add(stringRequest);
     }
 
     Response.Listener<String> sendWeiboListener = new Response.Listener<String>() {
@@ -208,7 +219,7 @@ public class PublishActivity extends BaseActivity {
                 JSONObject jsonObject = new JSONObject(s);
                 String idstr = jsonObject.getString("idstr");
                 if (!TextUtils.isEmpty(idstr)) {
-                    setResult(RESULT_OK);
+                    setResult(SEND_WEIBO_SUCCESS);
                     finish();
                 }
             } catch (JSONException e) {
@@ -260,9 +271,9 @@ public class PublishActivity extends BaseActivity {
     private String imageUrl;
 
     // 处理点击 图片 事件
-    private void processPhoto() {
+    private void processPhoto(View v) {
         if (imageMap.size() > 8) {
-            CommonUtil.showToast(PublishActivity.this, R.string.no_more_pictures);
+            Snackbar.make(v,R.string.no_more_pictures,Snackbar.LENGTH_SHORT).show();
             return;
         }
         CommonUtil.createItemAlertDialog(PublishActivity.this, getResources().getStringArray(R.array.photo_items), new DialogInterface.OnClickListener() {

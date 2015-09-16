@@ -31,4 +31,6 @@
     <string name="no_location_permission">没有定位权限</string>
     <string name="no_more_pictures">一次最多只能上传9张图片</string>
     <string name="content_cannot_be_empty">微博内容不能为空！</string>
+    <string name="all_weibo">全部微博</string>
+    <string name="bilateral_weibo">互相关注</string>
 </resources>

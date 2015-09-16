@@ -20,7 +20,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/thumbnail_default"
-            android:scaleType="fitXY"/>
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/tv_screen_name"

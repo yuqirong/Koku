@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.fragment.FragmentFactory;
 import com.yuqirong.koku.fragment.WeiboTimeLineFragment;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
@@ -65,6 +67,7 @@ public class MainActivity extends BaseActivity {
     private FragmentAdapter adapter;
     private FragmentManager fm;
     private static final int SEND_NEW_WEIBO = 1001;
+    private boolean isLastShown = false;
 
     @Override
     protected void initData() {
@@ -75,7 +78,7 @@ public class MainActivity extends BaseActivity {
     private void checkTokenExpireIn() {
         final String access_token = SharePrefUtil.getString(this, "access_token", "");
         if (access_token != "") {
-            String url = AppConstant.GET_TOKEN_INFO_URL + access_token;
+            String url = AppConstant.GET_TOKEN_INFO_URL + "?access_token=" + access_token;
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
@@ -128,12 +131,17 @@ public class MainActivity extends BaseActivity {
         toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
+                if(isLastShown){
+                    mFloatingActionButton.show();
+                }
                 super.onDrawerClosed(drawerView);
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 isDrawerOpened = true;
+                isLastShown = mFloatingActionButton.isShown();
+                mFloatingActionButton.hide();
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -172,6 +180,16 @@ public class MainActivity extends BaseActivity {
             case SEND_NEW_WEIBO:
                 if (resultCode == PublishActivity.SEND_WEIBO_SUCCESS) {
                     // 发布广播
+                    LogUtils.i("send weibo success");
+                    CommonUtil.setVubator(MainActivity.this, 300);
+                    final Fragment item = adapter.getItem(0);
+                    View rootView = item.getView();
+                    Snackbar.make(rootView, "发布成功", Snackbar.LENGTH_LONG).setAction("点击刷新", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((WeiboTimeLineFragment) item).refreshWeibo();
+                        }
+                    }).show();
                 }
                 break;
         }
@@ -200,7 +218,8 @@ public class MainActivity extends BaseActivity {
     private void setupViewPagerContent() {
         fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm);
-        adapter.addFragment(new WeiboTimeLineFragment(), "全部微博");
+        adapter.addFragment(FragmentFactory.newInstance(AppConstant.HOME_TIMELINE_URL), getResources().getString(R.string.all_weibo));
+        adapter.addFragment(FragmentFactory.newInstance(AppConstant.STATUSES_BILATERAL_TIMELINE_URL), getResources().getString(R.string.bilateral_weibo));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }

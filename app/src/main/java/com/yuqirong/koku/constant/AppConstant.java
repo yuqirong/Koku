@@ -31,16 +31,15 @@ public class AppConstant {
     /**
      * 查询用户access_token的授权相关信息，包括授权时间，过期时间和scope权限。
      */
-    public static final String GET_TOKEN_INFO_URL = "https://api.weibo.com/oauth2/get_token_info?access_token=";
+    public static final String GET_TOKEN_INFO_URL = "https://api.weibo.com/oauth2/get_token_info";
     /**
      * 获取当前登录用户及其所关注用户的最新微博
      */
-    public static final String FRIENDS_TIMELINE_URL = "https://api.weibo.com/2/statuses/home_timeline.json?access_token=";
+    public static final String HOME_TIMELINE_URL = "https://api.weibo.com/2/statuses/home_timeline.json";
     /**
      * 搜索用户时的联想搜索建议
      */
     public static final String SEARCH_USER_URL = "https://api.weibo.com/2/search/suggestions/users.json";
-
     /**
      * 根据地理信息坐标返回实际地址
      */
@@ -49,8 +48,15 @@ public class AppConstant {
      * 发布一条新微博
      */
     public static final String STATUSES_UPDATE_URL = "https://api.weibo.com/2/statuses/update.json";
+    /**
+     * 上传图片并发布一条新微博
+     */
+    public static final String STATUSES_UPLOAD_URL = "https://upload.api.weibo.com/2/statuses/upload.json";
+    /**
+     * 获取双向关注用户的最新微博
+     */
+    public static final String STATUSES_BILATERAL_TIMELINE_URL = "https://api.weibo.com/2/statuses/bilateral_timeline.json";
 
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
-
 
 }
