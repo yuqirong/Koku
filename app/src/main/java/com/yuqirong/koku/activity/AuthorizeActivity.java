@@ -25,12 +25,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 授权认证Activity
  * Created by Anyway on 2015/8/29.
  */
 public class AuthorizeActivity extends BaseActivity {
 
-    private Toolbar tb_main;
-    private WebView wv_main;
+    private Toolbar mToolbar;
+    private WebView mWebView;
     private WebSettings settings;
     public static final String RESPONSE_URL = "https://api.weibo.com/oauth2/default.html?code=";
 
@@ -46,25 +47,24 @@ public class AuthorizeActivity extends BaseActivity {
 
     @Override
     protected void initToolBar() {
-        tb_main.setTitle(R.string.app_authorize);
-        tb_main.setTitleTextColor(Color.WHITE);
-        tb_main.setNavigationIcon(R.drawable.ic_drawer_oauth_sina_normal);
-        setSupportActionBar(tb_main);
+        mToolbar.setTitle(R.string.app_authorize);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setNavigationIcon(R.drawable.ic_drawer_oauth_sina_normal);
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        actionBar.setHomeButtonEnabled(false);
     }
 
     @Override
     protected void initView() {
         setContentView(R.layout.activity_authorize);
-        wv_main = (WebView) findViewById(R.id.wv_main);
-        tb_main = (Toolbar) findViewById(R.id.mToolbar);
-        settings = wv_main.getSettings();
+        mWebView = (WebView) findViewById(R.id.wv_main);
+        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+        settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setLoadWithOverviewMode(true);
-        wv_main.setWebViewClient(new WebViewClient() {
+        mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url != null && url.startsWith(RESPONSE_URL)) {
@@ -129,8 +129,9 @@ public class AuthorizeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (URLUtil.isNetworkUrl(AppConstant.AUTHORIZE_URL)) {
-            wv_main.loadUrl(AppConstant.AUTHORIZE_URL);
+        String url = AppConstant.AUTHORIZE_URL +" ?redirect_uri=" + AppConstant.REDIRECT_URL + "&display=mobile&response_type=code" + "&client_id=" + AppConstant.APP_KEY + "&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
+        if (URLUtil.isNetworkUrl(url)) {
+            mWebView.loadUrl(AppConstant.AUTHORIZE_URL);
         }
     }
 }

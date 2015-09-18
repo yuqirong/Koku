@@ -29,6 +29,7 @@ import java.util.List;
 
 
 /**
+ * 搜索用户
  * Created by Anyway on 2015/9/8.
  */
 public class SearchUserActivity extends BaseActivity {

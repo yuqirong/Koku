@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Activity基类
  * Created by Anyway on 2015/8/28.
  */
 public abstract class BaseActivity extends AppCompatActivity {

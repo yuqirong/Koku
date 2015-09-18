@@ -17,15 +17,16 @@ import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.StringUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 微博适配器
  * Created by Anyway on 2015/8/30.
  */
 public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
@@ -33,17 +34,11 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
     private Context context;
     private BitmapUtils bitmapUtils;
     public static final String AT = "@";
-    public static final int DISK_CACHE_SIZE = 10 * 1024 * 1024;
-
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
 
     public WeiboRecycleViewAdapter(Context context) {
         this.context = context;
-        String bitmap_cache_dir = context.getCacheDir() + File.separator + "bitmap";
-        int cache = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024 * 8));
-        bitmapUtils = new BitmapUtils(context, bitmap_cache_dir, cache, DISK_CACHE_SIZE);
-        bitmapUtils.configDefaultLoadFailedImage(R.drawable.thumbnail_default);
-        bitmapUtils.configDefaultLoadFailedImage(R.drawable.timeline_image_failure);
+        bitmapUtils = BitmapUtil.getBitmapUtils(context);
         list.add(new WeiboItem());
     }
 
@@ -55,7 +50,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
     }
 
     @Override
-    public void bindCustomViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void bindCustomViewHolder(RecyclerView.ViewHolder holder, final int position) {
         WeiboItem weiboItem = list.get(position);
         WeiboViewHolder viewHolder = (WeiboViewHolder) holder;
         viewHolder.tv_screen_name.setText(weiboItem.user.name);
@@ -88,6 +83,28 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
             if (viewHolder.view_retweeted != null)
                 viewHolder.ll_item.removeView(viewHolder.view_retweeted);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(v, position);
+                }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                if (listener != null) {
+                    listener.onItemLongClick(v, position);
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     // 处理被转发的View
@@ -200,6 +217,8 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
 
     }
 
+    private OnItemClickLitener listener;
+
     public interface OnItemClickLitener {
 
         void onItemClick(View view, int position);
@@ -207,10 +226,8 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         void onItemLongClick(View view, int position);
     }
 
-    private OnItemClickLitener mOnItemClickLitener;
-
     public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
-        this.mOnItemClickLitener = mOnItemClickLitener;
+        this.listener = mOnItemClickLitener;
     }
 
 }

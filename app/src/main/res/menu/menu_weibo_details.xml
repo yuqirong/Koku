@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".WeiboDetailsActivity">
+
+    <item
+        android:id="@+id/action_repost"
+        android:icon="@drawable/ic_repost_light"
+        android:title="@string/action_repost"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/action_comment"
+        android:icon="@drawable/ic_comment_stable_light"
+        android:title="@string/action_comment"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
+        android:title="@string/action_share"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/ic_favorite_light"
+        android:title="@string/action_favorite"
+        app:showAsAction="never" />
+
+</menu>

@@ -1,10 +1,12 @@
 package com.yuqirong.koku.entity;
 
+import java.io.Serializable;
+
 /**
  * 用户实例类
  * Created by Anyway on 2015/9/2.
  */
-public class User {
+public class User implements Serializable{
 
     public String id;
 

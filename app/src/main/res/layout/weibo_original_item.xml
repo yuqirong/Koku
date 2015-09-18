@@ -38,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignTop="@id/tv_screen_name"
-            android:layout_toRightOf="@id/tv_screen_name" />
+            android:layout_toRightOf="@id/tv_screen_name"
+            android:layout_marginLeft="4dp"/>
 
         <TextView
             android:id="@+id/tv_time"

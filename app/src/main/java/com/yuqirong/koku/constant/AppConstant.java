@@ -19,7 +19,7 @@ public class AppConstant {
     /**
      * OAuth2的authorize接口
      */
-    public static final String AUTHORIZE_URL = "https://open.weibo.cn/oauth2/authorize?redirect_uri=" + REDIRECT_URL + "&display=mobile&response_type=code" + "&client_id=" + APP_KEY + "&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
+    public static final String AUTHORIZE_URL = "https://open.weibo.cn/oauth2/authorize";
     /**
      * OAuth2的access_token接口
      */

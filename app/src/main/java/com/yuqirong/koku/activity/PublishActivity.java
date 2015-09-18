@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -35,6 +36,8 @@ import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
+import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
+import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,9 +54,10 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * 发布微博 评论微博 转发微博等
  * Created by Anyway on 2015/9/13.
  */
-public class PublishActivity extends BaseActivity {
+public class PublishActivity extends SwipeBackActivity {
 
     private Toolbar mToolbar;
     private ImageView iv_location;
@@ -70,6 +74,7 @@ public class PublishActivity extends BaseActivity {
     private HorizontalScrollView mHorizontalScrollView;
     private Map<ImageView, String> imageMap = new HashMap<>();
     private LoadImageAsyncTask loadImageAsyncTask;
+    private SwipeBackLayout mSwipeBackLayout;
     private boolean isPicture = false;
 
     /**
@@ -127,6 +132,13 @@ public class PublishActivity extends BaseActivity {
         iv_sharp.setOnClickListener(listener);
         iv_send.setOnClickListener(listener);
         iv_add.setOnClickListener(listener);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     TextWatcher watcher = new TextWatcher() {

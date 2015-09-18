@@ -1,5 +1,6 @@
 package com.yuqirong.koku.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.WeiboDetailsActivity;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
@@ -181,6 +183,27 @@ public class WeiboTimeLineFragment extends BaseFragment {
         adapter = new WeiboRecycleViewAdapter(context);
         adapter.setOnLoadingMoreListener(loadingMoreListener);
         mRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickLitener(new WeiboRecycleViewAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                WeiboItem item = adapter.list.get(position);
+                int[] startingLocation = new int[2];
+                view.getLocationOnScreen(startingLocation);
+                startingLocation[0] += view.getWidth() / 2;
+                startingLocation[1] += view.getHeight() / 2;
+                Intent intent = new Intent(context, WeiboDetailsActivity.class);
+                intent.putExtra(WeiboDetailsActivity.ARG_REVEAL_START_LOCATION, startingLocation);
+                intent.putExtra("WeiboItem",item);
+                startActivity(intent);
+                getActivity().overridePendingTransition(0, 0);
+                LogUtils.i("click the item " + position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                LogUtils.i("long click the item " + position);
+            }
+        });
     }
 
     WeiboRecycleViewAdapter.OnLoadingMoreListener loadingMoreListener = new WeiboRecycleViewAdapter.OnLoadingMoreListener() {

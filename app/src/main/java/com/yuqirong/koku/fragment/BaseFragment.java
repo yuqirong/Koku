@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.activity.MainActivity;
+import com.yuqirong.koku.util.BitmapUtil;
 
 /**
  * Created by Anyway on 2015/8/28.
@@ -21,11 +22,12 @@ public abstract class BaseFragment extends Fragment {
     public Context context;
     protected BitmapUtils bitmapUtils;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        bitmapUtils = new BitmapUtils(context);
+        bitmapUtils = BitmapUtil.getBitmapUtils(context);
     }
 
     @Override

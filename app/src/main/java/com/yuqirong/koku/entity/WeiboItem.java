@@ -1,13 +1,16 @@
 package com.yuqirong.koku.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * weibo实例类
  * Created by Anyway on 2015/8/30.
  */
-public class WeiboItem {
+public class WeiboItem implements Serializable{
 
+    // 字符串型的微博ID
+    public String idstr;
     // weibo创建时间
     public String created_at;
     // weibo来源
@@ -25,7 +28,7 @@ public class WeiboItem {
     // 转发微博状态
     public Retweeted_status retweeted_status;
 
-    public class Retweeted_status {
+    public class Retweeted_status implements Serializable{
         // 字符串型的微博ID
         public String idstr;
         // 微博信息内容

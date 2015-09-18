@@ -41,7 +41,14 @@
             android:name=".activity.PublishActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.Transparent">
+        </activity>
+        <activity
+            android:name=".activity.WeiboDetailsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
         </activity>
     </application>
 

@@ -40,6 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 主页面
+ */
 public class MainActivity extends BaseActivity {
 
     /**
@@ -68,6 +71,7 @@ public class MainActivity extends BaseActivity {
     private FragmentManager fm;
     private static final int SEND_NEW_WEIBO = 1001;
     private boolean isLastShown = false;
+    private long firstTime;
 
     @Override
     protected void initData() {
@@ -131,7 +135,7 @@ public class MainActivity extends BaseActivity {
         toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
-                if(isLastShown){
+                if (isLastShown) {
                     mFloatingActionButton.show();
                 }
                 super.onDrawerClosed(drawerView);
@@ -270,9 +274,22 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (isDrawerOpened && keyCode == KeyEvent.KEYCODE_BACK) {
-            mDrawerLayout.closeDrawers();
-            isDrawerOpened = false;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (isDrawerOpened) {
+                mDrawerLayout.closeDrawers();
+                isDrawerOpened = false;
+            }else{
+                long secondTime = System.currentTimeMillis();
+                if (secondTime - firstTime > 2000) {
+                    Snackbar sb = Snackbar.make(mViewPager.getChildAt(mViewPager.getCurrentItem()), "再按一次退出应用", Snackbar.LENGTH_SHORT);
+                    sb.getView().setBackgroundColor(getResources().getColor(R.color.Indigo_colorPrimary));
+                    sb.show();
+                    firstTime = secondTime;
+                } else {
+                    finish();
+                    removeAllActivities();
+                }
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
