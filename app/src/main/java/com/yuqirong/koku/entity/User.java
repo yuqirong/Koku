@@ -27,6 +27,8 @@ public class User implements Serializable{
     public String verified_reason;
     // 粉丝数
     public String followers_count;
+    // 认证类型
+    public int verified_type;
 
 }
 

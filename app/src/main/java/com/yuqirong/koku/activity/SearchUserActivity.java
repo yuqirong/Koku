@@ -1,6 +1,7 @@
 package com.yuqirong.koku.activity;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,7 +42,7 @@ public class SearchUserActivity extends BaseActivity {
     private SearchUserAdapter adapter;
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
         mQueue = Volley.newRequestQueue(this);
     }
 

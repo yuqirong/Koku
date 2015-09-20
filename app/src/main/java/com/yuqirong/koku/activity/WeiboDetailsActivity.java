@@ -2,6 +2,9 @@ package com.yuqirong.koku.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,6 +13,9 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.fragment.FragmentFactory;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.view.RevealBackgroundView;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
@@ -24,6 +30,11 @@ public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBac
     private SwipeBackLayout mSwipeBackLayout;
     private Toolbar mToolbar;
     public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private FragmentManager fm;
+    private MainActivity.FragmentAdapter adapter;
+    private WeiboItem weiboItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +42,11 @@ public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBac
         setupRevealBackground(savedInstanceState);
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        weiboItem = (WeiboItem) getIntent().getSerializableExtra("WeiboItem");
     }
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
 
     }
 
@@ -52,6 +64,19 @@ public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBac
         setContentView(R.layout.activity_weibo_details);
         vRevealBackground = (RevealBackgroundView) findViewById(R.id.vRevealBackground);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+        mTabLayout = (TabLayout) findViewById(R.id.mTabLayout);
+        mViewPager = (ViewPager) findViewById(R.id.mViewPager);
+
+        mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
+        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
+        mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(android.R.color.white));
+
+        fm = getSupportFragmentManager();
+        adapter = new MainActivity.FragmentAdapter(fm);
+        adapter.addFragment(FragmentFactory.newInstance(),"评论");
+        adapter.addFragment(FragmentFactory.newInstance(),"转发");
+        mViewPager.setAdapter(adapter);
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 
     private void setupRevealBackground(Bundle savedInstanceState) {

@@ -17,7 +17,7 @@
     <string name="load_more">加载更多...</string>
     <string name="load_fail">加载失败，点击重试</string>
     <string name="no_more_weibo">没有更多微博了</string>
-    <string name="colon"> : </string>
+    <string name="colon">:</string>
     <string name="serach_user_warning">温馨提示：新浪接口功能搜索的范围是：V用户、粉丝500以上的达人、粉丝600以上的普通用户</string>
     <string name="serach_user">搜索用户</string>
     <string name="nearly_dynamic">周边动态</string>
@@ -26,6 +26,8 @@
     <string name="draft">草稿箱</string>
     <string name="share_new">分享新鲜事</string>
     <string name="publish_weibo">发微博</string>
+    <string name="comment_weibo">评论微博</string>
+    <string name="repost_weibo">转发微博</string>
     <array name="photo_items">
         <item>拍照</item>
         <item>最后一次拍照</item>
@@ -38,4 +40,9 @@
     <string name="content_cannot_be_empty">微博内容不能为空！</string>
     <string name="all_weibo">全部微博</string>
     <string name="bilateral_weibo">互相关注</string>
+    <string name="again_to_exit">再按一次退出应用</string>
+    <string name="comment_to_author">是否同时评论给作者</string>
+    <string name="publish_success">发布成功</string>
+    <string name="click_to_refresh">点击刷新</string>
+    <string name="comment_to_original_weibo">是否同时评论给原微博</string>
 </resources>

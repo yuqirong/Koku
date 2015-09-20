@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/avatar_vip"
+        android:maxLevel="0" />
+    <item
+        android:drawable="@drawable/avatar_grassroot"
+        android:maxLevel="220" />
+    <item
+        android:drawable="@drawable/avatar_enterprise_vip"
+        android:maxLevel="7" />
+    <item
+        android:drawable="@android:color/transparent"
+        android:maxLevel="-1" />
+</level-list>

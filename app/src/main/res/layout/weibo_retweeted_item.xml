@@ -42,6 +42,8 @@
         android:layout_alignTop="@id/tv_test"
         android:layout_below="@id/rl_pics"
         android:layout_centerVertical="true"
+        android:background="@drawable/text_selector"
+        android:clickable="true"
         android:drawableLeft="@drawable/ic_detail_comment_dark"
         android:text="0" />
 
@@ -56,6 +58,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/tv_retweeted_comment_count"
+        android:background="@drawable/text_selector"
+        android:clickable="true"
         android:drawableLeft="@drawable/ic_detail_repost_dark"
         android:text="0" />
 

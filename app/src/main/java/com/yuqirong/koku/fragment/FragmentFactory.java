@@ -14,4 +14,9 @@ public class FragmentFactory {
         f.setArguments(b);
         return f;
     }
+
+    public static WeiboCommentFragment newInstance() {
+        WeiboCommentFragment f = new WeiboCommentFragment();
+        return f;
+    }
 }

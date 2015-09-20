@@ -2,6 +2,7 @@ package com.yuqirong.koku.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -69,12 +70,14 @@ public class MainActivity extends BaseActivity {
 
     private FragmentAdapter adapter;
     private FragmentManager fm;
-    private static final int SEND_NEW_WEIBO = 1001;
-    private boolean isLastShown = false;
+    public static final int SEND_NEW_WEIBO = 1001;
+    public static final int SEND_NEW_COMMENT = 1003;
+    public static final int SEND_NEW_REPOST = 1005;
+    private boolean isLastShown = false; //用于fabbutton上一个状态是否显示
     private long firstTime;
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
         checkTokenExpireIn();
     }
 
@@ -180,6 +183,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         switch (requestCode) {
             case SEND_NEW_WEIBO:
                 if (resultCode == PublishActivity.SEND_WEIBO_SUCCESS) {
@@ -188,12 +192,22 @@ public class MainActivity extends BaseActivity {
                     CommonUtil.setVubator(MainActivity.this, 300);
                     final Fragment item = adapter.getItem(0);
                     View rootView = item.getView();
-                    Snackbar.make(rootView, "发布成功", Snackbar.LENGTH_LONG).setAction("点击刷新", new View.OnClickListener() {
+                    CommonUtil.showSnackbar(rootView, R.string.publish_success, getResources().getColor(R.color.Indigo_colorPrimary), Snackbar.LENGTH_LONG, R.string.click_to_refresh, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ((WeiboTimeLineFragment) item).refreshWeibo();
                         }
-                    }).show();
+                    });
+                }
+                break;
+            case SEND_NEW_COMMENT:
+                if (resultCode == PublishActivity.SEND_COMMENT_SUCCESS) {
+                    CommonUtil.setVubator(MainActivity.this, 300);
+                }
+                break;
+            case SEND_NEW_REPOST:
+                if (resultCode == PublishActivity.SEND_REPOST_SUCCESS) {
+                    CommonUtil.setVubator(MainActivity.this, 300);
                 }
                 break;
         }
@@ -211,7 +225,9 @@ public class MainActivity extends BaseActivity {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(new Intent(MainActivity.this, PublishActivity.class), SEND_NEW_WEIBO);
+                Intent intent = new Intent(MainActivity.this, PublishActivity.class);
+                intent.putExtra("type", PublishActivity.SEND_WEIBO);
+                startActivityForResult(intent, SEND_NEW_WEIBO);
             }
         });
 
@@ -278,12 +294,10 @@ public class MainActivity extends BaseActivity {
             if (isDrawerOpened) {
                 mDrawerLayout.closeDrawers();
                 isDrawerOpened = false;
-            }else{
+            } else {
                 long secondTime = System.currentTimeMillis();
                 if (secondTime - firstTime > 2000) {
-                    Snackbar sb = Snackbar.make(mViewPager.getChildAt(mViewPager.getCurrentItem()), "再按一次退出应用", Snackbar.LENGTH_SHORT);
-                    sb.getView().setBackgroundColor(getResources().getColor(R.color.Indigo_colorPrimary));
-                    sb.show();
+                    CommonUtil.showSnackbar(mViewPager.getChildAt(mViewPager.getCurrentItem()), R.string.again_to_exit, getResources().getColor(R.color.Indigo_colorPrimary));
                     firstTime = secondTime;
                 } else {
                     finish();

@@ -49,6 +49,7 @@ public class WeiboDetailsFragment extends BaseFragment {
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
     public static final String AT = "@";
 
+
     @Override
     public void initData(Bundle savedInstanceState) {
         Intent intent = getActivity().getIntent();
@@ -137,10 +138,12 @@ public class WeiboDetailsFragment extends BaseFragment {
         tv_comment_count = (TextView) view.findViewById(R.id.tv_comment_count);
         tv_text = (TextView) view.findViewById(R.id.tv_text);
         rl_pics = (RelativeLayout) view.findViewById(R.id.rl_pics);
+
         for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
             ImageView iv = (ImageView) view.findViewById(IMAGEVIEW_IDS[i]);
             iv_arrays.add(iv);
         }
+
         return view;
     }
 }

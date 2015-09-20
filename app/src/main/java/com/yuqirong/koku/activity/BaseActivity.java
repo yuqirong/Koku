@@ -31,7 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         initView();
         initToolBar();
-        initData();
+        initData(savedInstanceState);
     }
 
     @Override
@@ -51,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected abstract void initData();
+    protected abstract void initData(Bundle savedInstanceState);
 
     protected abstract void initToolBar();
 

@@ -56,6 +56,14 @@ public class AppConstant {
      * 获取双向关注用户的最新微博
      */
     public static final String STATUSES_BILATERAL_TIMELINE_URL = "https://api.weibo.com/2/statuses/bilateral_timeline.json";
+    /**
+     * 转发一条微博
+     */
+    public static final String STATUSES_REPOST_URL = "https://api.weibo.com/2/statuses/repost.json";
+    /**
+     * 对一条微博进行评论
+     */
+    public static final String COMMENTS_CREATE_URL = "https://api.weibo.com/2/comments/create.json";
 
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
 

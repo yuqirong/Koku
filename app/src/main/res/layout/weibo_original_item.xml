@@ -3,12 +3,12 @@
     android:id="@+id/ll_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/background_light"
+    android:layout_marginBottom="1dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginTop="1dp"
+    android:background="@drawable/recyclerview_bg_selector"
     android:orientation="vertical"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
     android:padding="@dimen/activity_vertical_margin">
 
     <RelativeLayout
@@ -19,8 +19,8 @@
             android:id="@+id/civ_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/thumbnail_default"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/thumbnail_default" />
 
         <TextView
             android:id="@+id/tv_screen_name"
@@ -29,7 +29,7 @@
             android:layout_alignTop="@id/civ_avatar"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/civ_avatar"
-            android:text="AAA"
+            android:text="username"
             android:textStyle="bold" />
 
         <ImageView
@@ -38,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignTop="@id/tv_screen_name"
-            android:layout_toRightOf="@id/tv_screen_name"
-            android:layout_marginLeft="4dp"/>
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/tv_screen_name" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -50,7 +50,7 @@
             android:layout_below="@id/tv_screen_name"
             android:layout_toRightOf="@id/civ_avatar"
             android:gravity="center_vertical"
-            android:text="15小时前"
+            android:text="xx小时前"
             android:textSize="12sp" />
 
         <TextView
@@ -85,6 +85,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/iv_overflow"
+            android:background="@drawable/text_selector"
+            android:clickable="true"
             android:drawableLeft="@drawable/ic_detail_comment_dark"
             android:text="0" />
 
@@ -98,6 +100,8 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@id/tv_comment_count"
+            android:background="@drawable/text_selector"
+            android:clickable="true"
             android:drawableLeft="@drawable/ic_detail_repost_dark"
             android:text="0" />
 
@@ -107,8 +111,8 @@
         android:id="@+id/tv_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
 
     <include
         android:id="@+id/rl_pics"
