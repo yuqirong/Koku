@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/divider"
         android:layout_marginBottom="5dp"
-        android:text="AAA" />
+        tools:text="AAA" />
 
     <include
         android:id="@+id/rl_pics"
@@ -31,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rl_pics"
+        tools:text="text for test"
         android:layout_marginTop="5dp" />
 
     <TextView
@@ -45,7 +47,7 @@
         android:background="@drawable/text_selector"
         android:clickable="true"
         android:drawableLeft="@drawable/ic_detail_comment_dark"
-        android:text="0" />
+        tools:text="0" />
 
 
     <TextView
@@ -61,6 +63,6 @@
         android:background="@drawable/text_selector"
         android:clickable="true"
         android:drawableLeft="@drawable/ic_detail_repost_dark"
-        android:text="0" />
+        tools:text="0" />
 
 </RelativeLayout>

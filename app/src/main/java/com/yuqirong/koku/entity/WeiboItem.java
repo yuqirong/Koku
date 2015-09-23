@@ -10,19 +10,19 @@ import java.util.List;
 public class WeiboItem implements Serializable{
 
     // 字符串型的微博ID
-    public String idstr;
+    public String idstr="";
     // weibo创建时间
-    public String created_at;
+    public String created_at="";
     // weibo来源
-    public String source;
+    public String source="";
     // weibo转发数
-    public String reposts_count;
+    public String reposts_count="";
     // weibo评论数
-    public String comments_count;
+    public String comments_count="";
     // 微博作者的用户信息字段
-    public User user;
+    public User user = new User();
     // 微博信息内容
-    public String text;
+    public String text="";
     // 微博配图url
     public List<Pic_urls> pic_urls;
     // 转发微博状态
@@ -30,15 +30,15 @@ public class WeiboItem implements Serializable{
 
     public class Retweeted_status implements Serializable{
         // 字符串型的微博ID
-        public String idstr;
+        public String idstr="";
         // 微博信息内容
-        public String text;
+        public String text="";
         // 微博作者的用户信息字段
         public User user;
         // weibo转发数
-        public String reposts_count;
+        public String reposts_count="";
         // weibo评论数
-        public String comments_count;
+        public String comments_count="";
         // 微博配图url
         public List<Pic_urls> pic_urls;
     }

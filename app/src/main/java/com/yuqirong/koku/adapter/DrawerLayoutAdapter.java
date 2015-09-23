@@ -29,7 +29,7 @@ public class DrawerLayoutAdapter extends MBaseAdapter<String, ListView> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        String str = list.get(position);
+        String str = getList().get(position);
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();

@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,11 +20,13 @@ import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.MainActivity;
 import com.yuqirong.koku.activity.PublishActivity;
+import com.yuqirong.koku.activity.UserDetailsActivity;
 import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.WeiboItem;
 import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
+import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.StringUtils;
 
 import java.util.ArrayList;
@@ -58,10 +62,11 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         weiboItem = list.get(position);
         WeiboViewHolder viewHolder = (WeiboViewHolder) holder;
         //创建监听器实例
-        viewHolder.onClickListener = new WeiboWidghtOnClickListener(position);
+        viewHolder.onMenuItemClickListener = new MyOnMenuItemClickListener(position);
+        viewHolder.onClickListener = new WeiboWidghtOnClickListener(position,viewHolder.onMenuItemClickListener);
 
         viewHolder.tv_screen_name.setText(weiboItem.user.name);
-        bitmapUtils.display(viewHolder.civ_avatar, weiboItem.user.profile_image_url);
+        bitmapUtils.display(viewHolder.iv_avatar, weiboItem.user.profile_image_url);
         viewHolder.tv_time.setText(DateUtils.getWeiboDate(weiboItem.created_at));
         viewHolder.tv_device.setText(Html.fromHtml(weiboItem.source));
         //设置认证图标
@@ -102,8 +107,12 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
                 viewHolder.ll_item.removeView(viewHolder.view_retweeted);
         }
         //设置监听器
+        viewHolder.tv_screen_name.setOnClickListener(viewHolder.onClickListener);
+        viewHolder.iv_avatar.setOnClickListener(viewHolder.onClickListener);
+
         viewHolder.tv_comment_count.setOnClickListener(viewHolder.onClickListener);
         viewHolder.tv_repost_count.setOnClickListener(viewHolder.onClickListener);
+        viewHolder.iv_overflow.setOnClickListener(viewHolder.onClickListener);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,14 +136,16 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
 
     }
 
-
+    // item上各组件的点击事件监听器
     class WeiboWidghtOnClickListener implements View.OnClickListener {
 
         private boolean isReweeted;
         private WeiboItem weiboItem;
+        private MyOnMenuItemClickListener onMenuItemClickListener;
 
-        public WeiboWidghtOnClickListener(int position) {
+        public WeiboWidghtOnClickListener(int position, MyOnMenuItemClickListener onMenuItemClickListener) {
             weiboItem = list.get(position);
+            this.onMenuItemClickListener = onMenuItemClickListener;
             isReweeted = (weiboItem.retweeted_status != null);
         }
 
@@ -144,36 +155,71 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
                 return;
             }
             int requestCode = 0;
-            Intent intent = new Intent(context, PublishActivity.class);
+            Intent intent = new Intent();
             switch (v.getId()) {
+                case R.id.tv_screen_name:
+                    intent.setClass(context, UserDetailsActivity.class);
+                    context.startActivity(intent);
+                    break;
+                case R.id.iv_avatar:
+                    intent.setClass(context, UserDetailsActivity.class);
+                    context.startActivity(intent);
+                    break;
                 case R.id.tv_comment_count:
                     requestCode = MainActivity.SEND_NEW_COMMENT;
+                    intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_COMMENT);
                     intent.putExtra("idstr", weiboItem.idstr);
                     intent.putExtra("isReweeted", isReweeted);
+                    ((MainActivity) context).startActivityForResult(intent, requestCode);
                     break;
                 case R.id.tv_repost_count:
                     requestCode = MainActivity.SEND_NEW_REPOST;
+                    intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_REPOST);
                     intent.putExtra("idstr", weiboItem.idstr);
                     if (isReweeted) {
                         intent.putExtra("text", "//@" + weiboItem.user.screen_name + context.getResources().getString(R.string.colon) + weiboItem.text);
                     }
+                    ((MainActivity) context).startActivityForResult(intent, requestCode);
+                    break;
+                case R.id.iv_overflow:
+                    CommonUtil.showPopupMenu(context, v, R.menu.overflow_popupmenu, onMenuItemClickListener);
                     break;
                 case R.id.tv_retweeted_comment_count:
                     requestCode = MainActivity.SEND_NEW_COMMENT;
+                    intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_COMMENT);
                     intent.putExtra("idstr", weiboItem.retweeted_status.idstr);
+                    ((MainActivity) context).startActivityForResult(intent, requestCode);
                     break;
                 case R.id.tv_retweeted_repost_count:
                     requestCode = MainActivity.SEND_NEW_REPOST;
+                    intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_REPOST);
                     intent.putExtra("idstr", weiboItem.retweeted_status.idstr);
+                    ((MainActivity) context).startActivityForResult(intent, requestCode);
                     break;
             }
-            ((MainActivity) context).startActivityForResult(intent, requestCode);
         }
     }
+
+    // item上的overflow弹出的PopupMenu的点击监听器
+    class MyOnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        private WeiboItem weiboItem;
+
+        public MyOnMenuItemClickListener(int position) {
+            weiboItem = list.get(position);
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            LogUtils.i(weiboItem + weiboItem.user.screen_name);
+            return true;
+        }
+    }
+
 
     // 处理被转发的View
     private void processRetweeted(RecyclerView.ViewHolder holder, WeiboItem weiboItem) {
@@ -226,12 +272,13 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
 
         public LinearLayout ll_item;
         public TextView tv_screen_name;
-        public ImageView civ_avatar;
+        public ImageView iv_avatar;
         public TextView tv_time;
         public TextView tv_device;
         public ImageView iv_verified;
         public TextView tv_repost_count;
         public TextView tv_comment_count;
+        public ImageView iv_overflow;
         public TextView tv_text;
         public List<ImageView> iv_arrays = new ArrayList<>();
         public List<ImageView> iv_retweeted_arrays = new ArrayList<>();
@@ -242,6 +289,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         public RelativeLayout rl_pics;
         public RelativeLayout rl_retweeted_pics;
         public WeiboWidghtOnClickListener onClickListener;
+        public MyOnMenuItemClickListener onMenuItemClickListener;
 
         private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {
             rl.setVisibility(View.VISIBLE);
@@ -269,13 +317,14 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         public WeiboViewHolder(View itemView) {
             super(itemView);
             ll_item = (LinearLayout) itemView.findViewById(R.id.ll_item);
-            civ_avatar = (ImageView) itemView.findViewById(R.id.civ_avatar);
+            iv_avatar = (ImageView) itemView.findViewById(R.id.iv_avatar);
             tv_screen_name = (TextView) itemView.findViewById(R.id.tv_screen_name);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_device = (TextView) itemView.findViewById(R.id.tv_device);
             iv_verified = (ImageView) itemView.findViewById(R.id.iv_verified);
             tv_repost_count = (TextView) itemView.findViewById(R.id.tv_repost_count);
             tv_comment_count = (TextView) itemView.findViewById(R.id.tv_comment_count);
+            iv_overflow = (ImageView) itemView.findViewById(R.id.iv_overflow);
             tv_text = (TextView) itemView.findViewById(R.id.tv_text);
             rl_pics = (RelativeLayout) itemView.findViewById(R.id.rl_pics);
             for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
@@ -286,17 +335,17 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
 
     }
 
-    private OnItemClickLitener listener;
+    private OnItemClickListener listener;
 
-    public interface OnItemClickLitener {
+    public interface OnItemClickListener {
 
         void onItemClick(View view, int position);
 
         void onItemLongClick(View view, int position);
     }
 
-    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
-        this.listener = mOnItemClickLitener;
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.listener = mOnItemClickListener;
     }
 
 }

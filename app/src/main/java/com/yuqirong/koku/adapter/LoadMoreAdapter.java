@@ -20,8 +20,15 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     private static final int TYPE_FOOTER = 1001;
     protected FooterViewHolder mFooterViewHolder;
-    public List<T> list = new LinkedList<>();
+
+    public List<T> getList() {
+        return list;
+    }
+
+    protected List<T> list = new LinkedList<>();
     protected boolean loadSuccess = true;
+
+
 
     // 是否为加载更多
     private boolean isLoadingMore;

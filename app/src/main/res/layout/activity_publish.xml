@@ -133,4 +133,13 @@
 
     </RelativeLayout>
 
+    <GridView
+        android:id="@+id/gv_emotion"
+        android:layout_width="match_parent"
+        android:layout_height="195dp"
+        android:numColumns="8"
+        android:padding="10dp"
+        android:background="@android:color/background_light"
+        android:visibility="gone"/>
+
 </LinearLayout>

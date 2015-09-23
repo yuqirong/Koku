@@ -1,16 +1,20 @@
 package com.yuqirong.koku.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.db.EmotionsDB;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,9 +30,11 @@ public class StringUtils {
     private static final String EMOJI = "\\[[\u4e00-\u9fa5\\w]+\\]";// 表情
     private static final String URL = "http://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";// url
 
-    private static final String REGEX = "("+AT+")|("+TOPIC+")|("+EMOJI+")|("+URL+")";
+    private static final String REGEX = "(" + AT + ")|(" + TOPIC + ")|(" + EMOJI + ")|(" + URL + ")";
+
     /**
      * 设置微博内容样式
+     *
      * @param context
      * @param source
      * @param textView
@@ -61,7 +67,6 @@ public class StringUtils {
                 int start = matcher.start(1);
                 int end = start + at.length();
                 MyClickableSpan clickableSpan = new MyClickableSpan(context) {
-
                     @Override
                     public void onClick(View widget) {
                         //这里需要做跳转用户的实现，先用一个Toast代替
@@ -84,22 +89,24 @@ public class StringUtils {
                 };
                 spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
+            if (emoji != null) {
+                int start = matcher.start(3);
+                int end = start + emoji.length();
 
-//            if (emoji != null) {
-//                int start = matcher.start(3);
-//                int end = start + emoji.length();
-//                int ResId = EmotionUtils.getImgByName(emoji);
-//                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), ResId);
-//                if (bitmap != null) {
-//                    // 获取字符的大小
-//                    int size = (int) textView.getTextSize();
-//                    // 压缩Bitmap
-//                    bitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
-//                    // 设置表情
-//                    ImageSpan imageSpan = new ImageSpan(context, bitmap);
-//                    spannableString.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                }
-//            }
+                byte[] emotion = EmotionsDB.getEmotion(emoji);
+                if (emotion != null) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(emotion, 0, emotion.length);
+                    if (bitmap != null) {
+                        // 设置表情
+                        int size = (int) textView.getTextSize();
+                        // 压缩Bitmap 设置为字体大小的1.5倍
+                        bitmap = Bitmap.createScaledBitmap(bitmap, (int)(size*1.5), (int)(size*1.5), true);
+
+                        ImageSpan imageSpan = new ImageSpan(context, bitmap);
+                        spannableString.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+            }
 
             // 处理url地址
             if (url != null) {
@@ -121,14 +128,14 @@ public class StringUtils {
 
     /**
      * 继承ClickableSpan复写updateDrawState方法，自定义所需样式
-     * @author Rabbit_Lee
      *
+     * @author Rabbit_Lee
      */
     public static class MyClickableSpan extends ClickableSpan {
 
         private Context context;
 
-        public MyClickableSpan(Context context){
+        public MyClickableSpan(Context context) {
             this.context = context;
         }
 

@@ -11,9 +11,9 @@ import java.util.List;
  */
 public abstract class MBaseAdapter<T, Q> extends BaseAdapter {
 
-	public Context context;
-	public List<T> list;//
-	public Q view; // 这里不一定是ListView,比如GridView,CustomListView
+	protected Context context;
+	private List<T> list;
+	private Q view; // 这里不一定是ListView,比如GridView,CustomListView
 	
 
 	public MBaseAdapter(Context context, List<T> list, Q view) {
@@ -24,6 +24,14 @@ public abstract class MBaseAdapter<T, Q> extends BaseAdapter {
 
 	public MBaseAdapter(Context context, List<T> list) {
 		this.context = context;
+		this.list = list;
+	}
+
+	public List<T> getList() {
+		return list;
+	}
+
+	public void setList(List<T> list) {
 		this.list = list;
 	}
 

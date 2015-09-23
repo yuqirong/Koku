@@ -1,9 +1,11 @@
 package com.yuqirong.koku.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -15,12 +17,19 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -33,13 +42,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.adapter.EmotionAdapter;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.entity.Emotion;
 import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
-import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
-import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +59,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -59,7 +69,7 @@ import java.util.Map;
  * 发布微博 评论微博 转发微博等
  * Created by Anyway on 2015/9/13.
  */
-public class PublishActivity extends SwipeBackActivity {
+public class PublishActivity extends BaseActivity {
 
     private Toolbar mToolbar;
     private ActionBar actionBar;
@@ -78,13 +88,14 @@ public class PublishActivity extends SwipeBackActivity {
     private HorizontalScrollView mHorizontalScrollView;
     private Map<ImageView, String> imageMap = new HashMap<>();
     private LoadImageAsyncTask loadImageAsyncTask;
-    private SwipeBackLayout mSwipeBackLayout;
+    private GridView gv_emotion;
+    private EmotionAdapter adapter;
+
     private boolean isPicture = false;
 
     public static final int SEND_WEIBO = 1010;
     public static final int SEND_COMMENT = 1020;
     public static final int SEND_REPOST = 1030;
-
     /**
      * 是否定位
      */
@@ -170,8 +181,14 @@ public class PublishActivity extends SwipeBackActivity {
         ib_send = (ImageButton) findViewById(R.id.ib_send);
         tv_location = (TextView) findViewById(R.id.tv_location);
         tv_word_num = (TextView) findViewById(R.id.tv_word_num);
+        gv_emotion = (GridView) findViewById(R.id.gv_emotion);
         cb_comment_to_auth = (CheckBox) findViewById(R.id.cb_comment_to_auth);
+
+        adapter = new EmotionAdapter(this, new ArrayList<Emotion>());
+        gv_emotion.setAdapter(adapter);
+        gv_emotion.setOnItemClickListener(onItemClickListener);
         et_content.addTextChangedListener(watcher);
+        et_content.setOnClickListener(listener);
         ib_location.setOnClickListener(listener);
         ib_photo.setOnClickListener(listener);
         ib_emotion.setOnClickListener(listener);
@@ -179,13 +196,6 @@ public class PublishActivity extends SwipeBackActivity {
         ib_sharp.setOnClickListener(listener);
         ib_send.setOnClickListener(listener);
         iv_add.setOnClickListener(listener);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     TextWatcher watcher = new TextWatcher() {
@@ -215,6 +225,9 @@ public class PublishActivity extends SwipeBackActivity {
                 case R.id.ib_photo:
                     processPhoto(v);
                     break;
+                case R.id.ib_emotion:
+                    processEmotion();
+                    break;
                 case R.id.ib_sharp:
                     processTopic();
                     break;
@@ -224,9 +237,47 @@ public class PublishActivity extends SwipeBackActivity {
                 case R.id.ib_send:
                     processSendWeibo(v);
                     break;
+                case R.id.et_content:
+                    if (gv_emotion.isShown()) {
+                        gv_emotion.setVisibility(View.GONE);
+                    }
+                    break;
             }
         }
     };
+
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Emotion emotion = adapter.getList().get(position);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(emotion.getData(), 0, emotion.getData().length);
+            if (bitmap != null) {
+                SpannableString ss = new SpannableString(emotion.getKey());
+                ImageSpan imageSpan = new ImageSpan(PublishActivity.this, bitmap, ImageSpan.ALIGN_BOTTOM);
+                ss.setSpan(imageSpan, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                et_content.getText().append(ss);
+                et_content.setSelection(et_content.getText().length());
+            }
+        }
+    };
+
+    //选择表情
+    private void processEmotion() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(PublishActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+        if (gv_emotion.isShown()) {
+            gv_emotion.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    gv_emotion.setVisibility(View.GONE);
+                }
+            }, 300);
+        } else {
+            gv_emotion.setVisibility(View.VISIBLE);
+        }
+    }
 
     // 发布微博
     private void processSendWeibo(View v) {
@@ -474,6 +525,9 @@ public class PublishActivity extends SwipeBackActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                if(gv_emotion.isShown()){
+                    gv_emotion.setVisibility(View.GONE);
+                }
                 finish();
                 break;
             default:
@@ -481,4 +535,14 @@ public class PublishActivity extends SwipeBackActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && gv_emotion.isShown()) {
+            gv_emotion.setVisibility(View.GONE);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

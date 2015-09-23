@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/mCollapsingToolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        app:expandedTitleMarginEnd="64dp"
+        app:expandedTitleMarginStart="48dp"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+
+            <ImageView
+                android:id="@+id/iv_cover"
+                android:layout_width="match_parent"
+                android:layout_height="195dp"
+                android:clickable="false"
+                android:scaleType="centerCrop"
+                android:src="@drawable/parallax_img" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_cover"
+                android:background="@android:color/white"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/tv_screen_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:text="量院速冻"
+                    tools:text="量院速冻" />
+
+                <TextView
+                    android:id="@+id/tv_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_screen_name"
+                    android:text="浙江"
+                    tools:text="浙江" />
+
+
+                <TextView
+                    android:id="@+id/tv_follower_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_city"
+                    android:text="粉丝：20525"
+                    tools:text="粉丝：20525" />
+
+                <TextView
+                    android:id="@+id/tv_follow_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_city"
+                    android:layout_centerHorizontal="true"
+                    android:text="关注：20525"
+                    tools:text="关注：20525" />
+
+                <TextView
+                    android:id="@+id/tv_weibo_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/tv_city"
+                    android:text="微博：20525"
+                    tools:text="微博：20525" />
+
+                <TextView
+                    android:id="@+id/tv_introduction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_follower_num"
+                    android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+
+            </RelativeLayout>
+
+            <com.yuqirong.koku.view.CircleImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="160dp"
+                android:src="@drawable/img_empty_avatar"
+                 />
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/mToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:layout_collapseMode="pin" />
+
+
+    </android.support.design.widget.CollapsingToolbarLayout>
+
+</android.support.design.widget.AppBarLayout>

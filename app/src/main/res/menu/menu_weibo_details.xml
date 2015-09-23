@@ -27,4 +27,9 @@
         android:title="@string/action_favorite"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_copy"
+        android:icon="@drawable/ic_copy_light"
+        android:title="@string/action_copy"
+        app:showAsAction="never" />
 </menu>

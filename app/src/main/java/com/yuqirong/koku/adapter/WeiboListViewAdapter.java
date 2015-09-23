@@ -48,7 +48,7 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        WeiboItem weiboItem = list.get(position);
+        WeiboItem weiboItem = getList().get(position);
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.weibo_original_item, null);

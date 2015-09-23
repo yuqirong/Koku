@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Koku</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">设置</string>
     <string name="action_search">搜索</string>
     <string name="action_about">关于</string>
@@ -9,6 +8,7 @@
     <string name="action_repost">转发</string>
     <string name="action_share">分享</string>
     <string name="action_favorite">收藏</string>
+    <string name="action_copy">复制</string>
 
     <string name="action_comment">评论</string>
     <string name="drawer_open">打开抽屉</string>

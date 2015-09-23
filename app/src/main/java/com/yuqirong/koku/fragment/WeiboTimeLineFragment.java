@@ -7,8 +7,10 @@ import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -19,6 +21,7 @@ import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
@@ -137,9 +140,9 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private void processData(String statuses) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             adapter.clearData();
-            adapter.list.add(new WeiboItem());
+            adapter.getList().add(new WeiboItem());
         }
-        adapter.list.addAll(adapter.list.size() - 1, JsonUtils.getListFromJson(statuses, WeiboItem.class));
+        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, WeiboItem.class));
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
@@ -183,25 +186,33 @@ public class WeiboTimeLineFragment extends BaseFragment {
         adapter = new WeiboRecycleViewAdapter(context);
         adapter.setOnLoadingMoreListener(loadingMoreListener);
         mRecyclerView.setAdapter(adapter);
-        adapter.setOnItemClickLitener(new WeiboRecycleViewAdapter.OnItemClickLitener() {
+        adapter.setOnItemClickListener(new WeiboRecycleViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                WeiboItem item = adapter.list.get(position);
+                LogUtils.i("click the item " + position);
+                WeiboItem item = adapter.getList().get(position);
                 int[] startingLocation = new int[2];
                 view.getLocationOnScreen(startingLocation);
                 startingLocation[0] += view.getWidth() / 2;
                 startingLocation[1] += view.getHeight() / 2;
                 Intent intent = new Intent(context, WeiboDetailsActivity.class);
                 intent.putExtra(WeiboDetailsActivity.ARG_REVEAL_START_LOCATION, startingLocation);
-                intent.putExtra("WeiboItem",item);
+                intent.putExtra("WeiboItem", item);
                 startActivity(intent);
                 getActivity().overridePendingTransition(0, 0);
-                LogUtils.i("click the item " + position);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
                 LogUtils.i("long click the item " + position);
+                final WeiboItem weiboItem = adapter.getList().get(position);
+                CommonUtil.showPopupMenu(context, view.findViewById(R.id.iv_overflow), R.menu.overflow_popupmenu, new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        LogUtils.i(weiboItem + weiboItem.user.screen_name);
+                        return true;
+                    }
+                });
             }
         });
     }

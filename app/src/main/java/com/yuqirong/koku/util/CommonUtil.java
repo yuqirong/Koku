@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.yuqirong.koku.R;
@@ -173,6 +174,13 @@ public class CommonUtil {
         Snackbar sb = Snackbar.make(v, text, length).setAction(actionText,listener);
         sb.getView().setBackgroundColor(backgroundColor);
         sb.show();
+    }
+
+    public static void showPopupMenu(Context context,View v,int resId,PopupMenu.OnMenuItemClickListener listener){
+        PopupMenu mPopupMenu = new PopupMenu(context, v);
+        mPopupMenu.getMenuInflater().inflate(resId, mPopupMenu.getMenu());
+        mPopupMenu.setOnMenuItemClickListener(listener);
+        mPopupMenu.show();
     }
 
 }

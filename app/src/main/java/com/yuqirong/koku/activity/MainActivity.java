@@ -230,8 +230,6 @@ public class MainActivity extends BaseActivity {
                 startActivityForResult(intent, SEND_NEW_WEIBO);
             }
         });
-
-
     }
 
     //设置ViewPager内容
@@ -251,13 +249,14 @@ public class MainActivity extends BaseActivity {
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setCheckable(true);
-                        mDrawerLayout.closeDrawers();
                         LogUtils.i(menuItem.getItemId() + "");
                         switch (menuItem.getItemId()) {
                             case R.id.nav_search:
                                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                 startActivity(new Intent(MainActivity.this, SearchUserActivity.class));
+                                mDrawerLayout.closeDrawers();
+                                isDrawerOpened = false;
+                                menuItem.setCheckable(false);
                                 break;
                             case R.id.nav_nearly:
                                 break;
