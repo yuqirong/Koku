@@ -15,13 +15,13 @@
         android:minHeight="?attr/actionBarSize"
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:theme="@style/MyToolBarTheme"
-        app:layout_scrollFlags="scroll|enterAlways"/>
+        app:layout_scrollFlags="scroll|enterAlways" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/mTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/Indigo_colorPrimary"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </android.support.design.widget.AppBarLayout>

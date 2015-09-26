@@ -1,6 +1,7 @@
 package com.yuqirong.koku.fragment;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,10 +33,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * 微博主页
- * Created by Anyway on 2015/8/30.
+ * 周边动态Fragment
+ * Created by Anyway on 2015/9/19.
  */
-public class WeiboTimeLineFragment extends BaseFragment {
+public class NearlyDynamicFragment extends BaseFragment {
 
     // 下拉刷新组件
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
@@ -46,22 +47,16 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private boolean load = false;
 
     private AutoLoadRecyclerView mRecyclerView;
-    private String baseUrl = "";
     public String CACHE_FOLDER_NAME = "timeline";
-    public String TIME_LINE_CACHE_NAME = "timeline_cache";
+    public String TIME_LINE_CACHE_NAME = "nearly_dynamic_cache";
     protected ACache aCache;
-    //若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
-    private String max_id = "0";
+    //返回结果的页码，默认为1。
+    private int page = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         aCache = ACache.get(context, CACHE_FOLDER_NAME);
-        Bundle args = getArguments();
-        if (args != null) {
-            baseUrl = args.getString("url");
-            TIME_LINE_CACHE_NAME += baseUrl;
-        }
     }
 
     @Override
@@ -96,7 +91,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
         }
         try {
             JSONObject jsonObject = new JSONObject(cache);
-            max_id = jsonObject.getString("max_id");
+            //TODO
             String statuses = jsonObject.getString("statuses");
             processData(statuses);
         } catch (JSONException e) {
@@ -111,12 +106,18 @@ public class WeiboTimeLineFragment extends BaseFragment {
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         if (!TextUtils.isEmpty(access_token)) {
             if (mSwipeRefreshLayout.isRefreshing()) {
-                max_id = "0";
+                page = 1;
                 adapter.initFooterViewHolder();
             }
-            String url = this.baseUrl + "?access_token=" + access_token + "&max_id=" + max_id;
-            LogUtils.i("url  : " + url);
-            getData(url, listener, errorListener);
+            Location location = CommonUtil.getLocation(context);
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                String url = AppConstant.PLACE_NEARBY_TIMELINE_URL + "?access_token=" + access_token + "&lat=" + latitude + "&long=" + longitude+"&count=20&page="+page;
+                LogUtils.i("周边动态 url ：" + url);
+                getData(url, listener, errorListener);
+            }
+
         }
     }
 
@@ -126,7 +127,6 @@ public class WeiboTimeLineFragment extends BaseFragment {
             String statuses = null;
             try {
                 JSONObject jsonObject = new JSONObject(stringResult);
-                max_id = jsonObject.getString("max_id");
                 statuses = jsonObject.getString("statuses");
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     aCache.put(TIME_LINE_CACHE_NAME, stringResult);
@@ -148,9 +148,6 @@ public class WeiboTimeLineFragment extends BaseFragment {
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
             adapter.completeLoadMore(true);
-            if ("0".equals(max_id)) {
-                adapter.setNoMoreWeibo();
-            }
             load = false;
         }
     }
@@ -222,35 +219,35 @@ public class WeiboTimeLineFragment extends BaseFragment {
         @Override
         public void onLoadingMore() {
             load = true;
-            if (!"0".equals(max_id))
-                getDataFromServer();
-        }
-    };
-
-    /**
-     * 下拉刷新Listener
-     */
-    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
+            page++;
             getDataFromServer();
         }
     };
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
 
-            switch (msg.what) {
-                case 0:
-                    getDataFromServer();
-                    break;
-                case 1:
-                    adapter.completeLoadMore(false);
-                    break;
+        /**
+         * 下拉刷新Listener
+         */
+        SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDataFromServer();
             }
+        };
 
-        }
-    };
+        private Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
 
+                switch (msg.what) {
+                    case 0:
+                        getDataFromServer();
+                        break;
+                    case 1:
+                        adapter.completeLoadMore(false);
+                        break;
+                }
+
+            }
+        };
 }

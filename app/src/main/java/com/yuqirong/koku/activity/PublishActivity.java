@@ -113,8 +113,11 @@ public class PublishActivity extends BaseActivity {
     private int type; //Activity 类型
     private String url;
     private String idstr;
+    //发微博成功
     public static final int SEND_WEIBO_SUCCESS = 1200;
+    //评论成功
     public static final int SEND_COMMENT_SUCCESS = 1250;
+    //转发成功
     public static final int SEND_REPOST_SUCCESS = 1300;
 
     @Override
@@ -228,6 +231,9 @@ public class PublishActivity extends BaseActivity {
                 case R.id.ib_emotion:
                     processEmotion();
                     break;
+                case R.id.ib_noti:
+                    processNoti();
+                    break;
                 case R.id.ib_sharp:
                     processTopic();
                     break;
@@ -255,11 +261,17 @@ public class PublishActivity extends BaseActivity {
                 SpannableString ss = new SpannableString(emotion.getKey());
                 ImageSpan imageSpan = new ImageSpan(PublishActivity.this, bitmap, ImageSpan.ALIGN_BOTTOM);
                 ss.setSpan(imageSpan, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                et_content.getText().append(ss);
-                et_content.setSelection(et_content.getText().length());
+                et_content.getText().insert(et_content.getSelectionEnd(), ss);
             }
         }
     };
+
+    // 处理 @ 事件
+    private void processNoti() {
+        Intent intent = new Intent(this,SearchUserActivity.class);
+        intent.putExtra("type", SearchUserActivity.AT_USER);
+        startActivityForResult(intent, SearchUserActivity.AT_USER);
+    }
 
     //选择表情
     private void processEmotion() {
@@ -281,6 +293,9 @@ public class PublishActivity extends BaseActivity {
 
     // 发布微博
     private void processSendWeibo(View v) {
+        if (gv_emotion.isShown()) {
+            gv_emotion.setVisibility(View.GONE);
+        }
         final String content = et_content.getText().toString();
         StringRequest stringRequest;
         if (TextUtils.isEmpty(content.trim()) && type != SEND_REPOST) {
@@ -427,8 +442,8 @@ public class PublishActivity extends BaseActivity {
 
     // 处理点击 # 事件
     private void processTopic() {
-        et_content.setText(et_content.getText().toString() + "##");
-        et_content.setSelection(et_content.getText().toString().length() - 1);
+        et_content.getText().append("##");
+        et_content.setSelection(et_content.getText().length() - 1);
     }
 
     class LoadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
@@ -517,6 +532,12 @@ public class PublishActivity extends BaseActivity {
                     loadImageAsyncTask.execute(imgPath);
                 }
                 break;
+            case SearchUserActivity.AT_USER:
+                if(resultCode == RESULT_OK){
+                    String screen_name = data.getStringExtra("screen_name");
+                    et_content.getText().append("@"+screen_name+" ");
+                }
+                break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -525,7 +546,7 @@ public class PublishActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(gv_emotion.isShown()){
+                if (gv_emotion.isShown()) {
                     gv_emotion.setVisibility(View.GONE);
                 }
                 finish();

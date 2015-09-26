@@ -15,8 +15,4 @@ public class FragmentFactory {
         return f;
     }
 
-    public static WeiboCommentFragment newInstance() {
-        WeiboCommentFragment f = new WeiboCommentFragment();
-        return f;
-    }
 }

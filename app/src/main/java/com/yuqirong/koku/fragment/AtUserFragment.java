@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yuqirong.koku.R;
-
 /**
- * Created by Anyway on 2015/9/19.
+ * Created by Anyway on 2015/9/24.
  */
-public class WeiboCommentFragment extends BaseFragment {
+public abstract class AtUserFragment extends BaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -19,8 +17,8 @@ public class WeiboCommentFragment extends BaseFragment {
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_weibo_comments,null);
-        return view;
+        String str = "";
+        return null;
     }
 
 }

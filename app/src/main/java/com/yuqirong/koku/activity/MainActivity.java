@@ -3,6 +3,7 @@ package com.yuqirong.koku.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -65,6 +66,7 @@ public class MainActivity extends BaseActivity {
 
     private NavigationView mNavigationView;
     private FloatingActionButton mFloatingActionButton;
+    private Handler handler = new Handler();
 
     private ViewPager mViewPager;
 
@@ -250,15 +252,24 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         LogUtils.i(menuItem.getItemId() + "");
+                        mDrawerLayout.closeDrawers();
+                        menuItem.setCheckable(false);
                         switch (menuItem.getItemId()) {
                             case R.id.nav_search:
-                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                startActivity(new Intent(MainActivity.this, SearchUserActivity.class));
-                                mDrawerLayout.closeDrawers();
-                                isDrawerOpened = false;
-                                menuItem.setCheckable(false);
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        SearchUserActivity.actionStart(MainActivity.this, SearchUserActivity.SEARCH_USER);
+                                    }
+                                }, 300);
                                 break;
                             case R.id.nav_nearly:
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        NearlyDynamicActivity.actionStart(MainActivity.this);
+                                    }
+                                },300);
                                 break;
                             case R.id.nav_hot:
                                 break;

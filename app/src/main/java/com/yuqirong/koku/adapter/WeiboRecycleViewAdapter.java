@@ -85,8 +85,8 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
                 break;
         }
         //设置微博 转发数和评论数
-        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(weiboItem.reposts_count));
-        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(weiboItem.comments_count));
+        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(String.valueOf(weiboItem.reposts_count)));
+        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(String.valueOf(weiboItem.comments_count)));
         //设置微博内容
         SpannableString weiBoContent = StringUtils.getWeiBoContent(context, weiboItem.text, viewHolder.tv_text);
         viewHolder.tv_text.setText(weiBoContent);

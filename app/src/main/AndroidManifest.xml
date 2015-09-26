@@ -41,7 +41,8 @@
         <activity
             android:name=".activity.SearchUserActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
             android:name=".activity.PublishActivity"
@@ -59,6 +60,12 @@
             android:name=".activity.UserDetailsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.NearlyDynamicActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
         </activity>
 
     </application>

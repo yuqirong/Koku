@@ -122,6 +122,19 @@
 
     <include
         android:id="@+id/rl_pics"
-        layout="@layout/weibo_pic_item" />
+        layout="@layout/weibo_pic_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:drawablePadding="4dp"
+        android:drawableLeft="@drawable/ic_location_grey_12"
+        android:text="杭州市江干区"
+        tools:text="杭州市江干区"/>
 
 </LinearLayout>

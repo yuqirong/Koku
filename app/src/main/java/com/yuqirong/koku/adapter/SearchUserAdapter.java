@@ -5,10 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.User;
+import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 
 import java.util.ArrayList;
@@ -20,10 +23,30 @@ import java.util.List;
 public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.ViewHolder> {
 
     private Context context;
-    public List<User> list = new ArrayList<>();
+    private List<User> list = new ArrayList<>();
+    private BitmapUtils bitmapUtils;
+
+    public void setIsSearchMode(boolean isSearchMode) {
+        this.isSearchMode = isSearchMode;
+    }
+
+    private boolean isSearchMode = true; //是否为搜索用户模式
+
+
+    private WeiboRecycleViewAdapter.OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(WeiboRecycleViewAdapter.OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public List<User> getList() {
+        return list;
+    }
 
     public SearchUserAdapter(Context context) {
         this.context = context;
+        bitmapUtils = BitmapUtil.getBitmapUtils(context);
+        bitmapUtils.configMemoryCacheEnabled(false);
     }
 
     @Override
@@ -34,10 +57,24 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(SearchUserAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(SearchUserAdapter.ViewHolder holder, final int position) {
         User user = list.get(position);
         holder.tv_screen_name.setText(user.screen_name);
         holder.tv_follower_count.setText(CommonUtil.getNumString(user.followers_count));
+        if (!isSearchMode) {
+            holder.iv_avatar.setVisibility(View.VISIBLE);
+            bitmapUtils.display(holder.iv_avatar, user.profile_image_url);
+        } else {
+            holder.iv_avatar.setVisibility(View.GONE);
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(v, position);
+                }
+            }
+        });
     }
 
     @Override
@@ -55,23 +92,24 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
         notifyItemRemoved(position);
     }
 
-    public void clearData(){
-        int size = list.size();
-        for(int i=0;i<size;i++){
-            removeData(0);
-        }
+    public void clearData() {
+        list.clear();
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tv_screen_name;
         public TextView tv_follower_count;
+        public ImageView iv_avatar;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tv_screen_name = (TextView) itemView.findViewById(R.id.tv_screen_name);
             tv_follower_count = (TextView) itemView.findViewById(R.id.tv_follower_count);
+            iv_avatar = (ImageView) itemView.findViewById(R.id.iv_avatar);
         }
 
     }
+
 }

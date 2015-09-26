@@ -14,7 +14,6 @@ import android.view.ViewTreeObserver;
 
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.WeiboItem;
-import com.yuqirong.koku.fragment.FragmentFactory;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.view.RevealBackgroundView;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
@@ -73,8 +72,8 @@ public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBac
 
         fm = getSupportFragmentManager();
         adapter = new MainActivity.FragmentAdapter(fm);
-        adapter.addFragment(FragmentFactory.newInstance(),"评论");
-        adapter.addFragment(FragmentFactory.newInstance(),"转发");
+//        adapter.addFragment(FragmentFactory.newInstance(),"评论");
+//        adapter.addFragment(FragmentFactory.newInstance(),"转发");
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }

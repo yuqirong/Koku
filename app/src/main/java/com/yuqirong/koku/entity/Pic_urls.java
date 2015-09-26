@@ -9,6 +9,6 @@ import java.io.Serializable;
 public class Pic_urls implements Serializable{
 
     //图片url
-    public String thumbnail_pic="";
+    public String thumbnail_pic;
 
 }

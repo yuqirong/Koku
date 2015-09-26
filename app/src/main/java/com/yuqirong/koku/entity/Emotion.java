@@ -2,6 +2,9 @@ package com.yuqirong.koku.entity;
 
 import java.io.Serializable;
 
+/**
+ * 表情类
+ */
 public class Emotion implements Serializable {
 
 	private static final long serialVersionUID = 4734938312469844000L;

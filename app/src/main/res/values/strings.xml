@@ -20,6 +20,7 @@
     <string name="colon">:</string>
     <string name="serach_user_warning">温馨提示：新浪接口功能搜索的范围是：V用户、粉丝500以上的达人、粉丝600以上的普通用户</string>
     <string name="serach_user">搜索用户</string>
+    <string name="at_friends">\@好友</string>
     <string name="nearly_dynamic">周边动态</string>
     <string name="hot_topic">热门话题</string>
     <string name="my_favorite">我的收藏</string>
@@ -45,4 +46,8 @@
     <string name="publish_success">发布成功</string>
     <string name="click_to_refresh">点击刷新</string>
     <string name="comment_to_original_weibo">是否同时评论给原微博</string>
+    <string name="follower">粉丝：</string>
+    <string name="follower_num_limit">温馨提示：由于新浪微博接口限制，只返回同样授权本应用的用户</string>
+    <string name="friends_list">好友列表</string>
+    <string name="search_result_list">搜索结果</string>
 </resources>

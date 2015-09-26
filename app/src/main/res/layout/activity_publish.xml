@@ -139,6 +139,7 @@
         android:layout_height="195dp"
         android:numColumns="8"
         android:padding="10dp"
+        android:clipToPadding="false"
         android:background="@android:color/background_light"
         android:visibility="gone"/>
 

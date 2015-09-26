@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.lidroid.xutils.BitmapUtils;
-import com.yuqirong.koku.activity.MainActivity;
 import com.yuqirong.koku.util.BitmapUtil;
 
 /**
@@ -21,13 +22,14 @@ public abstract class BaseFragment extends Fragment {
 
     public Context context;
     protected BitmapUtils bitmapUtils;
-
+    private RequestQueue mQueue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
         bitmapUtils = BitmapUtil.getBitmapUtils(context);
+        mQueue = Volley.newRequestQueue(context);
     }
 
     @Override
@@ -54,7 +56,7 @@ public abstract class BaseFragment extends Fragment {
      */
     protected void getData(String url,Response.Listener listener,Response.ErrorListener errorListener){
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, listener,errorListener );
-        ((MainActivity) context).mQueue.add(stringRequest);
+        mQueue.add(stringRequest);
     }
 
 }

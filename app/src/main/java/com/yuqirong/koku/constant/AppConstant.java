@@ -64,6 +64,14 @@ public class AppConstant {
      * 对一条微博进行评论
      */
     public static final String COMMENTS_CREATE_URL = "https://api.weibo.com/2/comments/create.json";
+    /**
+     * 获取用户的关注列表
+     */
+    public static final String FRIENDSHIPS_FRIENDS_URL = "https://api.weibo.com/2/friendships/friends.json";
+    /**
+     * 获取某个位置周边的动态
+     */
+    public static final String PLACE_NEARBY_TIMELINE_URL = "https://api.weibo.com/2/place/nearby_timeline.json";
 
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
 

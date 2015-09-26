@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="1dp"
     android:layout_marginTop="1dp"
-    android:background="@android:color/background_light"
+    android:background="@drawable/recyclerview_bg_selector"
     android:orientation="vertical"
     android:padding="10dp">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/img_empty_avatar"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:id="@+id/iv_avatar"/>
 
     <TextView
         android:id="@id/tv_screen_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="aaa"
+        android:layout_alignTop="@id/iv_avatar"
+        tools:text="aaa"
+        android:layout_toRightOf="@id/iv_avatar"
         android:textAppearance="?android:textAppearanceMedium" />
 
     <TextView
@@ -20,7 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_screen_name"
-        android:text="粉丝：" />
+        android:layout_toRightOf="@id/iv_avatar"
+        android:text="@string/follower" />
 
     <TextView
         android:id="@+id/tv_follower_count"
@@ -28,6 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_screen_name"
         android:layout_toRightOf="@id/tv_follower"
-        android:text="333" />
+        tools:text="333" />
 
 </RelativeLayout>
