@@ -1,10 +1,12 @@
 package com.yuqirong.koku.entity;
 
+import java.io.Serializable;
+
 /**
  * 地理信息类
  * Created by Anyway on 2015/9/25.
  */
-public class Geo {
+public class Geo implements Serializable {
 
     // 经度坐标
     public String longitude;

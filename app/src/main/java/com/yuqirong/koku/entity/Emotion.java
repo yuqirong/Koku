@@ -7,8 +7,6 @@ import java.io.Serializable;
  */
 public class Emotion implements Serializable {
 
-	private static final long serialVersionUID = 4734938312469844000L;
-
 	private String key;
 	
 	private byte[] data;

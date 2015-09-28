@@ -63,7 +63,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         WeiboViewHolder viewHolder = (WeiboViewHolder) holder;
         //创建监听器实例
         viewHolder.onMenuItemClickListener = new MyOnMenuItemClickListener(position);
-        viewHolder.onClickListener = new WeiboWidghtOnClickListener(position,viewHolder.onMenuItemClickListener);
+        viewHolder.onClickListener = new WeiboWidghtOnClickListener(position, viewHolder.onMenuItemClickListener);
 
         viewHolder.tv_screen_name.setText(weiboItem.user.name);
         bitmapUtils.display(viewHolder.iv_avatar, weiboItem.user.profile_image_url);
@@ -90,12 +90,14 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         //设置微博内容
         SpannableString weiBoContent = StringUtils.getWeiBoContent(context, weiboItem.text, viewHolder.tv_text);
         viewHolder.tv_text.setText(weiBoContent);
+        //判断此微博是否包含图片
         if (weiboItem.pic_urls != null && weiboItem.pic_urls.size() > 0) {
             viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, weiboItem.pic_urls);
         } else {
             if (viewHolder.iv_arrays != null)
                 viewHolder.rl_pics.setVisibility(View.GONE);
         }
+        //判断此微博是否为转发微博
         if (weiboItem.retweeted_status != null) {
             processRetweeted(viewHolder, weiboItem);
             viewHolder.ll_item.addView(viewHolder.view_retweeted);
@@ -105,6 +107,14 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         } else {
             if (viewHolder.view_retweeted != null)
                 viewHolder.ll_item.removeView(viewHolder.view_retweeted);
+        }
+        //判断此微博有没有地理位置
+
+        if (weiboItem.annotations != null && weiboItem.annotations.get(0).place != null && weiboItem.annotations.get(0).place.title != null) {
+            viewHolder.tv_location.setVisibility(View.VISIBLE);
+            viewHolder.tv_location.setText(weiboItem.annotations.get(0).place.title);
+        } else {
+            viewHolder.tv_location.setVisibility(View.GONE);
         }
         //设置监听器
         viewHolder.tv_screen_name.setOnClickListener(viewHolder.onClickListener);
@@ -286,6 +296,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
         public View view_retweeted;
         public TextView tv_retweeted_repost_count;
         public TextView tv_retweeted_comment_count;
+        public TextView tv_location;
         public RelativeLayout rl_pics;
         public RelativeLayout rl_retweeted_pics;
         public WeiboWidghtOnClickListener onClickListener;
@@ -326,6 +337,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<WeiboItem> {
             tv_comment_count = (TextView) itemView.findViewById(R.id.tv_comment_count);
             iv_overflow = (ImageView) itemView.findViewById(R.id.iv_overflow);
             tv_text = (TextView) itemView.findViewById(R.id.tv_text);
+            tv_location = (TextView) itemView.findViewById(R.id.tv_location);
             rl_pics = (RelativeLayout) itemView.findViewById(R.id.rl_pics);
             for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
                 ImageView iv = (ImageView) itemView.findViewById(IMAGEVIEW_IDS[i]);

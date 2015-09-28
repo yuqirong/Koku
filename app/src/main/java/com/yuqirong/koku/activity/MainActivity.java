@@ -143,6 +143,7 @@ public class MainActivity extends BaseActivity {
                 if (isLastShown) {
                     mFloatingActionButton.show();
                 }
+                isDrawerOpened = false;
                 super.onDrawerClosed(drawerView);
             }
 
@@ -252,8 +253,14 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         LogUtils.i(menuItem.getItemId() + "");
-                        mDrawerLayout.closeDrawers();
                         menuItem.setCheckable(false);
+                        isDrawerOpened = false;
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDrawerLayout.closeDrawers();
+                            }
+                        }, 100);
                         switch (menuItem.getItemId()) {
                             case R.id.nav_search:
                                 handler.postDelayed(new Runnable() {
@@ -269,7 +276,7 @@ public class MainActivity extends BaseActivity {
                                     public void run() {
                                         NearlyDynamicActivity.actionStart(MainActivity.this);
                                     }
-                                },300);
+                                }, 300);
                                 break;
                             case R.id.nav_hot:
                                 break;
