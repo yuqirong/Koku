@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.WebViewActivity;
 import com.yuqirong.koku.db.EmotionsDB;
 
 import java.util.regex.Matcher;
@@ -100,7 +101,7 @@ public class StringUtils {
                         // 设置表情
                         int size = (int) textView.getTextSize();
                         // 压缩Bitmap 设置为字体大小的1.5倍
-                        bitmap = Bitmap.createScaledBitmap(bitmap, (int)(size*1.5), (int)(size*1.5), true);
+                        bitmap = Bitmap.createScaledBitmap(bitmap, (int) (size * 1.5), (int) (size * 1.5), true);
 
                         ImageSpan imageSpan = new ImageSpan(context, bitmap);
                         spannableString.setSpan(imageSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -113,10 +114,10 @@ public class StringUtils {
                 int start = matcher.start(4);
                 int end = start + url.length();
                 MyClickableSpan clickableSpan = new MyClickableSpan(context) {
-
                     @Override
                     public void onClick(View widget) {
-                        Toast.makeText(context, "点击了网址：" + url, Toast.LENGTH_LONG).show();
+                        LogUtils.i("点击了网址：" + url);
+                        WebViewActivity.actionStart(context, url);
                     }
                 };
                 spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

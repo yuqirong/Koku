@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/activity_bg_color"
     android:orientation="vertical">
 
     <com.yuqirong.koku.view.RevealBackgroundView
@@ -16,17 +17,5 @@
         class="com.yuqirong.koku.fragment.WeiboDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/mTabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_light" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/mViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
 
 </LinearLayout>

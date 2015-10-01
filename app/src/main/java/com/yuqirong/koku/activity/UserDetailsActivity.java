@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.entity.User;
-import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.entity.Status;
 import com.yuqirong.koku.view.DividerItemDecoration;
 
 /**
@@ -26,7 +26,7 @@ public class UserDetailsActivity extends BaseActivity {
     @Override
     protected void initData(Bundle savedInstanceState) {
         adapter = new WeiboRecycleViewAdapter(this);
-        WeiboItem item = new WeiboItem();
+        Status item = new Status();
         item.user = new User();
         item.user.name = "选哦三";
         item.user.screen_name = "选哦三";

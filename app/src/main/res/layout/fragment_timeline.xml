@@ -8,10 +8,11 @@
         android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="2dp"
         android:background="@color/activity_bg_color"
         android:cacheColorHint="@null"
         android:clipToPadding="false"
-        android:fadeScrollbars="true"/>
+        android:fadeScrollbars="true"
+        android:paddingTop="2dp"
+        android:scrollbars="vertical" />
 
 </com.yuqirong.koku.view.FixedSwipeRefreshLayout>

@@ -268,7 +268,7 @@ public class MainActivity extends BaseActivity {
                                     public void run() {
                                         SearchUserActivity.actionStart(MainActivity.this, SearchUserActivity.SEARCH_USER);
                                     }
-                                }, 300);
+                                }, 500);
                                 break;
                             case R.id.nav_nearly:
                                 handler.postDelayed(new Runnable() {
@@ -276,11 +276,23 @@ public class MainActivity extends BaseActivity {
                                     public void run() {
                                         NearlyDynamicActivity.actionStart(MainActivity.this);
                                     }
-                                }, 300);
+                                }, 500);
                                 break;
                             case R.id.nav_hot:
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        HotTopicActivity.actionStart(MainActivity.this);
+                                    }
+                                }, 500);
                                 break;
                             case R.id.nav_favorite:
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        MyFavoriteActivity.actionStart(MainActivity.this);
+                                    }
+                                }, 500);
                                 break;
                             case R.id.nav_draft:
                                 break;
@@ -289,6 +301,7 @@ public class MainActivity extends BaseActivity {
                     }
                 });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

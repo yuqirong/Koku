@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * weibo实例类
+ * 单条weibo实例类
  * Created by Anyway on 2015/8/30.
  */
-public class WeiboItem implements Serializable {
+public class Status implements Serializable {
 
     /**
      * "attitudes_count": 0,

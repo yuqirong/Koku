@@ -31,8 +31,27 @@ public class RelativeDateFormat {
             long hours = toHours(delta);
             return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
         } else {
-            return c.get(Calendar.MONTH) + 1 + "-"
-                    + c.get(Calendar.DAY_OF_MONTH);
+            String month = String.valueOf(c.get(Calendar.MONTH) + 1);
+            String day = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+            String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
+            String minute = String.valueOf(c.get(Calendar.MINUTE));
+//            String second = String.valueOf(c.get(Calendar.SECOND));
+            if (c.get(Calendar.MONTH) + 1 < 10) {
+                month = "0" + month;
+            }
+            if (c.get(Calendar.DAY_OF_MONTH) < 10) {
+                day = "0" + day;
+            }
+            if (c.get(Calendar.HOUR_OF_DAY) < 10) {
+                hour = "0" + hour;
+            }
+            if (c.get(Calendar.MINUTE) < 10) {
+                minute = "0" + minute;
+            }
+//            if (c.get(Calendar.SECOND) < 10) {
+//                second = "0" + second;
+//            }
+            return c.get(Calendar.YEAR) + "-" + month + "-" + day + " " + hour + ":" + minute;
         }
     }
 

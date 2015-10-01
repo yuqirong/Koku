@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.Pic_urls;
-import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.entity.Status;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.StringUtils;
@@ -45,7 +45,7 @@ public class WeiboDetailsFragment extends BaseFragment {
     public TextView tv_retweeted_comment_count;
     public RelativeLayout rl_pics;
     public RelativeLayout rl_retweeted_pics;
-    private WeiboItem weiboItem;
+    private Status status;
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
     public static final String AT = "@";
 
@@ -54,17 +54,17 @@ public class WeiboDetailsFragment extends BaseFragment {
     public void initData(Bundle savedInstanceState) {
         Intent intent = getActivity().getIntent();
         if (intent != null) {
-            weiboItem = (WeiboItem) intent.getSerializableExtra("WeiboItem");
+            status = (Status) intent.getSerializableExtra("Status");
         }
-        initWeiboData(weiboItem);
+        initWeiboData(status);
     }
 
-    private void initWeiboData(WeiboItem weiboItem) {
-        tv_screen_name.setText(weiboItem.user.name);
-        bitmapUtils.display(civ_avatar, weiboItem.user.profile_image_url);
-        tv_time.setText(DateUtils.getWeiboDate(weiboItem.created_at));
-        tv_device.setText(Html.fromHtml(weiboItem.source));
-        if (weiboItem.user.verified) {
+    private void initWeiboData(Status status) {
+        tv_screen_name.setText(status.user.name);
+        bitmapUtils.display(civ_avatar, status.user.profile_image_url);
+        tv_time.setText(DateUtils.getWeiboDate(status.created_at));
+        tv_device.setText(Html.fromHtml(status.source));
+        if (status.user.verified) {
             iv_verified.setImageResource(R.drawable.avatar_vip);
         }
         //隐藏微博 转发数和评论数
@@ -73,14 +73,14 @@ public class WeiboDetailsFragment extends BaseFragment {
         iv_overflow.setVisibility(View.GONE);
 
         //设置微博内容
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, weiboItem.text, tv_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.text, tv_text);
         tv_text.setText(weiBoContent);
 
-        if (weiboItem.pic_urls != null && weiboItem.pic_urls.size() > 0) {
-            initImageView(rl_pics, iv_arrays, weiboItem.pic_urls);
+        if (status.pic_urls != null && status.pic_urls.size() > 0) {
+            initImageView(rl_pics, iv_arrays, status.pic_urls);
         }
         //设置被转发的内容
-        if (weiboItem.retweeted_status != null) {
+        if (status.retweeted_status != null) {
             processRetweeted();
             ll_item.addView(view_retweeted);
         }
@@ -90,11 +90,11 @@ public class WeiboDetailsFragment extends BaseFragment {
     private void processRetweeted() {
         view_retweeted = LayoutInflater.from(context).inflate(R.layout.weibo_retweeted_item, null);
         initRetweetedView();
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + weiboItem.retweeted_status.user.name + context.getResources().getString(R.string.colon) + weiboItem.retweeted_status.text, tv_retweeted_name_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.name + context.getResources().getString(R.string.colon) + status.retweeted_status.text, tv_retweeted_name_text);
         tv_retweeted_name_text.setText(weiBoContent);
 
-        if (weiboItem.retweeted_status.pic_urls != null && weiboItem.retweeted_status.pic_urls.size() > 0) {
-            initImageView(rl_retweeted_pics, iv_retweeted_arrays, weiboItem.retweeted_status.pic_urls);
+        if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {
+            initImageView(rl_retweeted_pics, iv_retweeted_arrays, status.retweeted_status.pic_urls);
         }
     }
 
@@ -108,8 +108,8 @@ public class WeiboDetailsFragment extends BaseFragment {
             iv_retweeted_arrays.add(iv);
         }
         //设置被转发微博 转发数和评论数
-        tv_retweeted_repost_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.reposts_count));
-        tv_retweeted_comment_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.comments_count));
+        tv_retweeted_repost_count.setText(CommonUtil.getNumString(status.retweeted_status.reposts_count));
+        tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.retweeted_status.comments_count));
     }
 
     private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {

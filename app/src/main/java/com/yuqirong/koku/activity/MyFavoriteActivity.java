@@ -14,9 +14,10 @@ import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
 
 /**
+ * 我的收藏Activity
  * Created by Anyway on 2015/9/25.
  */
-public class NearlyDynamicActivity extends SwipeBackActivity {
+public class MyFavoriteActivity extends SwipeBackActivity {
 
     private SwipeBackLayout mSwipeBackLayout;
     private Toolbar mToolbar;
@@ -36,7 +37,7 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
     @Override
     protected void initToolBar() {
         mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setTitle(R.string.nearly_dynamic);
+        mToolbar.setTitle(R.string.my_favorite);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -44,7 +45,7 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
 
     @Override
     protected void initView() {
-        setContentView(R.layout.activity_nearly_dynamic);
+        setContentView(R.layout.activity_my_favorite);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
     }
 
@@ -54,12 +55,12 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
         switch (requestCode) {
             case MainActivity.SEND_NEW_COMMENT:
                 if (resultCode == PublishActivity.SEND_COMMENT_SUCCESS) {
-                    CommonUtil.setVubator(NearlyDynamicActivity.this, 300);
+                    CommonUtil.setVubator(MyFavoriteActivity.this, 300);
                 }
                 break;
             case MainActivity.SEND_NEW_REPOST:
                 if (resultCode == PublishActivity.SEND_REPOST_SUCCESS) {
-                    CommonUtil.setVubator(NearlyDynamicActivity.this, 300);
+                    CommonUtil.setVubator(MyFavoriteActivity.this, 300);
                 }
                 break;
         }
@@ -67,7 +68,7 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
     }
 
     public static void actionStart(Context context) {
-        Intent intent = new Intent(context, NearlyDynamicActivity.class);
+        Intent intent = new Intent(context, MyFavoriteActivity.class);
         context.startActivity(intent);
     }
 

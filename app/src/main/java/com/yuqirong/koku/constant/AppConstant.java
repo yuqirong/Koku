@@ -73,6 +73,10 @@ public class AppConstant {
      */
     public static final String PLACE_NEARBY_TIMELINE_URL = "https://api.weibo.com/2/place/nearby_timeline.json";
 
+    public static final String MY_FAVORITE_URL = "https://api.weibo.com/2/favorites.json";
+
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
+
+
 
 }

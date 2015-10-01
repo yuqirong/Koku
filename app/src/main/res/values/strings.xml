@@ -9,6 +9,8 @@
     <string name="action_share">分享</string>
     <string name="action_favorite">收藏</string>
     <string name="action_copy">复制</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_open_in_browser">在浏览器中打开</string>
 
     <string name="action_comment">评论</string>
     <string name="drawer_open">打开抽屉</string>
@@ -50,4 +52,6 @@
     <string name="follower_num_limit">温馨提示：由于新浪微博接口限制，只返回同样授权本应用的用户</string>
     <string name="friends_list">好友列表</string>
     <string name="search_result_list">搜索结果</string>
+    <string name="load_web">加载网页</string>
+    <string name="copy_to_clipboard">已将网址复制到剪贴板上</string>
 </resources>

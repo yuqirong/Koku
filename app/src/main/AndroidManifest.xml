@@ -67,7 +67,23 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent">
         </activity>
-
+        <activity
+            android:name=".activity.HotTopicActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.MyFavoriteActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
+        </activity>
+        <activity
+            android:name=".activity.WebViewActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent">
+        </activity>
     </application>
 
 </manifest>

@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.Pic_urls;
-import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.entity.Status;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.StringUtils;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by Anyway on 2015/8/31.
  */
-public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
+public class WeiboListViewAdapter extends MBaseAdapter<Status, ListView> {
 
     private BitmapUtils bitmapUtils;
     public static final String AT = "@";
@@ -37,7 +37,7 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
 
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
 
-    public WeiboListViewAdapter(Context context, List<WeiboItem> list) {
+    public WeiboListViewAdapter(Context context, List<Status> list) {
         super(context, list);
         String bitmap_cache_dir = context.getCacheDir() + File.separator + "bitmap";
         int cache = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024 * 8));
@@ -48,7 +48,7 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        WeiboItem weiboItem = getList().get(position);
+        Status status = getList().get(position);
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.weibo_original_item, null);
@@ -57,32 +57,32 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tv_screen_name.setText(weiboItem.user.name);
-        bitmapUtils.display(viewHolder.civ_avatar, weiboItem.user.profile_image_url);
-        viewHolder.tv_time.setText(DateUtils.getWeiboDate(weiboItem.created_at));
-        viewHolder.tv_device.setText(Html.fromHtml(weiboItem.source));
-        if (weiboItem.user.verified) {
+        viewHolder.tv_screen_name.setText(status.user.name);
+        bitmapUtils.display(viewHolder.civ_avatar, status.user.profile_image_url);
+        viewHolder.tv_time.setText(DateUtils.getWeiboDate(status.created_at));
+        viewHolder.tv_device.setText(Html.fromHtml(status.source));
+        if (status.user.verified) {
             viewHolder.iv_verified.setImageResource(R.drawable.avatar_vip);
         } else {
             viewHolder.iv_verified.setImageResource(android.R.drawable.screen_background_light_transparent);
         }
         //设置微博 转发数和评论数
-        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(String.valueOf(weiboItem.reposts_count)));
-        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(String.valueOf(weiboItem.comments_count)));
+        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(String.valueOf(status.reposts_count)));
+        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(String.valueOf(status.comments_count)));
 
         //设置微博内容
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, weiboItem.text, viewHolder.tv_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.text, viewHolder.tv_text);
         viewHolder.tv_text.setText(weiBoContent);
 
-        if (weiboItem.pic_urls != null && weiboItem.pic_urls.size() > 0) {
-            viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, weiboItem.pic_urls);
+        if (status.pic_urls != null && status.pic_urls.size() > 0) {
+            viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, status.pic_urls);
         } else {
             if (viewHolder.iv_arrays != null)
                 viewHolder.rl_pics.setVisibility(View.GONE);
         }
 
-        if (weiboItem.retweeted_status != null) {
-            processRetweeted(viewHolder, weiboItem);
+        if (status.retweeted_status != null) {
+            processRetweeted(viewHolder, status);
             viewHolder.ll_item.addView(viewHolder.view_retweeted);
         } else {
             if (viewHolder.view_retweeted != null)
@@ -92,26 +92,26 @@ public class WeiboListViewAdapter extends MBaseAdapter<WeiboItem, ListView> {
     }
 
     // 处理被转发的View
-    private void processRetweeted(ViewHolder viewHolder, WeiboItem weiboItem) {
+    private void processRetweeted(ViewHolder viewHolder, Status status) {
         if (viewHolder.view_retweeted == null) {
             viewHolder.view_retweeted = LayoutInflater.from(context).inflate(R.layout.weibo_retweeted_item, null);
             viewHolder.initRetweetedView();
         }
 
         //设置被转发微博内容
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + weiboItem.retweeted_status.user.name + context.getResources().getString(R.string.colon) + weiboItem.retweeted_status.text, viewHolder.tv_retweeted_name_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.name + context.getResources().getString(R.string.colon) + status.retweeted_status.text, viewHolder.tv_retweeted_name_text);
         viewHolder.tv_retweeted_name_text.setText(weiBoContent);
 
-        if (weiboItem.retweeted_status.pic_urls != null && weiboItem.retweeted_status.pic_urls.size() > 0) {
-            viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, weiboItem.retweeted_status.pic_urls);
+        if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {
+            viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, status.retweeted_status.pic_urls);
         } else {
             if (viewHolder.iv_retweeted_arrays != null)
                 viewHolder.rl_retweeted_pics.setVisibility(View.GONE);
         }
 
         //设置被转发微博 转发数和评论数
-        viewHolder.tv_retweeted_repost_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.reposts_count));
-        viewHolder.tv_retweeted_comment_count.setText(CommonUtil.getNumString(weiboItem.retweeted_status.comments_count));
+        viewHolder.tv_retweeted_repost_count.setText(CommonUtil.getNumString(status.retweeted_status.reposts_count));
+        viewHolder.tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.retweeted_status.comments_count));
 
         ViewParent parent = viewHolder.view_retweeted.getParent();
         if (parent != null) {

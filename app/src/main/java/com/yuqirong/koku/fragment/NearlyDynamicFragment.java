@@ -21,7 +21,7 @@ import com.yuqirong.koku.activity.WeiboDetailsActivity;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
-import com.yuqirong.koku.entity.WeiboItem;
+import com.yuqirong.koku.entity.Status;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
@@ -141,9 +141,9 @@ public class NearlyDynamicFragment extends BaseFragment {
     private void processData(String statuses) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             adapter.clearData();
-            adapter.getList().add(new WeiboItem());
+            adapter.getList().add(new Status());
         }
-        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, WeiboItem.class));
+        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
@@ -188,14 +188,14 @@ public class NearlyDynamicFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position) {
                 LogUtils.i("click the item " + position);
-                WeiboItem item = adapter.getList().get(position);
+                Status item = adapter.getList().get(position);
                 int[] startingLocation = new int[2];
                 view.getLocationOnScreen(startingLocation);
                 startingLocation[0] += view.getWidth() / 2;
                 startingLocation[1] += view.getHeight() / 2;
                 Intent intent = new Intent(context, WeiboDetailsActivity.class);
                 intent.putExtra(WeiboDetailsActivity.ARG_REVEAL_START_LOCATION, startingLocation);
-                intent.putExtra("WeiboItem", item);
+                intent.putExtra("Status", item);
                 startActivity(intent);
                 getActivity().overridePendingTransition(0, 0);
             }
@@ -203,11 +203,11 @@ public class NearlyDynamicFragment extends BaseFragment {
             @Override
             public void onItemLongClick(View view, int position) {
                 LogUtils.i("long click the item " + position);
-                final WeiboItem weiboItem = adapter.getList().get(position);
+                final Status status = adapter.getList().get(position);
                 CommonUtil.showPopupMenu(context, view.findViewById(R.id.iv_overflow), R.menu.overflow_popupmenu, new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        LogUtils.i(weiboItem + weiboItem.user.screen_name);
+                        LogUtils.i(status + status.user.screen_name);
                         return true;
                     }
                 });

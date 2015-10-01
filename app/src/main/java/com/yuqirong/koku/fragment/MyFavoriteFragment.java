@@ -20,6 +20,7 @@ import com.yuqirong.koku.activity.WeiboDetailsActivity;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.entity.Favorite;
 import com.yuqirong.koku.entity.Status;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.JsonUtils;
@@ -31,11 +32,13 @@ import com.yuqirong.koku.view.FixedSwipeRefreshLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
- * 微博主页
- * Created by Anyway on 2015/8/30.
+ * 周边动态Fragment
+ * Created by Anyway on 2015/9/19.
  */
-public class WeiboTimeLineFragment extends BaseFragment {
+public class MyFavoriteFragment extends BaseFragment {
 
     // 下拉刷新组件
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
@@ -46,29 +49,23 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private boolean load = false;
 
     private AutoLoadRecyclerView mRecyclerView;
-    private String baseUrl = "";
     public String CACHE_FOLDER_NAME = "timeline";
-    public String TIME_LINE_CACHE_NAME = "timeline_cache";
+    public String TIME_LINE_CACHE_NAME = "my_favorite_cache";
     protected ACache aCache;
-    //若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
-    private String max_id = "0";
+    //返回结果的页码，默认为1。
+    private int page = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         aCache = ACache.get(context, CACHE_FOLDER_NAME);
-        Bundle args = getArguments();
-        if (args != null) {
-            baseUrl = args.getString("url");
-            TIME_LINE_CACHE_NAME += baseUrl;
-        }
     }
 
     @Override
     public void initData(Bundle savedInstanceState) {
         getCache();
         if (first) {
-
+            refreshWeibo();
         }
     }
 
@@ -92,13 +89,12 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private void getCache() {
         String cache = aCache.getAsString(TIME_LINE_CACHE_NAME);
         if (TextUtils.isEmpty(cache)) {
-            //TODO 设置recyclerview为emptyView
             return;
         }
         try {
             JSONObject jsonObject = new JSONObject(cache);
-            max_id = jsonObject.getString("max_id");
-            String statuses = jsonObject.getString("statuses");
+            //TODO
+            String statuses = jsonObject.getString("favorites");
             processData(statuses);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -112,11 +108,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         if (!TextUtils.isEmpty(access_token)) {
             if (mSwipeRefreshLayout.isRefreshing()) {
-                max_id = "0";
+                page = 1;
                 adapter.initFooterViewHolder();
             }
-            String url = this.baseUrl + "?access_token=" + access_token + "&max_id=" + max_id;
-            LogUtils.i("url  : " + url);
+            String url = AppConstant.MY_FAVORITE_URL + "?access_token=" + access_token + "&count=20&page=" + page;
+            LogUtils.i("我的收藏 url ：" + url);
             getData(url, listener, errorListener);
         }
     }
@@ -127,8 +123,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
             String statuses = null;
             try {
                 JSONObject jsonObject = new JSONObject(stringResult);
-                max_id = jsonObject.getString("max_id");
-                statuses = jsonObject.getString("statuses");
+                statuses = jsonObject.getString("favorites");
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     aCache.put(TIME_LINE_CACHE_NAME, stringResult);
                 }
@@ -144,14 +139,14 @@ public class WeiboTimeLineFragment extends BaseFragment {
             adapter.clearData();
             adapter.getList().add(new Status());
         }
-        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
+        List<Favorite> favoritesList = JsonUtils.getListFromJson(statuses, Favorite.class);
+        for (Favorite f : favoritesList) {
+            adapter.getList().add(adapter.getList().size() - 1, f.status);
+        }
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
             adapter.completeLoadMore(true);
-            if ("0".equals(max_id)) {
-                adapter.setNoMoreWeibo();
-            }
             load = false;
         }
     }
@@ -192,14 +187,14 @@ public class WeiboTimeLineFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position) {
                 LogUtils.i("click the item " + position);
-                Status status = adapter.getList().get(position);
+                Status item = adapter.getList().get(position);
                 int[] startingLocation = new int[2];
                 view.getLocationOnScreen(startingLocation);
                 startingLocation[0] += view.getWidth() / 2;
                 startingLocation[1] += view.getHeight() / 2;
                 Intent intent = new Intent(context, WeiboDetailsActivity.class);
                 intent.putExtra(WeiboDetailsActivity.ARG_REVEAL_START_LOCATION, startingLocation);
-                intent.putExtra("Status", status);
+                intent.putExtra("Status", item);
                 startActivity(intent);
                 getActivity().overridePendingTransition(0, 0);
             }
@@ -223,10 +218,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
         @Override
         public void onLoadingMore() {
             load = true;
-            if (!"0".equals(max_id))
-                getDataFromServer();
+            page++;
+            getDataFromServer();
         }
     };
+
 
     /**
      * 下拉刷新Listener
@@ -253,5 +249,4 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
         }
     };
-
 }
