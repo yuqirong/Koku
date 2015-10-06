@@ -72,8 +72,18 @@ public class AppConstant {
      * 获取某个位置周边的动态
      */
     public static final String PLACE_NEARBY_TIMELINE_URL = "https://api.weibo.com/2/place/nearby_timeline.json";
-
+    /**
+     * 获取我的收藏
+     */
     public static final String MY_FAVORITE_URL = "https://api.weibo.com/2/favorites.json";
+    /**
+     * 添加一条微博到收藏里
+     */
+    public static final String FAVORITE_CREATE_URL = "https://api.weibo.com/2/favorites/create.json";
+    /**
+     * 取消收藏一条微博
+     */
+    public static final String FAVORITE_DESTROY_URL = "https://api.weibo.com/2/favorites/destroy.json";
 
     public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
 

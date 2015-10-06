@@ -1,8 +1,10 @@
 package com.yuqirong.koku.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -16,6 +18,13 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.MainActivity;
@@ -23,16 +32,23 @@ import com.yuqirong.koku.activity.MyFavoriteActivity;
 import com.yuqirong.koku.activity.NearlyDynamicActivity;
 import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.activity.UserDetailsActivity;
+import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.Status;
 import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.LogUtils;
+import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 /**
  * 微博适配器
@@ -45,15 +61,19 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
     public static final String AT = "@";
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
     private Status status;
+    private RequestQueue mQueue;
+    private View view;
 
     public WeiboRecycleViewAdapter(Context context) {
         this.context = context;
         bitmapUtils = BitmapUtil.getBitmapUtils(context);
         list.add(new Status());
+        mQueue = Volley.newRequestQueue(context);
     }
 
     @Override
     public RecyclerView.ViewHolder createCustomViewHolder(ViewGroup parent, int viewType) {
+        view = parent;
         View view = LayoutInflater.from(context).inflate(R.layout.weibo_original_item, parent, false);
         WeiboViewHolder holder = new WeiboViewHolder(view);
         return holder;
@@ -166,7 +186,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
             if (status == null) {
                 return;
             }
-            int requestCode = 0;
+            int requestCode;
             Intent intent = new Intent();
             switch (v.getId()) {
                 case R.id.tv_screen_name: //点击用户昵称
@@ -196,7 +216,11 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                     switchToActivity(intent, requestCode);
                     break;
                 case R.id.iv_overflow:  //点击菜单图标事件
-                    CommonUtil.showPopupMenu(context, v, R.menu.overflow_popupmenu, onMenuItemClickListener);
+                    if (status.favorited) {
+                        CommonUtil.showPopupMenu(context, v, R.menu.overflow_popupmenu_02, onMenuItemClickListener);
+                    } else {
+                        CommonUtil.showPopupMenu(context, v, R.menu.overflow_popupmenu, onMenuItemClickListener);
+                    }
                     break;
                 case R.id.tv_retweeted_comment_count: //点击被转发微博的评论数事件
                     requestCode = MainActivity.SEND_NEW_COMMENT;
@@ -231,6 +255,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
     class MyOnMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private Status status;
+        private ProgressDialog mProgressDialog;
 
         public MyOnMenuItemClickListener(int position) {
             status = list.get(position);
@@ -239,8 +264,86 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             LogUtils.i(status + status.user.screen_name);
+            switch (item.getItemId()) {
+                case R.id.overflow_share:
+                    // TODO: 2015/10/4 share the weibo by sharesdk
+                    showShare();
+                    break;
+                case R.id.overflow_favorite:
+                    processFavorite();
+                    break;
+                case R.id.overflow_cancel_favorite:
+                    processFavorite();
+                    break;
+                case R.id.overflow_copy:
+                    ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    clip.setText(status.text); // 复制
+                    CommonUtil.showSnackbar(view, R.string.copy_weibo_to_clipboard, context.getResources().getColor(R.color.Indigo_colorPrimary));
+                    break;
+            }
             return true;
         }
+
+        private void showShare() {
+            ShareSDK.initSDK(context);
+            OnekeyShare oks = new OnekeyShare();
+            //关闭sso授权
+            oks.disableSSOWhenAuthorize();
+
+            // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+            oks.setTitle(status.user.screen_name);
+//            // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+//            oks.setTitleUrl("http://sharesdk.cn");
+            // text是分享文本，所有平台都需要这个字段
+            oks.setText(status.text);
+//            // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+//            oks.setImagePath(status.pic_urls.get(0).thumbnail_pic);//确保SDcard下面存在此张图片
+//            // url仅在微信（包括好友和朋友圈）中使用
+//            oks.setUrl("http://sharesdk.cn");
+//            // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+//            oks.setComment("我是测试评论文本");
+//            // site是分享此内容的网站名称，仅在QQ空间使用
+//            oks.setSite(context.getResources().getString(R.string.app_name));
+//            // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+//            oks.setSiteUrl("http://sharesdk.cn");
+            // 启动分享GUI
+            oks.show(context);
+        }
+
+        private void processFavorite() {
+            String url;
+            if (status.favorited) {
+                url = AppConstant.FAVORITE_DESTROY_URL;
+            } else {
+                url = AppConstant.FAVORITE_CREATE_URL;
+            }
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String s) {
+                    if (mProgressDialog != null) {
+                        mProgressDialog.dismiss();
+                    }
+                    CommonUtil.showSnackbar(view, R.string.operation_success, context.getResources().getColor(R.color.Indigo_colorPrimary));
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    // TODO: 2015/10/4  请求错误
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> map = new HashMap();
+                    map.put("id", status.idstr);
+                    map.put("access_token", SharePrefUtil.getString(context, "access_token", ""));
+                    return map;
+                }
+            };
+            mQueue.add(stringRequest);
+            LogUtils.i("收藏微博url：" + AppConstant.FAVORITE_CREATE_URL + " , id=" + status.idstr);
+            mProgressDialog = CommonUtil.showProgressDialog(context, R.string.please_wait, true);
+        }
+
     }
 
 

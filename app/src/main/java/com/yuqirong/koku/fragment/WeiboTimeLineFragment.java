@@ -1,10 +1,13 @@
 package com.yuqirong.koku.fragment;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,8 +16,11 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.WeiboDetailsActivity;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
@@ -30,6 +36,9 @@ import com.yuqirong.koku.view.FixedSwipeRefreshLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 微博主页
@@ -68,7 +77,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
     public void initData(Bundle savedInstanceState) {
         getCache();
         if (first) {
-
+            refreshWeibo();
         }
     }
 
@@ -193,26 +202,78 @@ public class WeiboTimeLineFragment extends BaseFragment {
             public void onItemClick(View view, int position) {
                 LogUtils.i("click the item " + position);
                 Status status = adapter.getList().get(position);
-                int[] startingLocation = new int[2];
-                view.getLocationOnScreen(startingLocation);
-                startingLocation[0] += view.getWidth() / 2;
-                startingLocation[1] += view.getHeight() / 2;
                 Intent intent = new Intent(context, WeiboDetailsActivity.class);
-                intent.putExtra(WeiboDetailsActivity.ARG_REVEAL_START_LOCATION, startingLocation);
                 intent.putExtra("Status", status);
                 startActivity(intent);
-                getActivity().overridePendingTransition(0, 0);
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
+                int menuResId;
                 LogUtils.i("long click the item " + position);
                 final Status status = adapter.getList().get(position);
-                CommonUtil.showPopupMenu(context, view.findViewById(R.id.iv_overflow), R.menu.overflow_popupmenu, new PopupMenu.OnMenuItemClickListener() {
+                if (status.favorited) {
+                    menuResId = R.menu.overflow_popupmenu_02;
+                } else {
+                    menuResId = R.menu.overflow_popupmenu;
+                }
+                CommonUtil.showPopupMenu(context, view.findViewById(R.id.iv_overflow), menuResId, new PopupMenu.OnMenuItemClickListener() {
+
+                    private ProgressDialog mProgressDialog;
+
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        LogUtils.i(status + status.user.screen_name);
+                        LogUtils.i("click: " + status + status.user.screen_name);
+
+                        switch (item.getItemId()) {
+                            case R.id.overflow_share:
+                                //TODO: 2015/10/4 分享
+                                showShare(status.user.screen_name,status.text);
+                                break;
+                            case R.id.overflow_favorite:
+                                processFavorite();
+                                break;
+                            case R.id.overflow_cancel_favorite:
+                                processFavorite();
+                                break;
+                            case R.id.overflow_copy:
+                                ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                                clip.setText(status.text); // 复制
+                                CommonUtil.showSnackbar(getView(), R.string.copy_weibo_to_clipboard, getResources().getColor(R.color.Indigo_colorPrimary));
+                                break;
+                        }
                         return true;
+                    }
+
+
+
+                    private void processFavorite() {
+                        String url;
+                        if (status.favorited) {
+                            url = AppConstant.FAVORITE_DESTROY_URL;
+                        } else {
+                            url = AppConstant.FAVORITE_CREATE_URL;
+                        }
+                        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String s) {
+                                if (mProgressDialog != null) {
+                                    mProgressDialog.dismiss();
+                                }
+                                CommonUtil.showSnackbar(getView(), R.string.operation_success, getResources().getColor(R.color.Indigo_colorPrimary));
+                            }
+                        }, errorListener) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> map = new HashMap();
+                                map.put("id", status.idstr);
+                                map.put("access_token", SharePrefUtil.getString(context, "access_token", ""));
+                                return map;
+                            }
+                        };
+                        mQueue.add(stringRequest);
+                        LogUtils.i("收藏微博url：" + AppConstant.FAVORITE_CREATE_URL + " , id=" + status.idstr);
+                        mProgressDialog = CommonUtil.showProgressDialog(context, R.string.please_wait, true);
                     }
                 });
             }

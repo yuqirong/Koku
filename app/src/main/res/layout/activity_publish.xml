@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg_color"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
+
+    <com.yuqirong.koku.view.RevealBackgroundView
+        android:id="@+id/vRevealBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <include layout="@layout/layout_toolbar" />
 
@@ -70,10 +76,10 @@
             android:id="@+id/cb_comment_to_auth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/tv_location"
             android:layout_alignBottom="@id/tv_location"
+            android:layout_alignTop="@id/tv_location"
             android:text="@string/comment_to_author"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_word_num"
@@ -137,10 +143,10 @@
         android:id="@+id/gv_emotion"
         android:layout_width="match_parent"
         android:layout_height="195dp"
+        android:background="@android:color/background_light"
+        android:clipToPadding="false"
         android:numColumns="8"
         android:padding="10dp"
-        android:clipToPadding="false"
-        android:background="@android:color/background_light"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </LinearLayout>

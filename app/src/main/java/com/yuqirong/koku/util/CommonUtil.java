@@ -1,6 +1,7 @@
 package com.yuqirong.koku.util;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -181,6 +182,20 @@ public class CommonUtil {
         mPopupMenu.getMenuInflater().inflate(resId, mPopupMenu.getMenu());
         mPopupMenu.setOnMenuItemClickListener(listener);
         mPopupMenu.show();
+    }
+
+    /**
+     * 显示ProgressDialog
+     * @param context
+     * @param stringResId
+     * @param cancelable
+     */
+    public static ProgressDialog showProgressDialog(Context context,int stringResId,boolean cancelable){
+        ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage(context.getResources().getString(stringResId));
+        progressDialog.setCancelable(cancelable);
+        progressDialog.show();
+        return progressDialog;
     }
 
 }

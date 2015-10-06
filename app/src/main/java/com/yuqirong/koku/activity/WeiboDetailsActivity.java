@@ -6,12 +6,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewTreeObserver;
 
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.Status;
-import com.yuqirong.koku.view.RevealBackgroundView;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
 
@@ -19,12 +16,10 @@ import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
  * 单条微博详情Activity
  * Created by Anyway on 2015/9/17.
  */
-public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBackgroundView.OnStateChangeListener {
+public class WeiboDetailsActivity extends SwipeBackActivity {
 
-    private RevealBackgroundView vRevealBackground;
     private SwipeBackLayout mSwipeBackLayout;
     private Toolbar mToolbar;
-    public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
 //    private TabLayout mTabLayout;
 //    private ViewPager mViewPager;
 //    private FragmentManager fm;
@@ -34,7 +29,6 @@ public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupRevealBackground(savedInstanceState);
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         status = (Status) getIntent().getSerializableExtra("status");
@@ -57,7 +51,6 @@ public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBac
     @Override
     protected void initView() {
         setContentView(R.layout.activity_weibo_details);
-        vRevealBackground = (RevealBackgroundView) findViewById(R.id.vRevealBackground);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
 //        mTabLayout = (TabLayout) findViewById(R.id.mTabLayout);
 //        mViewPager = (ViewPager) findViewById(R.id.mViewPager);
@@ -72,32 +65,6 @@ public class WeiboDetailsActivity extends SwipeBackActivity implements RevealBac
 ////        adapter.addFragment(FragmentFactory.newInstance(),"转发");
 //        mViewPager.setAdapter(adapter);
 //        mTabLayout.setupWithViewPager(mViewPager);
-    }
-
-    private void setupRevealBackground(Bundle savedInstanceState) {
-        vRevealBackground.setOnStateChangeListener(this);
-        if (savedInstanceState == null) {
-            final int[] startingLocation = getIntent().getIntArrayExtra(ARG_REVEAL_START_LOCATION);
-            vRevealBackground.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-                @Override
-                public boolean onPreDraw() {
-                    vRevealBackground.getViewTreeObserver().removeOnPreDrawListener(this);
-                    vRevealBackground.startFromLocation(startingLocation);
-                    return false;
-                }
-            });
-        } else {
-            vRevealBackground.setToFinishedFrame();
-        }
-    }
-
-    @Override
-    public void onStateChange(int state) {
-        if (RevealBackgroundView.STATE_FINISHED == state) {
-            if (RevealBackgroundView.STATE_FINISHED == state) {
-                vRevealBackground.setVisibility(View.GONE);
-            }
-        }
     }
 
     @Override

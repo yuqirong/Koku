@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,6 +79,7 @@ public class MainActivity extends BaseActivity {
     public static final int SEND_NEW_REPOST = 1005;
     private boolean isLastShown = false; //用于fabbutton上一个状态是否显示
     private long firstTime;
+    private CoordinatorLayout mCoordinatorLayout;
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -173,6 +176,7 @@ public class MainActivity extends BaseActivity {
         mNavigationView = (NavigationView) findViewById(R.id.mNavigationView);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.mFloatingActionButton);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.mCoordinatorLayout);
         if (adapter == null) {
             setupViewPagerContent();
         }
@@ -228,9 +232,20 @@ public class MainActivity extends BaseActivity {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 得到状态栏的高度
+                DisplayMetrics dm = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(dm);
+                int topOffset = dm.heightPixels - mCoordinatorLayout.getMeasuredHeight();
+
+                int[] startingLocation = new int[2];
+                view.getLocationOnScreen(startingLocation);
+                startingLocation[0] += view.getWidth() / 2;
+                startingLocation[1] = startingLocation[1] - topOffset + view.getHeight() / 2;
                 Intent intent = new Intent(MainActivity.this, PublishActivity.class);
                 intent.putExtra("type", PublishActivity.SEND_WEIBO);
+                intent.putExtra(PublishActivity.ARG_REVEAL_START_LOCATION, startingLocation);
                 startActivityForResult(intent, SEND_NEW_WEIBO);
+                overridePendingTransition(0, 0);
             }
         });
     }

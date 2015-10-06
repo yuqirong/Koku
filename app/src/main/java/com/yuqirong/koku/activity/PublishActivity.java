@@ -25,6 +25,7 @@ import android.text.style.ImageSpan;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
@@ -49,6 +50,7 @@ import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
+import com.yuqirong.koku.view.RevealBackgroundView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,11 +67,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
 /**
  * 发布微博 评论微博 转发微博等
  * Created by Anyway on 2015/9/13.
  */
-public class PublishActivity extends BaseActivity {
+public class PublishActivity extends BaseActivity implements RevealBackgroundView.OnStateChangeListener {
 
     private Toolbar mToolbar;
     private ActionBar actionBar;
@@ -90,12 +93,15 @@ public class PublishActivity extends BaseActivity {
     private LoadImageAsyncTask loadImageAsyncTask;
     private GridView gv_emotion;
     private EmotionAdapter adapter;
+    private RevealBackgroundView vRevealBackground;
 
     private boolean isPicture = false;
 
     public static final int SEND_WEIBO = 1010;
     public static final int SEND_COMMENT = 1020;
     public static final int SEND_REPOST = 1030;
+    public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
+
     /**
      * 是否定位
      */
@@ -119,6 +125,43 @@ public class PublishActivity extends BaseActivity {
     public static final int SEND_COMMENT_SUCCESS = 1250;
     //转发成功
     public static final int SEND_REPOST_SUCCESS = 1300;
+    private LinearLayout mLinearLayout;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (type == PublishActivity.SEND_WEIBO) {
+            setupRevealBackground(savedInstanceState);
+        }
+    }
+
+    private void setupRevealBackground(Bundle savedInstanceState) {
+        vRevealBackground.setFillPaintColor(getResources().getColor(R.color.Indigo_colorPrimary));
+        vRevealBackground.setOnStateChangeListener(this);
+        if (savedInstanceState == null) {
+            final int[] startingLocation = getIntent().getIntArrayExtra(ARG_REVEAL_START_LOCATION);
+            vRevealBackground.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    vRevealBackground.getViewTreeObserver().removeOnPreDrawListener(this);
+                    vRevealBackground.startFromLocation(startingLocation);
+                    return false;
+                }
+            });
+        } else {
+            vRevealBackground.setToFinishedFrame();
+        }
+    }
+
+    @Override
+    public void onStateChange(int state) {
+        if (RevealBackgroundView.STATE_FINISHED == state) {
+            if (RevealBackgroundView.STATE_FINISHED == state) {
+                vRevealBackground.setVisibility(View.GONE);
+                mLinearLayout.setBackgroundColor(getResources().getColor(R.color.activity_bg_color));
+            }
+        }
+    }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -186,6 +229,8 @@ public class PublishActivity extends BaseActivity {
         tv_word_num = (TextView) findViewById(R.id.tv_word_num);
         gv_emotion = (GridView) findViewById(R.id.gv_emotion);
         cb_comment_to_auth = (CheckBox) findViewById(R.id.cb_comment_to_auth);
+        vRevealBackground = (RevealBackgroundView) findViewById(R.id.vRevealBackground);
+        mLinearLayout = (LinearLayout) findViewById(R.id.mLinearLayout);
 
         adapter = new EmotionAdapter(this, new ArrayList<Emotion>());
         gv_emotion.setAdapter(adapter);
@@ -268,7 +313,7 @@ public class PublishActivity extends BaseActivity {
 
     // 处理 @ 事件
     private void processNoti() {
-        Intent intent = new Intent(this,SearchUserActivity.class);
+        Intent intent = new Intent(this, SearchUserActivity.class);
         intent.putExtra("type", SearchUserActivity.AT_USER);
         startActivityForResult(intent, SearchUserActivity.AT_USER);
     }
@@ -533,9 +578,9 @@ public class PublishActivity extends BaseActivity {
                 }
                 break;
             case SearchUserActivity.AT_USER:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     String screen_name = data.getStringExtra("screen_name");
-                    et_content.getText().append("@"+screen_name+" ");
+                    et_content.getText().append("@" + screen_name + " ");
                 }
                 break;
         }

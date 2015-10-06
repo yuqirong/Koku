@@ -8,6 +8,7 @@
     <string name="action_repost">转发</string>
     <string name="action_share">分享</string>
     <string name="action_favorite">收藏</string>
+    <string name="action_cancel_favorite">取消收藏</string>
     <string name="action_copy">复制</string>
     <string name="action_refresh">刷新</string>
     <string name="action_open_in_browser">在浏览器中打开</string>
@@ -54,4 +55,7 @@
     <string name="search_result_list">搜索结果</string>
     <string name="load_web">加载网页</string>
     <string name="copy_to_clipboard">已将网址复制到剪贴板上</string>
+    <string name="copy_weibo_to_clipboard">已将微博复制到剪贴板上</string>
+    <string name="please_wait">请等待...</string>
+    <string name="operation_success">操作成功</string>
 </resources>

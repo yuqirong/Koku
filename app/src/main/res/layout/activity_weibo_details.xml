@@ -5,11 +5,6 @@
     android:background="@color/activity_bg_color"
     android:orientation="vertical">
 
-    <com.yuqirong.koku.view.RevealBackgroundView
-        android:id="@+id/vRevealBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <include layout="@layout/layout_toolbar" />
 
     <fragment
