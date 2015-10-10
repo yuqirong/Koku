@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginTop="2dp"
+    android:background="@drawable/recyclerview_bg_selector">
+
+    <TextView
+        android:id="@+id/tv_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        tools:text="新微博" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_type"
+        android:layout_margin="5dp"
+        tools:text="微博内容" />
+
+    <ImageButton
+        android:id="@+id/ib_send"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_content"
+        android:layout_marginRight="5dp"
+        android:background="@android:color/transparent"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_send_dark" />
+
+    <ImageButton
+        android:id="@+id/ib_delete"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_below="@id/tv_content"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/ib_send"
+        android:background="@android:color/transparent"
+        android:padding="5dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_delete_dark" />
+
+
+</RelativeLayout>

@@ -7,6 +7,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.db.DraftDB;
 import com.yuqirong.koku.db.EmotionsDB;
 
 /**
@@ -27,21 +28,19 @@ public class SplashActivity extends BaseActivity {
         scaleAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                Thread thread = new Thread(new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         EmotionsDB.checkEmotions();
+                        DraftDB.checkDraft();
                     }
-                });
-                thread.start();
+                }).start();
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
                 finish();
             }
 
@@ -64,4 +63,9 @@ public class SplashActivity extends BaseActivity {
         iv_splash = (ImageView) findViewById(R.id.iv_splash);
     }
 
+    @Override
+    public void onBackPressed() {
+        //按返回键无效
+//        super.onBackPressed();
+    }
 }

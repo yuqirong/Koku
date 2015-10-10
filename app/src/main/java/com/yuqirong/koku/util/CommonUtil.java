@@ -63,9 +63,9 @@ public class CommonUtil {
     /**
      * 创建一个对话框
      */
-    public static void createMessageAlertDialog(Context context, String title, String message, String negativeMessage, DialogInterface.OnClickListener negativeListener, String positiveMessage, DialogInterface.OnClickListener positiveListener) {
+    public static void createMessageAlertDialog(Context context, String title, String message, String negativeMessage, DialogInterface.OnClickListener negativeListener, String positiveMessage, DialogInterface.OnClickListener positiveListener,boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title).setMessage(message).setNegativeButton(negativeMessage, negativeListener).setPositiveButton(positiveMessage, positiveListener).create().show();
+        builder.setTitle(title).setMessage(message).setNegativeButton(negativeMessage, negativeListener).setPositiveButton(positiveMessage, positiveListener).setCancelable(cancelable).create().show();
     }
 
     public static void createItemAlertDialog(Context context, CharSequence[] items, DialogInterface.OnClickListener listener) {

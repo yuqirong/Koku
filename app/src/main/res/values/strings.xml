@@ -58,4 +58,9 @@
     <string name="copy_weibo_to_clipboard">已将微博复制到剪贴板上</string>
     <string name="please_wait">请等待...</string>
     <string name="operation_success">操作成功</string>
+    <string name="most_nine_pic">最多只能选择9张图片</string>
+    <string name="no_pic">未选择图片</string>
+    <string name="tip">提示</string>
+    <string name="save_draft">是否保存到草稿箱中</string>
+    <string name="confirm">确定</string>
 </resources>

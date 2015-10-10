@@ -310,6 +310,12 @@ public class MainActivity extends BaseActivity {
                                 }, 500);
                                 break;
                             case R.id.nav_draft:
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        DraftActivity.actionStart(MainActivity.this);
+                                    }
+                                }, 500);
                                 break;
                         }
                         return true;

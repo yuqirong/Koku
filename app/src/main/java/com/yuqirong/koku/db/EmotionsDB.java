@@ -30,8 +30,7 @@ public class EmotionsDB {
 
     // 创建表情库
     static {
-        String path = MyApplication.getContext().getFilesDir() + File.separator + "emotions_v5.db";
-        File dbf = new File(path);
+        File dbf = MyApplication.getContext().getDatabasePath("emotions_v5.db");
         if (!dbf.exists()) {
             LogUtils.i("新建表情DB");
             dbf.getParentFile().mkdirs();
@@ -39,6 +38,7 @@ public class EmotionsDB {
                 if (dbf.createNewFile())
                     emotionsDb = SQLiteDatabase.openOrCreateDatabase(dbf, null);
             } catch (IOException ioex) {
+                ioex.printStackTrace();
             }
         } else {
             LogUtils.i("表情DB已存在");

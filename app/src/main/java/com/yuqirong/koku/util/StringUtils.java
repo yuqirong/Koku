@@ -17,6 +17,8 @@ import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.WebViewActivity;
 import com.yuqirong.koku.db.EmotionsDB;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,34 @@ public class StringUtils {
     private static final String URL = "http://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";// url
 
     private static final String REGEX = "(" + AT + ")|(" + TOPIC + ")|(" + EMOJI + ")|(" + URL + ")";
+
+    /**
+     * 把String转化为List
+     * @param pic_urls
+     * @return
+     */
+    public static List<String> convertStringToList(String pic_urls) {
+        List<String> list = new ArrayList<>();
+        String[] arrays = pic_urls.split(",");
+        int size = arrays.length;
+        for (int i = 0; i < size; i++) {
+            list.add(arrays[i]);
+        }
+        return list;
+    }
+
+    /**
+     * 把String转化为List
+     * @param list
+     * @return
+     */
+    public static String convertListToString(List<String> list) {
+        StringBuilder builder = new StringBuilder();
+        for (int i=0;i<list.size();i++){
+            builder.append(list.get(i)+",");
+        }
+        return builder.toString();
+    }
 
     /**
      * 设置微博内容样式

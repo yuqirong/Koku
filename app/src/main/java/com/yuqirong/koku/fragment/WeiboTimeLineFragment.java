@@ -280,6 +280,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
         });
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
     WeiboRecycleViewAdapter.OnLoadingMoreListener loadingMoreListener = new WeiboRecycleViewAdapter.OnLoadingMoreListener() {
         @Override
         public void onLoadingMore() {

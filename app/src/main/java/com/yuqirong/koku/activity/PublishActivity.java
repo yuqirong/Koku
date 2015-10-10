@@ -3,7 +3,6 @@ package com.yuqirong.koku.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -45,6 +44,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.EmotionAdapter;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.db.DraftDB;
+import com.yuqirong.koku.entity.Draft;
 import com.yuqirong.koku.entity.Emotion;
 import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
@@ -64,6 +65,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -90,6 +92,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     private LinearLayout ll_images;
     private HorizontalScrollView mHorizontalScrollView;
     private Map<ImageView, String> imageMap = new HashMap<>();
+    private List<String> strList = new ArrayList<>();
     private LoadImageAsyncTask loadImageAsyncTask;
     private GridView gv_emotion;
     private EmotionAdapter adapter;
@@ -132,6 +135,9 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
         super.onCreate(savedInstanceState);
         if (type == PublishActivity.SEND_WEIBO) {
             setupRevealBackground(savedInstanceState);
+        } else {
+            mLinearLayout.setBackgroundColor(getResources().getColor(R.color.activity_bg_color));
+            vRevealBackground.setVisibility(View.GONE);
         }
     }
 
@@ -476,9 +482,10 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                         loadImageAsyncTask.execute(url);
                         break;
                     case 2:
-                        intent = new Intent(Intent.ACTION_PICK,
-                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
-                        startActivityForResult(intent, TAKE_GALLERY);
+//                        intent = new Intent(Intent.ACTION_PICK,
+//                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//调用android的图库
+//                        startActivityForResult(intent, TAKE_GALLERY);
+                        startActivityForResult(new Intent(PublishActivity.this, GridImageActivity.class), TAKE_GALLERY);
                         break;
                 }
             }
@@ -512,6 +519,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
                 imageMap.put(imageView, url);
+                strList.add(url);
             }
             if (imageMap.size() > 8) {
                 iv_add.setVisibility(View.GONE);
@@ -527,7 +535,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             }
             imageView = new ImageView(PublishActivity.this);
             imageView.setBackgroundResource(R.drawable.bg_unselected_card_item_light);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             ll_images.addView(imageView, ll_images.getChildCount() - 1);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageView.getLayoutParams();
             layoutParams.width = CommonUtil.dip2px(PublishActivity.this, 90);
@@ -568,13 +576,17 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                 break;
             case TAKE_GALLERY:
                 if (resultCode == RESULT_OK) {
-                    Uri uri = data.getData();
-                    Cursor cursor = getContentResolver().query(uri, null,
-                            null, null, null);
-                    cursor.moveToFirst();
-                    String imgPath = cursor.getString(1); // 图片文件路径
-                    loadImageAsyncTask = new LoadImageAsyncTask();
-                    loadImageAsyncTask.execute(imgPath);
+//                    Uri uri = data.getData();
+                    List<String> urls = data.getStringArrayListExtra("urls");
+//                    Cursor cursor = getContentResolver().query(uri, null,
+//                            null, null, null);
+//                    cursor.moveToFirst();
+//                    String imgPath = cursor.getString(1); // 图片文件路径
+                    for (int i = 0; i < urls.size(); i++) {
+                        LoadImageAsyncTask loadImageAsyncTask = new LoadImageAsyncTask();
+                        loadImageAsyncTask.execute(urls.get(i));
+                    }
+
                 }
                 break;
             case SearchUserActivity.AT_USER:
@@ -604,10 +616,34 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && gv_emotion.isShown()) {
-            gv_emotion.setVisibility(View.GONE);
-            return true;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (gv_emotion.isShown()) {
+                gv_emotion.setVisibility(View.GONE);
+                return true;
+            }
+            final String content = et_content.getText().toString();
+            if (!TextUtils.isEmpty(content)) {
+                CommonUtil.createMessageAlertDialog(this, getResources().getString(R.string.tip), getResources().getString(R.string.save_draft), getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }, getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Draft d = new Draft(0,type,content, strList);
+                                DraftDB.addDraft(d);
+                            }
+                        }).start();
+                        finish();
+                    }
+                },true);
+            }
         }
+
         return super.onKeyDown(keyCode, event);
     }
 

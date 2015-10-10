@@ -280,6 +280,8 @@ public class Status implements Serializable {
         public String bmiddle_pic;
         //缩略图片地址，没有时不返回此字段
         public String thumbnail_pic;
+        //被转发微博是否被删除  "1"为是
+        public String deleted;
     }
 
     public class Annotations implements Serializable {

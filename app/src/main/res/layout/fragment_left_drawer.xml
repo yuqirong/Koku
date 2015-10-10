@@ -10,6 +10,11 @@
         android:scaleType="centerCrop"
         android:src="@drawable/login_background_introduce" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/cover_background" />
+
     <com.yuqirong.koku.view.CircleImageView
         android:id="@+id/civ_avatar"
         android:layout_width="80dp"
@@ -28,6 +33,7 @@
         android:layout_marginTop="@dimen/left_drawer_marginTop"
         android:ellipsize="end"
         android:singleLine="true"
+        android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@android:color/white" />
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -356,8 +357,15 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         }
 
         //设置被转发微博内容
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.name + context.getResources().getString(R.string.colon) + status.retweeted_status.text, viewHolder.tv_retweeted_name_text);
-        viewHolder.tv_retweeted_name_text.setText(weiBoContent);
+        //判断该被转发微博是否被删除
+        if (!TextUtils.isEmpty(status.retweeted_status.deleted) && status.retweeted_status.deleted.equals("1")) {
+            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.retweeted_status.text, viewHolder.tv_retweeted_name_text);
+            viewHolder.tv_retweeted_name_text.setText(weiBoContent);
+        } else {
+            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.name + context.getResources().getString(R.string.colon) + status.retweeted_status.text, viewHolder.tv_retweeted_name_text);
+            viewHolder.tv_retweeted_name_text.setText(weiBoContent);
+        }
+
 
         if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {
             viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, status.retweeted_status.pic_urls);

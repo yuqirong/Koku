@@ -3,8 +3,8 @@
       <color name="actionbar_text">@android:color/black</color>
       <color name="darker_gray">@android:color/darker_gray</color>
       <color name="Indigo_colorPrimary">#3f51b5</color>
-      <color name="fab_press_color">#000c7a</color>
-      <color name="Indigo_nav_color">#4675FF</color>
+      <color name="fab_press_color">#7986cb</color>
+      <color name="Indigo_nav_color">#303f9f</color>
       <color name="activity_bg_color">#dddddd</color>
       <color name="unselected_text_color">#d8d8d8</color>
       <color name="span_text_color">#507daf</color>

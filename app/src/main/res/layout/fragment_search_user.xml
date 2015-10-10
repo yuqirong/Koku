@@ -30,7 +30,7 @@
         android:text="@string/friends_list"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_list"
+        android:id="@+id/mRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/tv_friends_list"

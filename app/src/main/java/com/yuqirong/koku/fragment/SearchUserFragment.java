@@ -129,7 +129,7 @@ public class SearchUserFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_search_user, null);
         tv_tips = (TextView) view.findViewById(R.id.tv_tips);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_list);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.mRecyclerView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.mProgressBar);
         tv_friends_list = (TextView) view.findViewById(R.id.tv_friends_list);
         //创建默认的线性LayoutManager
