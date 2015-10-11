@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_vertical_margin"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:background="@android:color/background_light"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_empty_avatar" />
+
+        <TextView
+            android:id="@+id/tv_screen_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/iv_avatar"
+            android:textSize="12sp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:onClick="true"
+            tools:text="username" />
+
+        <ImageView
+            android:id="@+id/iv_verified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_screen_name"
+            android:layout_alignTop="@id/tv_screen_name"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/tv_screen_name"
+            android:onClick="true" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/iv_avatar"
+            android:layout_alignLeft="@id/tv_screen_name"
+            android:layout_below="@id/tv_screen_name"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:gravity="center_vertical"
+            android:textSize="10sp"
+            tools:text="xx小时前" />
+
+        <TextView
+            android:id="@+id/tv_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_time"
+            android:layout_alignTop="@id/tv_time"
+            android:layout_below="@id/tv_screen_name"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_time"
+            android:gravity="center_vertical"
+            android:textSize="10sp"
+            tools:text="iPhone 6 Plus" />
+
+        <ImageView
+            android:id="@+id/iv_overflow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_screen_name"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/tv_screen_name"
+            android:layout_centerVertical="true"
+            android:background="@drawable/text_selector"
+            android:clickable="true"
+            android:src="@drawable/ic_detail_overflow_dark" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        tools:text="text for test" />
+
+</LinearLayout>

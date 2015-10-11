@@ -19,7 +19,11 @@ import java.util.List;
 public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_FOOTER = 1001;
+    private static final int TYPE_HEADER = 1002;
     protected FooterViewHolder mFooterViewHolder;
+    protected HeaderViewHolder mHeaderViewHolder;
+    private View mHeaderView;
+    private boolean headerMode;
 
     public List<T> getList() {
         return list;
@@ -27,8 +31,6 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     protected List<T> list = new LinkedList<>();
     protected boolean loadSuccess = true;
-
-
 
     // 是否为加载更多
     private boolean isLoadingMore;
@@ -41,9 +43,19 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         return isLoadingMore;
     }
 
+    public void addHeaderView(boolean headerMode, View view) {
+        this.mHeaderView = view;
+        this.headerMode = headerMode;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_FOOTER) {
+        if (viewType == TYPE_HEADER) {
+            if (mHeaderView != null) {
+                mHeaderViewHolder = new HeaderViewHolder(mHeaderView);
+            }
+            return mHeaderViewHolder;
+        } else if (viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
             mFooterViewHolder = new FooterViewHolder(view);
             return mFooterViewHolder;
@@ -58,7 +70,9 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder.getItemViewType() == TYPE_FOOTER) {
+        if (holder.getItemViewType() == TYPE_HEADER) {
+            return;
+        } else if (holder.getItemViewType() == TYPE_FOOTER) {
             final FooterViewHolder viewHolder = (FooterViewHolder) holder;
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -80,7 +94,11 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        return list.size();
+        if (headerMode) {
+            return list.size();
+        } else {
+            return list.size();
+        }
     }
 
     @Override
@@ -91,6 +109,9 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
+        if (position == 0 && headerMode) {
+            return TYPE_HEADER;
+        }
         if (position + 1 == getItemCount()) {
             return TYPE_FOOTER;
         }
@@ -144,7 +165,7 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
     //footer viewHolder
-    public class FooterViewHolder extends RecyclerView.ViewHolder {
+    static class FooterViewHolder extends RecyclerView.ViewHolder {
 
         public LinearLayout ll_load_more;
         public TextView tv_load_fail;
@@ -153,6 +174,12 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
             super(itemView);
             ll_load_more = (LinearLayout) itemView.findViewById(R.id.ll_load_more);
             tv_load_fail = (TextView) itemView.findViewById(R.id.tv_load_fail);
+        }
+    }
+
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
         }
     }
 

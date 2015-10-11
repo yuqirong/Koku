@@ -126,20 +126,24 @@ public class WeiboTimeLineFragment extends BaseFragment {
             }
             String url = this.baseUrl + "?access_token=" + access_token + "&max_id=" + max_id;
             LogUtils.i("url  : " + url);
-            getData(url, listener, errorListener);
+            getJsonData(url, listener, errorListener);
         }
     }
 
-    Response.Listener<String> listener = new Response.Listener<String>() {
+    Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
         @Override
-        public void onResponse(String stringResult) {
+        public void onResponse(final JSONObject jsonObject) {
             String statuses = null;
             try {
-                JSONObject jsonObject = new JSONObject(stringResult);
                 max_id = jsonObject.getString("max_id");
                 statuses = jsonObject.getString("statuses");
                 if (mSwipeRefreshLayout.isRefreshing()) {
-                    aCache.put(TIME_LINE_CACHE_NAME, stringResult);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            aCache.put(TIME_LINE_CACHE_NAME, jsonObject.toString());
+                        }
+                    }).start();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -184,7 +188,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_timeline, null);
         mSwipeRefreshLayout = (FixedSwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);
         // 设置小箭头的颜色
-        mSwipeRefreshLayout.setColorSchemeResources(AppConstant.SWIPE_REFRESH_LAYOUT_COLOR);
+        mSwipeRefreshLayout.setColorSchemeResources(FixedSwipeRefreshLayout.SWIPE_REFRESH_LAYOUT_COLOR);
         mSwipeRefreshLayout.setOnRefreshListener(onRefreshListener);
         mRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mRecyclerView);
         if (mRecyclerView != null) {

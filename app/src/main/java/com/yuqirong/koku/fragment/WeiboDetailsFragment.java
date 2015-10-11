@@ -2,13 +2,17 @@ package com.yuqirong.koku.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,7 +33,7 @@ public class WeiboDetailsFragment extends BaseFragment {
 
     public LinearLayout ll_item;
     public TextView tv_screen_name;
-    public ImageView civ_avatar;
+    public ImageView iv_avatar;
     public TextView tv_time;
     public TextView tv_device;
     public ImageView iv_verified;
@@ -48,24 +52,51 @@ public class WeiboDetailsFragment extends BaseFragment {
     private Status status;
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
     public static final String AT = "@";
+    private TextView tv_favorite;
+    private RadioButton rb_repost;
+    private RadioButton rb_comment;
+    private FrameLayout mFrameLayout;
+    private FragmentManager fragmentManager;
+    private RelativeLayout mRelativeLayout;
 
+    private WeiboDetailsCommentFragment commentFragment;
+    private WeiboDetailsRepostFragment repostFragment;
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        fragmentManager = getFragmentManager();
         Intent intent = getActivity().getIntent();
         if (intent != null) {
             status = (Status) intent.getSerializableExtra("Status");
         }
         initWeiboData(status);
+        commentFragment = new WeiboDetailsCommentFragment(mRelativeLayout);
+        Bundle bundle = new Bundle();
+        bundle.putString("idstr", status.idstr);
+        commentFragment.setArguments(bundle);
+        fragmentManager.beginTransaction().replace(R.id.mFrameLayout, commentFragment, "commentFragment").commit();
     }
 
     private void initWeiboData(Status status) {
+        ll_item.setBackgroundColor(getResources().getColor(android.R.color.background_light));
         tv_screen_name.setText(status.user.name);
-        bitmapUtils.display(civ_avatar, status.user.profile_image_url);
+        bitmapUtils.display(iv_avatar, status.user.profile_image_url);
         tv_time.setText(DateUtils.getWeiboDate(status.created_at));
         tv_device.setText(Html.fromHtml(status.source));
-        if (status.user.verified) {
-            iv_verified.setImageResource(R.drawable.avatar_vip);
+        //设置认证图标
+        switch (status.user.verified_type) {
+            case 0:
+                iv_verified.setImageResource(R.drawable.avatar_vip);
+                break;
+            case -1:
+                iv_verified.setImageResource(android.R.color.transparent);
+                break;
+            case 220:
+                iv_verified.setImageResource(R.drawable.avatar_grassroot);
+                break;
+            default:
+                iv_verified.setImageResource(R.drawable.avatar_enterprise_vip);
+                break;
         }
         //隐藏微博 转发数和评论数
         tv_repost_count.setVisibility(View.GONE);
@@ -84,7 +115,35 @@ public class WeiboDetailsFragment extends BaseFragment {
             processRetweeted();
             ll_item.addView(view_retweeted);
         }
+        rb_comment.setText(rb_comment.getText().toString() + CommonUtil.getNumString(status.comments_count));
+        rb_repost.setText(rb_repost.getText().toString() + CommonUtil.getNumString(status.reposts_count));
+        tv_favorite.setText(CommonUtil.getNumString(status.attitudes_count));
+        rb_comment.setOnCheckedChangeListener(onCheckedChangeListener);
+        rb_repost.setOnCheckedChangeListener(onCheckedChangeListener);
     }
+
+    CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            // TODO: 2015/10/11
+//            if (buttonView.getId() == R.id.rb_comment && isChecked) {
+//                LogUtils.i("comment button : " + isChecked);
+//                if (commentFragment == null) {
+//                    commentFragment = new WeiboDetailsCommentFragment(mRelativeLayout);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("idstr", status.idstr);
+//                    commentFragment.setArguments(bundle);
+//                }
+//                fragmentManager.beginTransaction().replace(R.id.mFrameLayout, commentFragment, "commentFragment").commit();
+//            } else if (buttonView.getId() == R.id.rb_repost && isChecked) {
+//                LogUtils.i("repost button : " + isChecked);
+//                if (repostFragment == null) {
+//                    repostFragment = new WeiboDetailsRepostFragment();
+//                }
+//                fragmentManager.beginTransaction().replace(R.id.mFrameLayout, repostFragment, "repostFragment").commit();
+//            }
+        }
+    };
 
     // 处理被转发的View
     private void processRetweeted() {
@@ -128,7 +187,8 @@ public class WeiboDetailsFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_weibo_details, null);
         ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
-        civ_avatar = (ImageView) view.findViewById(R.id.civ_avatar);
+        mRelativeLayout = (RelativeLayout) view.findViewById(R.id.mRelativeLayout);
+        iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);
         iv_overflow = (ImageView) view.findViewById(R.id.iv_overflow);
         tv_time = (TextView) view.findViewById(R.id.tv_time);
@@ -138,6 +198,10 @@ public class WeiboDetailsFragment extends BaseFragment {
         tv_comment_count = (TextView) view.findViewById(R.id.tv_comment_count);
         tv_text = (TextView) view.findViewById(R.id.tv_text);
         rl_pics = (RelativeLayout) view.findViewById(R.id.rl_pics);
+        rb_comment = (RadioButton) view.findViewById(R.id.rb_comment);
+        rb_repost = (RadioButton) view.findViewById(R.id.rb_repost);
+        tv_favorite = (TextView) view.findViewById(R.id.tv_favorite);
+        mFrameLayout = (FrameLayout) view.findViewById(R.id.mFrameLayout);
 
         for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
             ImageView iv = (ImageView) view.findViewById(IMAGEVIEW_IDS[i]);

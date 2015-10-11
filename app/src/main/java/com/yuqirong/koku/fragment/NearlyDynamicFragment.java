@@ -180,7 +180,7 @@ public class NearlyDynamicFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_timeline, null);
         mSwipeRefreshLayout = (FixedSwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);
         // 设置小箭头的颜色
-        mSwipeRefreshLayout.setColorSchemeResources(AppConstant.SWIPE_REFRESH_LAYOUT_COLOR);
+        mSwipeRefreshLayout.setColorSchemeResources(FixedSwipeRefreshLayout.SWIPE_REFRESH_LAYOUT_COLOR);
         mSwipeRefreshLayout.setOnRefreshListener(onRefreshListener);
         mRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mRecyclerView);
         if (mRecyclerView != null) {

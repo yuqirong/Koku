@@ -1,5 +1,6 @@
 package com.yuqirong.koku.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -20,10 +21,6 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
 
     private SwipeBackLayout mSwipeBackLayout;
     private Toolbar mToolbar;
-//    private TabLayout mTabLayout;
-//    private ViewPager mViewPager;
-//    private FragmentManager fm;
-//    private MainActivity.FragmentAdapter adapter;
     private Status status;
 
     @Override
@@ -31,7 +28,7 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        status = (Status) getIntent().getSerializableExtra("status");
+        status = (Status) getIntent().getSerializableExtra("Status");
     }
 
     @Override
@@ -52,19 +49,6 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
     protected void initView() {
         setContentView(R.layout.activity_weibo_details);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
-//        mTabLayout = (TabLayout) findViewById(R.id.mTabLayout);
-//        mViewPager = (ViewPager) findViewById(R.id.mViewPager);
-//
-//        mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
-//        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
-//        mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(android.R.color.white));
-//
-//        fm = getSupportFragmentManager();
-//        adapter = new MainActivity.FragmentAdapter(fm);
-////        adapter.addFragment(FragmentFactory.newInstance(),"评论");
-////        adapter.addFragment(FragmentFactory.newInstance(),"转发");
-//        mViewPager.setAdapter(adapter);
-//        mTabLayout.setupWithViewPager(mViewPager);
     }
 
     @Override
@@ -75,9 +59,36 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int requestCode;
+        boolean isReweeted = (status.retweeted_status != null);
+        Intent intent = new Intent();
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.action_repost:
+                requestCode = MainActivity.SEND_NEW_REPOST;
+                intent.setClass(WeiboDetailsActivity.this, PublishActivity.class);
+                intent.putExtra("type", PublishActivity.SEND_REPOST);
+                intent.putExtra("idstr", status.idstr);
+                if (isReweeted) {
+                    intent.putExtra("text", "//@" + status.user.screen_name + getResources().getString(R.string.colon) + status.text);
+                }
+                startActivityForResult(intent, requestCode);
+                break;
+            case R.id.action_comment:
+                requestCode = MainActivity.SEND_NEW_COMMENT;
+                intent.setClass(WeiboDetailsActivity.this, PublishActivity.class);
+                intent.putExtra("type", PublishActivity.SEND_COMMENT);
+                intent.putExtra("idstr", status.idstr);
+                intent.putExtra("isReweeted", isReweeted);
+                startActivityForResult(intent, requestCode);
+                break;
+            case R.id.action_share:
+                break;
+            case R.id.action_favorite:
+                break;
+            case R.id.action_copy:
                 break;
             default:
                 break;

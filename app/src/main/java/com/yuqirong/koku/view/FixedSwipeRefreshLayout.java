@@ -11,6 +11,8 @@ import android.view.View;
  */
 public class FixedSwipeRefreshLayout extends SwipeRefreshLayout {
 
+    public static final int[] SWIPE_REFRESH_LAYOUT_COLOR = new int[]{android.R.color.holo_red_light, android.R.color.holo_orange_light, android.R.color.holo_green_light, android.R.color.holo_blue_bright, android.R.color.holo_purple};
+
     public FixedSwipeRefreshLayout(Context context) {
         super(context);
     }

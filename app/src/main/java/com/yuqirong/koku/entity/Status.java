@@ -267,9 +267,9 @@ public class Status implements Serializable {
         //地理信息字段
         public Geo geo;
         // weibo转发数
-        public String reposts_count;
+        public int reposts_count;
         // weibo评论数
-        public String comments_count;
+        public int comments_count;
         //表态数
         public int attitudes_count;
         // 微博配图url

@@ -26,7 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.lidroid.xutils.BitmapUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.MainActivity;
 import com.yuqirong.koku.activity.MyFavoriteActivity;
@@ -58,7 +59,10 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
 
     private Context context;
-    private BitmapUtils bitmapUtils;
+    private ImageLoader imageLoader;
+    private static DisplayImageOptions options;
+    private static DisplayImageOptions ninepic_options;
+
     public static final String AT = "@";
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
     private Status status;
@@ -67,7 +71,9 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
 
     public WeiboRecycleViewAdapter(Context context) {
         this.context = context;
-        bitmapUtils = BitmapUtil.getBitmapUtils(context);
+        imageLoader = ImageLoader.getInstance();
+        options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, true);
+        ninepic_options = BitmapUtil.getDisplayImageOptions(R.drawable.thumbnail_default, true, true);
         list.add(new Status());
         mQueue = Volley.newRequestQueue(context);
     }
@@ -89,7 +95,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         viewHolder.onClickListener = new WeiboWidghtOnClickListener(position, viewHolder.onMenuItemClickListener);
 
         viewHolder.tv_screen_name.setText(status.user.name);
-        bitmapUtils.display(viewHolder.iv_avatar, status.user.profile_image_url);
+        imageLoader.displayImage(status.user.profile_image_url, viewHolder.iv_avatar, options);
         viewHolder.tv_time.setText(DateUtils.getWeiboDate(status.created_at));
         viewHolder.tv_device.setText(Html.fromHtml(status.source));
         //设置认证图标
@@ -108,8 +114,8 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 break;
         }
         //设置微博 转发数和评论数
-        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(String.valueOf(status.reposts_count)));
-        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(String.valueOf(status.comments_count)));
+        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(status.reposts_count));
+        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(status.comments_count));
         //设置微博内容
         SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.text, viewHolder.tv_text);
         viewHolder.tv_text.setText(weiBoContent);
@@ -431,7 +437,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
             for (int i = 0; i < iv_arrays.size(); i++) {
                 if (i < pic_urls.size()) {
                     iv_arrays.get(i).setVisibility(View.VISIBLE);
-                    bitmapUtils.display(iv_arrays.get(i), pic_urls.get(i).thumbnail_pic);
+                    imageLoader.displayImage(pic_urls.get(i).thumbnail_pic, iv_arrays.get(i), ninepic_options);
                 } else {
                     iv_arrays.get(i).setVisibility(View.GONE);
                 }

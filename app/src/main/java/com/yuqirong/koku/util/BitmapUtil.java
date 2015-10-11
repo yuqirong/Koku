@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.lidroid.xutils.BitmapUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.yuqirong.koku.R;
 
 import java.io.File;
@@ -16,14 +17,26 @@ public class BitmapUtil {
 
     private static final int DISK_CACHE_SIZE = 10 * 1024 * 1024;
     private static BitmapUtils bitmapUtils;
+    private static DisplayImageOptions options;
 
-    public static BitmapUtils getBitmapUtils(Context context){
+    public static BitmapUtils getBitmapUtils(Context context) {
         String bitmap_cache_dir = context.getCacheDir() + File.separator + "bitmap";
         int cache = (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024 * 8));
         bitmapUtils = new BitmapUtils(context, bitmap_cache_dir, cache, DISK_CACHE_SIZE);
         bitmapUtils.configDefaultLoadFailedImage(R.drawable.thumbnail_default);
         bitmapUtils.configDefaultLoadFailedImage(R.drawable.timeline_image_failure);
         return bitmapUtils;
+    }
+
+    public static DisplayImageOptions getDisplayImageOptions(int drawableId, boolean cacheInMemory, boolean cacheOnDisk) {
+        options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(drawableId)
+                .showImageOnFail(R.drawable.timeline_image_failure)
+                .cacheInMemory(cacheInMemory)
+                .cacheOnDisk(cacheOnDisk)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+        return options;
     }
 
 

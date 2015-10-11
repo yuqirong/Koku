@@ -69,7 +69,7 @@ public class User implements Serializable {
     // 认证原因
     public String verified_reason;
     // 粉丝数
-    public String followers_count;
+    public int followers_count;
     // 认证类型
     public int verified_type;
     //是否允许所有人给我发私信，true：是，false：否

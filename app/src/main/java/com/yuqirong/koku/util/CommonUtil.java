@@ -12,7 +12,6 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -32,17 +31,14 @@ public class CommonUtil {
      * @param num
      * @return
      */
-    public static String getNumString(String num) {
-        if (!TextUtils.isEmpty(num)) {
-            int number = Integer.parseInt(num) / 10000;
+    public static String getNumString(int num) {
+            int number = num / 10000;
             if (number == 0) {
-                return num;
+                return String.valueOf(num);
             } else {
                 return number + "万";
             }
         }
-        return "";
-    }
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
