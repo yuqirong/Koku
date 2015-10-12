@@ -598,7 +598,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             case SearchUserActivity.AT_USER:
                 if (resultCode == RESULT_OK) {
                     String screen_name = data.getStringExtra("screen_name");
-                    et_content.getText().append("@" + screen_name + " ");
+                    et_content.getText().insert(et_content.getSelectionEnd(),"@" + screen_name + " ");
                 }
                 break;
         }

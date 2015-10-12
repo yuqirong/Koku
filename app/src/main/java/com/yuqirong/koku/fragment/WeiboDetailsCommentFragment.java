@@ -54,7 +54,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         String idstr = getArguments().getString("idstr");
         if (!TextUtils.isEmpty(idstr)) {
             String url = AppConstant.COMMENTS_SHOW_URL + "?count=20&id=" + idstr +
-                    "&access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&max_id=" + next_cursor;
+                    "&access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&next_cursor=" + next_cursor;
             LogUtils.i("评论url ：" + url);
             getJsonData(url, listener, errorListener);
         }
@@ -84,7 +84,6 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -112,8 +111,8 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         adapter.setOnLoadingMoreListener(new LoadMoreAdapter.OnLoadingMoreListener() {
             @Override
             public void onLoadingMore() {
-                load = true;
-                getDataFromServer();
+                    load = true;
+                    getDataFromServer();
             }
         });
         mAutoLoadRecyclerView.setAdapter(adapter);

@@ -41,7 +41,6 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
     public void setLoadFinish() {
         completeLoadMore(false);
         loadSuccess = true;
-        setIsLoadingMore(true);
         if (mFooterViewHolder != null) {
             mFooterViewHolder.tv_load_fail.setText(context.getResources().getString(R.string.load_finish));
         }

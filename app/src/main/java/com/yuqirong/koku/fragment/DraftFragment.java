@@ -51,11 +51,7 @@ public class DraftFragment extends BaseFragment {
             @Override
             public void run() {
                 adapter.getList().clear();
-                List<Draft> list = DraftDB.getDraftList();
-                if (list == null || list.size() == 0) {
-                    return;
-                }
-                adapter.getList().addAll(list);
+                adapter.getList().addAll(DraftDB.getDraftList());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
