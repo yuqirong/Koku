@@ -1,26 +1,46 @@
 package com.yuqirong.koku.fragment;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.LoadMoreAdapter;
 import com.yuqirong.koku.adapter.WeiboCommentAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.Comment;
+import com.yuqirong.koku.entity.Pic_urls;
+import com.yuqirong.koku.entity.Status;
+import com.yuqirong.koku.util.CommonUtil;
+import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
+import com.yuqirong.koku.util.StringUtils;
 import com.yuqirong.koku.view.AutoLoadRecyclerView;
 import com.yuqirong.koku.view.DividerItemDecoration;
+import com.yuqirong.koku.view.FixedSwipeRefreshLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 微博详情页面评论
@@ -28,33 +48,60 @@ import org.json.JSONObject;
  */
 public class WeiboDetailsCommentFragment extends BaseFragment {
 
-    private View headerView;
+    public LinearLayout ll_item;
+    public TextView tv_screen_name;
+    public ImageView iv_avatar;
+    public TextView tv_time;
+    public TextView tv_device;
+    public ImageView iv_verified;
+    public ImageView iv_overflow;
+    public TextView tv_repost_count;
+    public TextView tv_comment_count;
+    public TextView tv_text;
+    public List<ImageView> iv_arrays = new ArrayList<>();
+    public List<ImageView> iv_retweeted_arrays = new ArrayList<>();
+    public TextView tv_retweeted_name_text;
+    public View view_retweeted;
+    public TextView tv_retweeted_repost_count;
+    public TextView tv_retweeted_comment_count;
+    public RelativeLayout rl_pics;
+    public RelativeLayout rl_retweeted_pics;
+
+    private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
+    public static final String AT = "@";
+
+    private TextView tv_favorite;
+    private RadioButton rb_repost;
+    private RadioButton rb_comment;
+    private FrameLayout mFrameLayout;
+    private RelativeLayout mRelativeLayout;
+
     private AutoLoadRecyclerView mAutoLoadRecyclerView;
     private WeiboCommentAdapter adapter;
 
     private long next_cursor;
     private boolean load;
-    private int total_number;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    public WeiboDetailsCommentFragment(View headerView) {
-        this();
-        this.headerView = headerView;
-    }
-
-    public WeiboDetailsCommentFragment() {
-
-    }
+    private Status status;
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        getDataFromServer();
+        if(savedInstanceState == null){
+            status = (Status) getArguments().getSerializable("Status");
+        }else{
+            // TODO: 2015/10/12
+        }
+        if(status != null){
+            initWeiboData(status);
+            getDataFromServer();
+        }
     }
 
     private void getDataFromServer() {
-        String idstr = getArguments().getString("idstr");
-        if (!TextUtils.isEmpty(idstr)) {
-            String url = AppConstant.COMMENTS_SHOW_URL + "?count=20&id=" + idstr +
-                    "&access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&next_cursor=" + next_cursor;
+        if (!TextUtils.isEmpty(status.idstr)) {
+            String url = AppConstant.COMMENTS_SHOW_URL + "?count=20&id=" + status.idstr +
+                    "&access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&max_id=" + next_cursor;
             LogUtils.i("评论url ：" + url);
             getJsonData(url, listener, errorListener);
         }
@@ -71,13 +118,13 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         try {
             String str = object.getString("comments");
             next_cursor = object.getLong("next_cursor");
-            total_number = object.getInt("total_number");
             adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(str, Comment.class));
             if (load) {
                 adapter.completeLoadMore(true);
                 load = false;
             }
-            if (total_number == adapter.getList().size() - 2) {
+            if (next_cursor == 0) {
+                adapter.setIsLoadingMore(true);
                 adapter.setLoadFinish();
             }
             adapter.notifyDataSetChanged();
@@ -95,7 +142,18 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mAutoLoadRecyclerView = new AutoLoadRecyclerView(context);
+        View view = inflater.from(context).inflate(R.layout.fragment_weibo_comments,null);
+        View headerView = inflater.from(context).inflate(R.layout.fragment_weibo_comments_header,null);
+        initHeaderView(headerView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(FixedSwipeRefreshLayout.SWIPE_REFRESH_LAYOUT_COLOR);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
+        mAutoLoadRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mAutoLoadRecyclerView);
         mAutoLoadRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
         adapter = new WeiboCommentAdapter(context);
         if (headerView != null) {
@@ -116,7 +174,137 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             }
         });
         mAutoLoadRecyclerView.setAdapter(adapter);
-        return mAutoLoadRecyclerView;
+        return view;
     }
+
+    private void initHeaderView(View view) {
+        ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
+        mRelativeLayout = (RelativeLayout) view.findViewById(R.id.mRelativeLayout);
+        iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
+        tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);
+        iv_overflow = (ImageView) view.findViewById(R.id.iv_overflow);
+        tv_time = (TextView) view.findViewById(R.id.tv_time);
+        tv_device = (TextView) view.findViewById(R.id.tv_device);
+        iv_verified = (ImageView) view.findViewById(R.id.iv_verified);
+        tv_repost_count = (TextView) view.findViewById(R.id.tv_repost_count);
+        tv_comment_count = (TextView) view.findViewById(R.id.tv_comment_count);
+        tv_text = (TextView) view.findViewById(R.id.tv_text);
+        rl_pics = (RelativeLayout) view.findViewById(R.id.rl_pics);
+        rb_comment = (RadioButton) view.findViewById(R.id.rb_comment);
+        rb_repost = (RadioButton) view.findViewById(R.id.rb_repost);
+        tv_favorite = (TextView) view.findViewById(R.id.tv_favorite);
+        mFrameLayout = (FrameLayout) view.findViewById(R.id.mFrameLayout);
+
+        for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
+            ImageView iv = (ImageView) view.findViewById(IMAGEVIEW_IDS[i]);
+            iv_arrays.add(iv);
+        }
+    }
+
+    private void initWeiboData(Status status) {
+        tv_screen_name.setText(status.user.name);
+        bitmapUtils.display(iv_avatar, status.user.profile_image_url);
+        tv_time.setText(DateUtils.getWeiboDate(status.created_at));
+        tv_device.setText(Html.fromHtml(status.source));
+        //设置认证图标
+        switch (status.user.verified_type) {
+            case 0:
+                iv_verified.setImageResource(R.drawable.avatar_vip);
+                break;
+            case -1:
+                iv_verified.setImageResource(android.R.color.transparent);
+                break;
+            case 220:
+                iv_verified.setImageResource(R.drawable.avatar_grassroot);
+                break;
+            default:
+                iv_verified.setImageResource(R.drawable.avatar_enterprise_vip);
+                break;
+        }
+        //隐藏微博 转发数和评论数
+        tv_repost_count.setVisibility(View.GONE);
+        tv_comment_count.setVisibility(View.GONE);
+        iv_overflow.setVisibility(View.GONE);
+
+        //设置微博内容
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.text, tv_text);
+        tv_text.setText(weiBoContent);
+
+        if (status.pic_urls != null && status.pic_urls.size() > 0) {
+            initImageView(rl_pics, iv_arrays, status.pic_urls);
+        }
+        //设置被转发的内容
+        if (status.retweeted_status != null) {
+            processRetweeted();
+            ll_item.addView(view_retweeted);
+        }
+        rb_comment.setText(rb_comment.getText().toString() + CommonUtil.getNumString(status.comments_count));
+        rb_repost.setText(rb_repost.getText().toString() + CommonUtil.getNumString(status.reposts_count));
+        tv_favorite.setText(CommonUtil.getNumString(status.attitudes_count));
+        rb_comment.setOnCheckedChangeListener(onCheckedChangeListener);
+        rb_repost.setOnCheckedChangeListener(onCheckedChangeListener);
+    }
+
+    // 处理被转发的View
+    private void processRetweeted() {
+        view_retweeted = LayoutInflater.from(context).inflate(R.layout.weibo_retweeted_item, null);
+        initRetweetedView();
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.name + context.getResources().getString(R.string.colon) + status.retweeted_status.text, tv_retweeted_name_text);
+        tv_retweeted_name_text.setText(weiBoContent);
+
+        if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {
+            initImageView(rl_retweeted_pics, iv_retweeted_arrays, status.retweeted_status.pic_urls);
+        }
+    }
+
+    private void initRetweetedView() {
+        tv_retweeted_name_text = (TextView) view_retweeted.findViewById(R.id.tv_retweeted_name_text);
+        tv_retweeted_repost_count = (TextView) view_retweeted.findViewById(R.id.tv_retweeted_repost_count);
+        tv_retweeted_comment_count = (TextView) view_retweeted.findViewById(R.id.tv_retweeted_comment_count);
+        rl_retweeted_pics = (RelativeLayout) view_retweeted.findViewById(R.id.rl_pics);
+        for (int i = 0; i < IMAGEVIEW_IDS.length; i++) {
+            ImageView iv = (ImageView) view_retweeted.findViewById(IMAGEVIEW_IDS[i]);
+            iv_retweeted_arrays.add(iv);
+        }
+        //设置被转发微博 转发数和评论数
+        tv_retweeted_repost_count.setText(CommonUtil.getNumString(status.retweeted_status.reposts_count));
+        tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.retweeted_status.comments_count));
+    }
+
+    private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {
+        rl.setVisibility(View.VISIBLE);
+        for (int i = 0; i < iv_arrays.size(); i++) {
+            if (i < pic_urls.size()) {
+                iv_arrays.get(i).setVisibility(View.VISIBLE);
+                bitmapUtils.display(iv_arrays.get(i), pic_urls.get(i).thumbnail_pic);
+            } else {
+                iv_arrays.get(i).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            // TODO: 2015/10/11 新浪微博API没有提供查看转发微博列表的接口
+//            if (buttonView.getId() == R.id.rb_comment && isChecked) {
+//                LogUtils.i("comment button : " + isChecked);
+//                if (commentFragment == null) {
+//                    commentFragment = new WeiboDetailsCommentFragment(mRelativeLayout);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("idstr", status.idstr);
+//                    commentFragment.setArguments(bundle);
+//                }
+//                fragmentManager.beginTransaction().replace(R.id.mFrameLayout, commentFragment, "commentFragment").commit();
+//            } else if (buttonView.getId() == R.id.rb_repost && isChecked) {
+//                LogUtils.i("repost button : " + isChecked);
+//                if (repostFragment == null) {
+//                    repostFragment = new WeiboDetailsRepostFragment();
+//                }
+//                fragmentManager.beginTransaction().replace(R.id.mFrameLayout, repostFragment, "repostFragment").commit();
+//            }
+        }
+    };
+
 
 }

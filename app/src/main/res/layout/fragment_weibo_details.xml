@@ -1,60 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:id="@+id/mRelativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
-        android:paddingBottom="10dp">
-
-        <include
-            android:id="@+id/ll_item"
-            layout="@layout/weibo_original_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
-
-        <RadioGroup
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ll_item"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rb_comment"
-                style="@style/Weibo_Details_RadioButton_Style"
-                android:checked="true"
-                android:text="评论 "
-                tools:text="评论 2542" />
-
-            <RadioButton
-                android:id="@+id/rb_repost"
-                style="@style/Weibo_Details_RadioButton_Style"
-                android:text="转发 "
-                tools:text="转发 5342" />
-        </RadioGroup>
-
-        <TextView
-            android:id="@+id/tv_favorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/ll_item"
-            android:layout_marginRight="16dp"
-            android:drawableLeft="@drawable/ic_like"
-            android:drawablePadding="5dp"
-            android:gravity="center"
-            tools:text="3645" />
-    </RelativeLayout>
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/mFrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+</RelativeLayout>
+

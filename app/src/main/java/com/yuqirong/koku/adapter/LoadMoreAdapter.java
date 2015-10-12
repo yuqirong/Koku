@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.util.LogUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -123,6 +124,7 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     public void completeLoadMore(boolean success) {
         loadSuccess = success;
+        LogUtils.i("isLoadingMore : "+isLoadingMore);
         if (mFooterViewHolder == null) {
             return;
         }

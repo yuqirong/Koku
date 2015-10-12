@@ -1,6 +1,9 @@
+/.idea
 # Built application files
 *.apk
 *.ap_
+/local.properties
+/build
 
 # Files for the Dalvik VM
 *.dex
@@ -12,6 +15,8 @@
 bin/
 gen/
 
+*.iml
+/.gradle
 # Gradle files
 .gradle/
 build/
