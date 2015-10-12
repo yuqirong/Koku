@@ -41,7 +41,7 @@ public class DraftDB {
         }
     }
 
-    public static void checkDraft(){
+    public static void checkDraft() {
         Cursor cursor = null;
         // 检查表是否存在
         boolean tableExist = false;
@@ -77,6 +77,7 @@ public class DraftDB {
 
     /**
      * 得到数据库中的Draft
+     *
      * @return
      */
     public static List<Draft> getDraftList() {
@@ -90,61 +91,66 @@ public class DraftDB {
             String text = cursor.getString(cursor.getColumnIndex(DraftTable.text));
             String pic_urls = cursor.getString(cursor.getColumnIndex(DraftTable.pic_urls));
             List<String> urls = StringUtils.convertStringToList(pic_urls);
-            draft = new Draft(id,type,text,urls);
+            draft = new Draft(id, type, text, urls);
             drafts.add(draft);
         } while (cursor.moveToNext());
         if (cursor != null) {
             cursor.close();
-            cursor=null;
+            cursor = null;
         }
         return drafts;
     }
 
     /**
      * 删除数据库中的Draft
+     *
      * @param id draft id
      * @return true：删除成功
      */
-    public static boolean deleteDraft(String...id){
-       int temp = draftDb.delete(DraftTable.table,DraftTable.id +" = ?",id);
-        if (temp!=0){
+    public static boolean deleteDraft(int id) {
+        int temp = draftDb.delete(DraftTable.table, DraftTable.id + " = ?", new String[]{String.valueOf(id)});
+        if (temp != 0) {
+            LogUtils.i("delete draft successfully which it's id =" + id);
             return true;
-        }else {
+        } else {
+            LogUtils.i("delete draft failed  which it's id =" + id);
             return false;
         }
     }
 
     /**
      * 更新Draft
+     *
      * @param d
      * @return
      */
-    public static boolean updateDraft(Draft d){
+    public static boolean updateDraft(Draft d) {
         ContentValues mContentValues = new ContentValues();
-        mContentValues.put(DraftTable.text,d.text);
-        mContentValues.put(DraftTable.pic_urls,StringUtils.convertListToString(d.pic_urls));
+        mContentValues.put(DraftTable.text, d.text);
+        mContentValues.put(DraftTable.pic_urls, StringUtils.convertListToString(d.pic_urls));
         int temp = draftDb.update(DraftTable.table, mContentValues, DraftTable.id + " = ?", new String[]{String.valueOf(d.id)});
-        if (temp!=0){
+        if (temp != 0) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     /**
      * 添加Draft
+     *
      * @param d
      * @return
      */
-    public static boolean addDraft(Draft d){
+    public static boolean addDraft(Draft d) {
         ContentValues mContentValues = new ContentValues();
-        mContentValues.put(DraftTable.type,d.type);
-        mContentValues.put(DraftTable.text,d.text);
-        mContentValues.put(DraftTable.pic_urls,StringUtils.convertListToString(d.pic_urls));
-        long temp = draftDb.insert(DraftTable.table,null,mContentValues);
-        if (temp!=-1){
+        mContentValues.put(DraftTable.type, d.type);
+        mContentValues.put(DraftTable.text, d.text);
+        mContentValues.put(DraftTable.pic_urls, StringUtils.convertListToString(d.pic_urls));
+        long temp = draftDb.insert(DraftTable.table, null, mContentValues);
+        if (temp != -1) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }

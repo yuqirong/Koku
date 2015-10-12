@@ -129,11 +129,13 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     //转发成功
     public static final int SEND_REPOST_SUCCESS = 1300;
     private LinearLayout mLinearLayout;
+    private boolean isFromFAButton;
+    private int draft_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (type == PublishActivity.SEND_WEIBO) {
+        if (type == PublishActivity.SEND_WEIBO && isFromFAButton) {
             setupRevealBackground(savedInstanceState);
         } else {
             mLinearLayout.setBackgroundColor(getResources().getColor(R.color.activity_bg_color));
@@ -172,9 +174,14 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     @Override
     protected void initData(Bundle savedInstanceState) {
         Intent intent = getIntent();
+        draft_id = intent.getIntExtra("draft_id", 0);
         type = intent.getIntExtra("type", 0);
+        isFromFAButton = intent.getBooleanExtra("isFromFAButton", false);
         idstr = intent.getStringExtra("idstr");
         String text = intent.getStringExtra("text");
+        if (text != null) {
+            et_content.setText(text);
+        }
         switch (type) {
             case SEND_WEIBO:   //发微博
                 actionBar.setTitle(R.string.publish_weibo);
@@ -199,7 +206,6 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                 ib_sharp.setVisibility(View.GONE);
                 cb_comment_to_auth.setVisibility(View.VISIBLE);
                 et_content.setHint(R.string.repost_weibo);
-                et_content.setText(text);
                 et_content.setSelection(0);
                 url = AppConstant.STATUSES_REPOST_URL;
                 break;
@@ -603,10 +609,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (gv_emotion.isShown()) {
-                    gv_emotion.setVisibility(View.GONE);
-                }
-                finish();
+                saveToDraft();
                 break;
             default:
                 break;
@@ -617,34 +620,51 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (gv_emotion.isShown()) {
-                gv_emotion.setVisibility(View.GONE);
-                return true;
-            }
-            final String content = et_content.getText().toString();
-            if (!TextUtils.isEmpty(content)) {
-                CommonUtil.createMessageAlertDialog(this, getResources().getString(R.string.tip), getResources().getString(R.string.save_draft), getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                }, getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Draft d = new Draft(0,type,content, strList);
-                                DraftDB.addDraft(d);
-                            }
-                        }).start();
-                        finish();
-                    }
-                },true);
-            }
+            saveToDraft();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /*
+     *返回提示是否保存到草稿箱
+     */
+    private void saveToDraft() {
+
+        //如果表情框出现，则隐藏
+        if (gv_emotion.isShown()) {
+            gv_emotion.setVisibility(View.GONE);
         }
 
-        return super.onKeyDown(keyCode, event);
+        final String content = et_content.getText().toString();
+        if (!TextUtils.isEmpty(content)) {
+            CommonUtil.createMessageAlertDialog(this, getResources().getString(R.string.tip), getResources().getString(R.string.save_draft), getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            }, getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(draft_id == 0){
+                                Draft d = new Draft(0, type, content, strList);
+                                DraftDB.addDraft(d);
+                            }else{
+                                Draft d = new Draft(draft_id, type, content, strList);
+                                DraftDB.updateDraft(d);
+                            }
+                        }
+                    }).start();
+                    finish();
+                }
+            }, true);
+        }else{
+            finish();
+        }
+
     }
 
 }

@@ -243,6 +243,7 @@ public class MainActivity extends BaseActivity {
                 startingLocation[1] = startingLocation[1] - topOffset + view.getHeight() / 2;
                 Intent intent = new Intent(MainActivity.this, PublishActivity.class);
                 intent.putExtra("type", PublishActivity.SEND_WEIBO);
+                intent.putExtra("isFromFAButton", true);
                 intent.putExtra(PublishActivity.ARG_REVEAL_START_LOCATION, startingLocation);
                 startActivityForResult(intent, SEND_NEW_WEIBO);
                 overridePendingTransition(0, 0);

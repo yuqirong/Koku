@@ -105,8 +105,8 @@
     <orderEntry type="library" exported="" name="design-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="MobTools" level="project" />
-    <orderEntry type="library" exported="" name="ShareSDK-QZone-2.6.3" level="project" />
     <orderEntry type="library" exported="" name="ShareSDK-Email-2.6.3" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-QZone-2.6.3" level="project" />
     <orderEntry type="library" exported="" name="percent-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="ShareSDK-Wechat-Moments-2.6.3" level="project" />
     <orderEntry type="library" exported="" name="MobLogCollector" level="project" />
@@ -114,9 +114,9 @@
     <orderEntry type="library" exported="" name="volley" level="project" />
     <orderEntry type="library" exported="" name="ShareSDK-Facebook-2.6.3" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.0.1" level="project" />
-    <orderEntry type="library" exported="" name="universal-image-loader-1.9.3" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="ShareSDK-Core-2.6.3" level="project" />
+    <orderEntry type="library" exported="" name="universal-image-loader-1.9.3" level="project" />
     <orderEntry type="module" module-name="library-xutils" exported="" />
   </component>
 </module>
