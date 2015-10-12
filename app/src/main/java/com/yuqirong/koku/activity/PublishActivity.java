@@ -104,7 +104,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     public static final int SEND_COMMENT = 1020;
     public static final int SEND_REPOST = 1030;
     public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
-
+    public static final int REFRESH_DRAFT = 1040;
     /**
      * 是否定位
      */
@@ -650,14 +650,17 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                         @Override
                         public void run() {
                             if(draft_id == 0){
-                                Draft d = new Draft(0, type, content, strList);
+                                Draft d = new Draft(0, type, content, strList,idstr);
                                 DraftDB.addDraft(d);
                             }else{
-                                Draft d = new Draft(draft_id, type, content, strList);
+                                Draft d = new Draft(draft_id, type, content, strList,idstr);
                                 DraftDB.updateDraft(d);
                             }
                         }
                     }).start();
+                    if(draft_id!=0){
+                        setResult(REFRESH_DRAFT);
+                    }
                     finish();
                 }
             }, true);

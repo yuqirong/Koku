@@ -67,8 +67,8 @@ public class DraftDB {
         if (!tableExist) {
             LogUtils.i("create draft table");
 
-            String sql = String.format("create table %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s TEXT , %s TEXT)", DraftTable.table,
-                    DraftTable.id, DraftTable.type, DraftTable.text, DraftTable.pic_urls);
+            String sql = String.format("create table %s ( %s INTEGER PRIMARY KEY AUTOINCREMENT,%s INTEGER, %s TEXT , %s TEXT , %s TEXT)", DraftTable.table,
+                    DraftTable.id, DraftTable.type, DraftTable.text, DraftTable.pic_urls, DraftTable.weibo_idstr);
             draftDb.execSQL(sql);
         } else {
             LogUtils.i("draft table exist");
@@ -84,16 +84,18 @@ public class DraftDB {
         Draft draft;
         List<Draft> drafts = new ArrayList<>();
         Cursor cursor = draftDb.rawQuery(" SELECT * FROM " + DraftTable.table, null);
-        cursor.moveToFirst();
-        do {
-            int id = cursor.getInt(cursor.getColumnIndex(DraftTable.id));
-            int type = cursor.getInt(cursor.getColumnIndex(DraftTable.type));
-            String text = cursor.getString(cursor.getColumnIndex(DraftTable.text));
-            String pic_urls = cursor.getString(cursor.getColumnIndex(DraftTable.pic_urls));
-            List<String> urls = StringUtils.convertStringToList(pic_urls);
-            draft = new Draft(id, type, text, urls);
-            drafts.add(draft);
-        } while (cursor.moveToNext());
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndex(DraftTable.id));
+                int type = cursor.getInt(cursor.getColumnIndex(DraftTable.type));
+                String text = cursor.getString(cursor.getColumnIndex(DraftTable.text));
+                String pic_urls = cursor.getString(cursor.getColumnIndex(DraftTable.pic_urls));
+                List<String> urls = StringUtils.convertStringToList(pic_urls);
+                String weibo_idstr = cursor.getString(cursor.getColumnIndex(DraftTable.weibo_idstr));
+                draft = new Draft(id, type, text, urls, weibo_idstr);
+                drafts.add(draft);
+            } while (cursor.moveToNext());
+        }
         if (cursor != null) {
             cursor.close();
             cursor = null;
@@ -147,6 +149,7 @@ public class DraftDB {
         mContentValues.put(DraftTable.type, d.type);
         mContentValues.put(DraftTable.text, d.text);
         mContentValues.put(DraftTable.pic_urls, StringUtils.convertListToString(d.pic_urls));
+        mContentValues.put(DraftTable.weibo_idstr, d.idstr);
         long temp = draftDb.insert(DraftTable.table, null, mContentValues);
         if (temp != -1) {
             return true;
@@ -166,6 +169,8 @@ public class DraftDB {
         static final String text = "draft_text";
 
         static final String pic_urls = "draft_pic_urls";
+
+        static final String weibo_idstr = "weibo_idstr";
 
     }
 

@@ -21,6 +21,8 @@ import com.yuqirong.koku.entity.Draft;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 
+import java.util.List;
+
 /**
  * 草稿箱Fragment
  * Created by Anyway on 2015/10/6.
@@ -29,6 +31,7 @@ public class DraftFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
     protected static DraftRecyclerViewAdapter adapter;
+    private static final int START_PUBLISH_ACTIVITY = 1300;
 
     private static Handler handler = new Handler() {
         @Override
@@ -36,14 +39,23 @@ public class DraftFragment extends BaseFragment {
             super.handleMessage(msg);
         }
     };
+    private Draft draft;
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        getDrafts();
+    }
+
+    public void getDrafts() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 adapter.getList().clear();
-                adapter.getList().addAll(DraftDB.getDraftList());
+                List<Draft> list = DraftDB.getDraftList();
+                if (list == null || list.size() == 0) {
+                    return;
+                }
+                adapter.getList().addAll(list);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -68,11 +80,11 @@ public class DraftFragment extends BaseFragment {
                 switch (view.getId()) {
                     case R.id.ib_delete:
                         CommonUtil.createMessageAlertDialog(context, getResources().getString(R.string.tip),
-                                getResources().getString(R.string.save_draft), getResources().getString(R.string.cancel), null, getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                                getResources().getString(R.string.delete_draft), getResources().getString(R.string.cancel),
+                                null, getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        processDeleteDraft(id);
-                                        adapter.getList().remove(position);
+                                        processDeleteDraft(id, position);
                                     }
                                 }, true);
                         break;
@@ -92,26 +104,43 @@ public class DraftFragment extends BaseFragment {
     }
 
     private void processPublish(int position) {
-        Intent intent = new Intent(context,PublishActivity.class);
-        Draft draft = adapter.getList().get(position);
-        intent.putExtra("type",draft.type);
-        intent.putExtra("text",draft.text);
-        intent.putExtra("draft_id",draft.id);
-        // TODO: 2015/10/12  
-        int requestCode = 0;
-        startActivityForResult(intent,requestCode);
-
+        Intent intent = new Intent(context, PublishActivity.class);
+        draft = adapter.getList().get(position);
+        intent.putExtra("type", draft.type);
+        intent.putExtra("text", draft.text);
+        intent.putExtra("draft_id", draft.id);
+        intent.putExtra("idstr", draft.idstr);
+        // TODO: 2015/10/12
+        startActivityForResult(intent, START_PUBLISH_ACTIVITY);
     }
 
-    private void processDeleteDraft(final int id) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == START_PUBLISH_ACTIVITY) {
+            if (resultCode == PublishActivity.REFRESH_DRAFT) {
+                getDrafts();
+            } else if (resultCode == PublishActivity.SEND_WEIBO_SUCCESS
+                    || resultCode == PublishActivity.SEND_COMMENT_SUCCESS
+                    || resultCode == PublishActivity.SEND_REPOST_SUCCESS) {
+                if (draft != null) {
+                    new DraftDBTask().execute(draft.id);
+                    getDrafts();
+                    CommonUtil.setVubator(context, 300);
+                }
+            }
+        }
+    }
+
+    private void processDeleteDraft(int id, int position) {
+        adapter.getList().remove(position);
         new DraftDBTask().execute(id);
     }
 
     static class DraftDBTask extends AsyncTask<Integer, Void, Void> {
 
         @Override
-        protected Void doInBackground(Integer... id) {
-            DraftDB.deleteDraft(id[0]);
+        protected Void doInBackground(Integer... param) {
+            DraftDB.deleteDraft(param[0]);
             return null;
         }
 

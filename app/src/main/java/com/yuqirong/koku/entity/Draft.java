@@ -7,16 +7,16 @@ import java.util.List;
  */
 public class Draft {
 
-    public Draft(){}
+    public Draft() {
+    }
 
-    public Draft(int id, int type, String text, List<String> pic_urls) {
+    public Draft(int id, int type, String text, List<String> pic_urls, String idstr) {
         this.id = id;
         this.type = type;
         this.text = text;
         this.pic_urls = pic_urls;
+        this.idstr = idstr;
     }
-
-
 
     //id
     public int id;
@@ -26,4 +26,6 @@ public class Draft {
     public String text;
     //图片url
     public List<String> pic_urls;
+    //weibo idstr
+    public String idstr;
 }
