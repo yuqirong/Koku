@@ -46,6 +46,13 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
         }
     }
 
+    public void initFooterViewHolder() {
+        if (mFooterViewHolder != null) {
+            mFooterViewHolder.tv_load_fail.setVisibility(View.INVISIBLE);
+            mFooterViewHolder.ll_load_more.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public RecyclerView.ViewHolder createCustomViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weibo_comment_item, null);

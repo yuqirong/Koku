@@ -92,6 +92,9 @@ public class AppConstant {
      * 获取指定微博的转发微博列表
      */
     public static final String STATUSES_REPOST_TIMELINE_URL = "https://api.weibo.com/2/statuses/repost_timeline.json";
-
+    /**
+     * 批量获取指定微博的转发数评论数
+     */
+    public static final String STATUSES_COUNT_URL="https://api.weibo.com/2/statuses/count.json";
 
 }

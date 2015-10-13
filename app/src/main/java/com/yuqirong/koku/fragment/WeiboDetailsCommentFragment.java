@@ -36,6 +36,7 @@ import com.yuqirong.koku.view.AutoLoadRecyclerView;
 import com.yuqirong.koku.view.DividerItemDecoration;
 import com.yuqirong.koku.view.FixedSwipeRefreshLayout;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,7 +81,8 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     private WeiboCommentAdapter adapter;
 
     private long next_cursor;
-    private boolean load;
+    private boolean load; //是否正在加载
+    private boolean refresh; //是否正在刷新
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Status status;
@@ -93,13 +95,47 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             // TODO: 2015/10/12
         }
         if(status != null){
+            getStatusesCountData();
             initWeiboData(status);
             getDataFromServer();
         }
     }
 
+    private void getStatusesCountData(){
+        if (!TextUtils.isEmpty(status.idstr)) {
+            String fresh_count_url = AppConstant.STATUSES_COUNT_URL + "?access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&ids=" + status.idstr;
+            LogUtils.i("批量获取指定微博的转发数评论数url ：" + fresh_count_url);
+            getData(fresh_count_url, countListener, errorListener);
+        }
+    }
+
+    Response.Listener<String> countListener = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String result) {
+            try {
+                JSONArray jsonArray = new JSONArray(result);
+                JSONObject object = (JSONObject) jsonArray.get(0);
+                status.comments_count = object.getInt("comments");
+                status.reposts_count = object.getInt("reposts");
+                status.attitudes_count = object.getInt("attitudes");
+                String comments = getResources().getString(R.string.rb_comment) + CommonUtil.getNumString(status.comments_count);
+                rb_comment.setText(comments);
+                String reposts = getResources().getString(R.string.rb_repost) + CommonUtil.getNumString(status.reposts_count);
+                rb_repost.setText(reposts);
+                tv_favorite.setText(CommonUtil.getNumString(status.attitudes_count));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
     private void getDataFromServer() {
         if (!TextUtils.isEmpty(status.idstr)) {
+            if(refresh){
+                next_cursor=0;
+                adapter.initFooterViewHolder();
+                adapter.setIsLoadingMore(false);
+            }
             String url = AppConstant.COMMENTS_SHOW_URL + "?count=20&id=" + status.idstr +
                     "&access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&max_id=" + next_cursor;
             LogUtils.i("评论url ：" + url);
@@ -116,6 +152,12 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void processData(JSONObject object) {
         try {
+            if(refresh){
+                adapter.getList().clear();
+                adapter.getList().add(new Comment());
+                adapter.getList().add(new Comment());
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
             String str = object.getString("comments");
             next_cursor = object.getLong("next_cursor");
             adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(str, Comment.class));
@@ -123,10 +165,11 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                 adapter.completeLoadMore(true);
                 load = false;
             }
-            if (next_cursor == 0) {
+            if (next_cursor == 0 && !refresh) {
                 adapter.setIsLoadingMore(true);
                 adapter.setLoadFinish();
             }
+            refresh = false;
             adapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -150,7 +193,9 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                getStatusesCountData();
+                refresh = true;
+                getDataFromServer();
             }
         });
         mAutoLoadRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mAutoLoadRecyclerView);
@@ -179,6 +224,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void initHeaderView(View view) {
         ll_item = (LinearLayout) view.findViewById(R.id.ll_item);
+        ll_item.setBackgroundColor(getResources().getColor(android.R.color.background_light));
         mRelativeLayout = (RelativeLayout) view.findViewById(R.id.mRelativeLayout);
         iv_avatar = (ImageView) view.findViewById(R.id.iv_avatar);
         tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);
@@ -238,8 +284,10 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             processRetweeted();
             ll_item.addView(view_retweeted);
         }
-        rb_comment.setText(rb_comment.getText().toString() + CommonUtil.getNumString(status.comments_count));
-        rb_repost.setText(rb_repost.getText().toString() + CommonUtil.getNumString(status.reposts_count));
+        String comments = getResources().getString(R.string.rb_comment) + CommonUtil.getNumString(status.comments_count);
+        rb_comment.setText(comments);
+        String reposts = getResources().getString(R.string.rb_repost) + CommonUtil.getNumString(status.reposts_count);
+        rb_repost.setText(reposts);
         tv_favorite.setText(CommonUtil.getNumString(status.attitudes_count));
         rb_comment.setOnCheckedChangeListener(onCheckedChangeListener);
         rb_repost.setOnCheckedChangeListener(onCheckedChangeListener);

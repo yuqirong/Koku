@@ -65,4 +65,6 @@
     <string name="save_draft">是否保存到草稿箱中？</string>
     <string name="confirm">确定</string>
     <string name="delete_draft">确定删除选中的草稿吗？</string>
+    <string name="rb_repost">转发</string>
+    <string name="rb_comment">评论</string>
 </resources>

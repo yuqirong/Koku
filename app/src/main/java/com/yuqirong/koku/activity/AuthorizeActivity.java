@@ -36,8 +36,8 @@ public class AuthorizeActivity extends BaseActivity {
     private WebSettings settings;
     public static final String RESPONSE_URL = "https://api.weibo.com/oauth2/default.html?code=";
 
-    public static void actionStart(Context context){
-        Intent intent = new Intent(context,AuthorizeActivity.class);
+    public static void actionStart(Context context) {
+        Intent intent = new Intent(context, AuthorizeActivity.class);
         context.startActivity(intent);
     }
 
@@ -69,7 +69,7 @@ public class AuthorizeActivity extends BaseActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url != null && url.startsWith(RESPONSE_URL)) {
-                    final String code = url.substring(url.indexOf("=")+1);
+                    final String code = url.substring(url.indexOf("=") + 1);
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, AppConstant.ACCESS_TOKEN_URL, listener, errorListener) {
                         @Override
                         protected Map<String, String> getParams() throws AuthFailureError {
@@ -97,27 +97,27 @@ public class AuthorizeActivity extends BaseActivity {
         }
     };
 
-    private void processData(String s){
-            String access_token = JsonUtils.getString(s,"access_token");
-            String expires_in = JsonUtils.getString(s,"expires_in");
-            String remind_in = JsonUtils.getString(s,"remind_in");
-            String uid = JsonUtils.getString(s,"uid");
-            if(access_token!=null) {
-                SharePrefUtil.saveString(AuthorizeActivity.this, "access_token", access_token);
-            }
-            if(expires_in!=null) {
-                SharePrefUtil.saveString(AuthorizeActivity.this, "expires_in", expires_in);
-            }
-            if(remind_in!=null) {
-                SharePrefUtil.saveString(AuthorizeActivity.this, "remind_in", remind_in);
-            }
-            if(uid!=null) {
-                SharePrefUtil.saveString(AuthorizeActivity.this, "uid", uid);
-            }
-            Intent intent = new Intent(AuthorizeActivity.this,MainActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            finish();
+    private void processData(String s) {
+        String access_token = JsonUtils.getString(s, "access_token");
+        String expires_in = JsonUtils.getString(s, "expires_in");
+        String remind_in = JsonUtils.getString(s, "remind_in");
+        String uid = JsonUtils.getString(s, "uid");
+        if (access_token != null) {
+            SharePrefUtil.saveString(AuthorizeActivity.this, "access_token", access_token);
+        }
+        if (expires_in != null) {
+            SharePrefUtil.saveString(AuthorizeActivity.this, "expires_in", expires_in);
+        }
+        if (remind_in != null) {
+            SharePrefUtil.saveString(AuthorizeActivity.this, "remind_in", remind_in);
+        }
+        if (uid != null) {
+            SharePrefUtil.saveString(AuthorizeActivity.this, "uid", uid);
+        }
+        Intent intent = new Intent(AuthorizeActivity.this, MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        finish();
     }
 
     protected Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -130,7 +130,8 @@ public class AuthorizeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String url = AppConstant.AUTHORIZE_URL +" ?redirect_uri=" + AppConstant.REDIRECT_URL + "&display=mobile&response_type=code" + "&client_id=" + AppConstant.APP_KEY + "&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
+        String url = AppConstant.AUTHORIZE_URL + "?redirect_uri=" + AppConstant.REDIRECT_URL + "&display=mobile&response_type=code" + "&client_id=" + AppConstant.APP_KEY + "&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
+        LogUtils.i("OAuth认证url ：" + url);
         if (URLUtil.isNetworkUrl(url)) {
             mWebView.loadUrl(AppConstant.AUTHORIZE_URL);
         }

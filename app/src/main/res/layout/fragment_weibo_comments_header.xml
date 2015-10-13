@@ -24,13 +24,13 @@
             android:id="@+id/rb_comment"
             style="@style/Weibo_Details_RadioButton_Style"
             android:checked="true"
-            android:text="评论 "
+            android:text="@string/rb_comment"
             tools:text="评论 2542" />
 
         <RadioButton
             android:id="@+id/rb_repost"
             style="@style/Weibo_Details_RadioButton_Style"
-            android:text="转发 "
+            android:text="@string/rb_repost"
             tools:text="转发 5342" />
     </RadioGroup>
 
