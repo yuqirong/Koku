@@ -101,6 +101,15 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(status.comments_count == 0){
+            adapter.setIsLoadingMore(true);
+            adapter.setLoadFinish();
+        }
+    }
+
     private void getStatusesCountData(){
         if (!TextUtils.isEmpty(status.idstr)) {
             String fresh_count_url = AppConstant.STATUSES_COUNT_URL + "?access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&ids=" + status.idstr;

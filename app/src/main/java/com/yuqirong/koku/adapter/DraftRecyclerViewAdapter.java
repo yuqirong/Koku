@@ -34,7 +34,7 @@ public class DraftRecyclerViewAdapter extends RecyclerView.Adapter<DraftRecycler
 
     }
 
-    public List<Draft> getList() {
+    public synchronized List<Draft> getList() {
         return list;
     }
 
