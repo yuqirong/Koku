@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.LoadMoreAdapter;
 import com.yuqirong.koku.adapter.WeiboCommentAdapter;
+import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.entity.Pic_urls;
@@ -223,9 +224,18 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         adapter.setOnLoadingMoreListener(new LoadMoreAdapter.OnLoadingMoreListener() {
             @Override
             public void onLoadingMore() {
-                    load = true;
-                    getDataFromServer();
+                load = true;
+                getDataFromServer();
             }
+        });
+        adapter.setOnItemClickListener(new WeiboRecycleViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {}
         });
         mAutoLoadRecyclerView.setAdapter(adapter);
         return view;

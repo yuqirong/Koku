@@ -96,5 +96,8 @@ public class AppConstant {
      * 批量获取指定微博的转发数评论数
      */
     public static final String STATUSES_COUNT_URL="https://api.weibo.com/2/statuses/count.json";
-
+    /**
+     * 回复一条评论
+     */
+    public static final String COMMENTS_REPLY_URL="https://api.weibo.com/2/comments/reply.json";
 }

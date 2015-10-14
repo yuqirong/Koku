@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.util.BitmapUtil;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.StringUtils;
@@ -28,6 +29,11 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
     private Context context;
     private static ImageLoader imageLoader;
     private static DisplayImageOptions options;
+    private static WeiboRecycleViewAdapter.OnItemClickListener listener;
+
+   public void setOnItemClickListener(WeiboRecycleViewAdapter.OnItemClickListener listener){
+       this.listener = listener;
+   }
 
     public WeiboCommentAdapter(Context context) {
         this.context = context;
@@ -61,7 +67,7 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
     }
 
     @Override
-    public void bindCustomViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void bindCustomViewHolder(RecyclerView.ViewHolder holder, final int position) {
         LogUtils.i("position : " + position);
         Comment comment = getList().get(position);
         ViewHolder mViewHolder = (ViewHolder) holder;
@@ -71,7 +77,31 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
         mViewHolder.tv_device.setText(Html.fromHtml(comment.source));
         SpannableString weiBoContent = StringUtils.getWeiBoContent(mViewHolder.context, comment.text, mViewHolder.tv_text);
         mViewHolder.tv_text.setText(weiBoContent);
+        mViewHolder.iv_overflow.setOnClickListener(new ViewOnClickListener(position));
+        mViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener!=null){
+                    listener.onItemClick(v,position);
+                }
+            }
+        });
     }
+
+     static class ViewOnClickListener implements View.OnClickListener{
+
+         private int position;
+
+         public ViewOnClickListener(int position){
+             this.position = position;
+         }
+
+         @Override
+         public void onClick(View v) {
+             // TODO: 2015/10/14
+             CommonUtil.showPopupMenu(v.getContext(), v, R.menu.overflow_popupmenu_02, null);
+         }
+     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -81,6 +111,7 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
         public TextView tv_device;
         public TextView tv_text;
         public Context context;
+        public ImageView iv_overflow;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -90,6 +121,7 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
             tv_device = (TextView) itemView.findViewById(R.id.tv_device);
             tv_text = (TextView) itemView.findViewById(R.id.tv_text);
+            iv_overflow = (ImageView) itemView.findViewById(R.id.iv_overflow);
         }
 
     }
