@@ -4,7 +4,7 @@
     android:id="@+id/mRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/background_light"
+    android:background="@drawable/bg_unselected_card_item_light"
     android:paddingBottom="10dp">
 
     <include

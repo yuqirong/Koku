@@ -1,18 +1,22 @@
 package com.yuqirong.koku.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
@@ -30,13 +34,16 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
     private static ImageLoader imageLoader;
     private static DisplayImageOptions options;
     private static WeiboRecycleViewAdapter.OnItemClickListener listener;
+    public static final int REPLY_COMMENT = 1007;
+    private String weiboId;
 
    public void setOnItemClickListener(WeiboRecycleViewAdapter.OnItemClickListener listener){
        this.listener = listener;
    }
 
-    public WeiboCommentAdapter(Context context) {
+    public WeiboCommentAdapter(Context context,String weiboId) {
         this.context = context;
+        this.weiboId = weiboId;
         imageLoader = ImageLoader.getInstance();
         options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, false);
     }
@@ -77,7 +84,7 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
         mViewHolder.tv_device.setText(Html.fromHtml(comment.source));
         SpannableString weiBoContent = StringUtils.getWeiBoContent(mViewHolder.context, comment.text, mViewHolder.tv_text);
         mViewHolder.tv_text.setText(weiBoContent);
-        mViewHolder.iv_overflow.setOnClickListener(new ViewOnClickListener(position));
+        mViewHolder.iv_overflow.setOnClickListener(new ViewOnClickListener(comment,weiboId));
         mViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,16 +97,37 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
 
      static class ViewOnClickListener implements View.OnClickListener{
 
-         private int position;
+         private Comment comment;
+         private String weiboId;
 
-         public ViewOnClickListener(int position){
-             this.position = position;
+         public ViewOnClickListener(Comment comment,String weiboId){
+             this.comment = comment;
+             this.weiboId = weiboId;
          }
 
          @Override
-         public void onClick(View v) {
+         public void onClick(final View v) {
              // TODO: 2015/10/14
-             CommonUtil.showPopupMenu(v.getContext(), v, R.menu.overflow_popupmenu_02, null);
+             CommonUtil.showPopupMenu(v.getContext(), v, R.menu.overflow_comment_popupmenu, new PopupMenu.OnMenuItemClickListener() {
+                 @Override
+                 public boolean onMenuItemClick(MenuItem item) {
+                     switch (item.getItemId()){
+                         case R.id.overflow_comment:
+//                            int requestCode = MainActivity.SEND_NEW_REPOST;
+                             Intent intent = new Intent();
+                             intent.setClass(v.getContext(), PublishActivity.class);
+                             intent.putExtra("type", PublishActivity.REPLY_COMMENT);
+                             intent.putExtra("cid", comment.idstr);
+                             intent.putExtra("idstr", weiboId);
+                             v.getContext().startActivity(intent);
+                             break;
+                         case R.id.overflow_copy:
+
+                             break;
+                     }
+                     return false;
+                 }
+             });
          }
      }
 

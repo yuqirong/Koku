@@ -34,7 +34,6 @@ import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.util.StringUtils;
 import com.yuqirong.koku.view.AutoLoadRecyclerView;
-import com.yuqirong.koku.view.DividerItemDecoration;
 import com.yuqirong.koku.view.FixedSwipeRefreshLayout;
 
 import org.json.JSONArray;
@@ -87,6 +86,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Status status;
+    private View headerView;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -96,6 +96,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             // TODO: 2015/10/12
         }
         if(status != null){
+            initAdapter(headerView);
             getStatusesCountData();
             initWeiboData(status);
             getDataFromServer();
@@ -196,7 +197,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.from(context).inflate(R.layout.fragment_weibo_comments,null);
-        View headerView = inflater.from(context).inflate(R.layout.fragment_weibo_comments_header,null);
+        headerView = inflater.from(context).inflate(R.layout.fragment_weibo_comments_header,null);
         initHeaderView(headerView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(FixedSwipeRefreshLayout.SWIPE_REFRESH_LAYOUT_COLOR);
@@ -209,8 +210,12 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             }
         });
         mAutoLoadRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mAutoLoadRecyclerView);
-        mAutoLoadRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
-        adapter = new WeiboCommentAdapter(context);
+//        mAutoLoadRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
+        return view;
+    }
+
+    private void initAdapter(View headerView) {
+        adapter = new WeiboCommentAdapter(context,status.idstr);
         if (headerView != null) {
             ViewParent parent = headerView.getParent();
             if (parent != null) {
@@ -235,10 +240,10 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {}
+            public void onItemLongClick(View view, int position) {
+            }
         });
         mAutoLoadRecyclerView.setAdapter(adapter);
-        return view;
     }
 
     private void initHeaderView(View view) {

@@ -98,39 +98,33 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     private EmotionAdapter adapter;
     private RevealBackgroundView vRevealBackground;
 
-    private boolean isPicture = false;
+    public static final int SEND_WEIBO = 1010; //发布微博
+    public static final int SEND_COMMENT = 1020; //发布评论
+    public static final int SEND_REPOST = 1030; //转发微博
+    public static final int REFRESH_DRAFT = 1040; //刷新草稿箱
+    public static final int REPLY_COMMENT = 1050; //回复评论
 
-    public static final int SEND_WEIBO = 1010;
-    public static final int SEND_COMMENT = 1020;
-    public static final int SEND_REPOST = 1030;
     public static final String ARG_REVEAL_START_LOCATION = "reveal_start_location";
-    public static final int REFRESH_DRAFT = 1040;
-    /**
-     * 是否定位
-     */
-    private boolean isLocation = false;
-    /**
-     * 相机拍照
-     */
-    private static final int TAKE_PHOTO = 1002;
-    /**
-     * 系统图库
-     */
-    private static final int TAKE_GALLERY = 1003;
-    private double longitude;
-    private double latitude;
-    private int type; //Activity 类型
-    private String url;
-    private String idstr;
-    //发微博成功
-    public static final int SEND_WEIBO_SUCCESS = 1200;
-    //评论成功
-    public static final int SEND_COMMENT_SUCCESS = 1250;
-    //转发成功
-    public static final int SEND_REPOST_SUCCESS = 1300;
+
+    private static final int TAKE_PHOTO = 1002; //相机拍照
+    private static final int TAKE_GALLERY = 1003; //系统图库
+
+    private boolean isPicture = false; //是否发含有图片的微博
+    private boolean isLocation = false; //是否定位
+    private double longitude; //经度
+    private double latitude; //维度
+    private int type; //源Activity 类型
+    private String url; //网络url
+    private String idstr; //微博ID
+
+    public static final int SEND_WEIBO_SUCCESS = 1200; //发微博成功
+    public static final int SEND_COMMENT_SUCCESS = 1250; //评论成功
+    public static final int SEND_REPOST_SUCCESS = 1300; //转发成功
+
     private LinearLayout mLinearLayout;
-    private boolean isFromFAButton;
-    private int draft_id;
+    private boolean isFromFAButton; //是否从含有FloatingActionButton的界面跳转过来
+    private int draft_id; //草稿箱ID
+    private String cid; // 回复某人评论时的评论ID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +172,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
         type = intent.getIntExtra("type", 0);
         isFromFAButton = intent.getBooleanExtra("isFromFAButton", false);
         idstr = intent.getStringExtra("idstr");
+        cid = intent.getStringExtra("cid");
         String text = intent.getStringExtra("text");
         if (text != null) {
             et_content.setText(text);
@@ -208,6 +203,14 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                 et_content.setHint(R.string.repost_weibo);
                 et_content.setSelection(0);
                 url = AppConstant.STATUSES_REPOST_URL;
+                break;
+            case REPLY_COMMENT:
+                actionBar.setTitle(R.string.reply_comment);
+                ib_location.setVisibility(View.GONE);
+                ib_photo.setVisibility(View.GONE);
+                cb_comment_to_auth.setVisibility(View.VISIBLE);
+                et_content.setHint(R.string.reply_comment);
+                url = AppConstant.COMMENTS_REPLY_URL;
                 break;
             default:
                 break;
@@ -354,16 +357,16 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             gv_emotion.setVisibility(View.GONE);
         }
         final String content = et_content.getText().toString();
-        StringRequest stringRequest;
         if (TextUtils.isEmpty(content.trim()) && type != SEND_REPOST) {
             CommonUtil.showSnackbar(v, R.string.content_cannot_be_empty, getResources().getColor(R.color.Indigo_colorPrimary));
             return;
         }
-        stringRequest = new StringRequest(Request.Method.POST, url, sendWeiboListener, errorListener) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, sendWeiboListener, errorListener) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> map = new HashMap();
                 map.put("access_token", SharePrefUtil.getString(PublishActivity.this, "access_token", ""));
+                map.put("status", content);
                 switch (type) {
                     case SEND_WEIBO:
                         map.put("status", content);
@@ -386,6 +389,13 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                             map.put("is_comment", "1");
                         }
                         break;
+                    case REPLY_COMMENT:
+                        map.put("comment", content);
+                        map.put("cid", cid);
+                        map.put("id", idstr);
+                        if (cb_comment_to_auth.isChecked()) {
+                            map.put("comment_ori", "1");
+                        }
                 }
                 return map;
             }
@@ -598,7 +608,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             case SearchUserActivity.AT_USER:
                 if (resultCode == RESULT_OK) {
                     String screen_name = data.getStringExtra("screen_name");
-                    et_content.getText().insert(et_content.getSelectionEnd(),"@" + screen_name + " ");
+                    et_content.getText().insert(et_content.getSelectionEnd(), "@" + screen_name + " ");
                 }
                 break;
         }
@@ -630,12 +640,16 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
      *返回提示是否保存到草稿箱
      */
     private void saveToDraft() {
-
         //如果表情框出现，则隐藏
         if (gv_emotion.isShown()) {
             gv_emotion.setVisibility(View.GONE);
+            return;
         }
-
+        // 如果是回复评论，直接finish
+        if(type == REPLY_COMMENT){
+            finish();
+            return;
+        }
         final String content = et_content.getText().toString();
         if (!TextUtils.isEmpty(content)) {
             CommonUtil.createMessageAlertDialog(this, getResources().getString(R.string.tip), getResources().getString(R.string.save_draft), getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -649,22 +663,22 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            if(draft_id == 0){
-                                Draft d = new Draft(0, type, content, strList,idstr);
+                            if (draft_id == 0) {
+                                Draft d = new Draft(0, type, content, strList, idstr);
                                 DraftDB.addDraft(d);
-                            }else{
-                                Draft d = new Draft(draft_id, type, content, strList,idstr);
+                            } else {
+                                Draft d = new Draft(draft_id, type, content, strList, idstr);
                                 DraftDB.updateDraft(d);
                             }
                         }
                     }).start();
-                    if(draft_id!=0){
+                    if (draft_id != 0) {
                         setResult(REFRESH_DRAFT);
                     }
                     finish();
                 }
             }, true);
-        }else{
+        } else {
             finish();
         }
 

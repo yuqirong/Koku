@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:cacheColorHint="@null"
         android:fadeScrollbars="true"
+        android:clipToPadding="false"
+        android:padding="2dp"
         android:scrollbars="vertical" />
 
 </com.yuqirong.koku.view.FixedSwipeRefreshLayout>

@@ -6,6 +6,7 @@
 /build
 
 # Files for the Dalvik VM
+/.idea
 *.dex
 
 # Java class files

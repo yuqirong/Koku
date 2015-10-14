@@ -3,12 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_vertical_margin"
-    android:paddingRight="@dimen/activity_vertical_margin"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:background="@android:color/background_light"
-    android:orientation="vertical">
+    android:background="@drawable/recyclerview_bg_selector"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_vertical_margin">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,8 +13,8 @@
 
         <ImageView
             android:id="@+id/iv_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:scaleType="centerCrop"
             android:src="@drawable/img_empty_avatar" />
 
@@ -26,10 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/iv_avatar"
-            android:textSize="12sp"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/iv_avatar"
             android:onClick="true"
+            android:textSize="12sp"
             tools:text="username" />
 
         <ImageView

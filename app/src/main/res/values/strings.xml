@@ -17,7 +17,7 @@
     <string name="drawer_open">打开抽屉</string>
     <string name="drawer_close">关闭抽屉</string>
     <string name="app_authorize">账号授权</string>
-    <string name="load_more">加载更多...</string>
+    <string name="load_more">加载中</string>
     <string name="load_fail">加载失败，点击重试</string>
     <string name="no_more_weibo">没有更多微博了</string>
     <string name="load_finish">加载完成</string>
@@ -33,6 +33,7 @@
     <string name="publish_weibo">发微博</string>
     <string name="comment_weibo">评论微博</string>
     <string name="repost_weibo">转发微博</string>
+    <string name="reply_comment">回复评论</string>
     <array name="photo_items">
         <item>拍照</item>
         <item>最后一次拍照</item>
