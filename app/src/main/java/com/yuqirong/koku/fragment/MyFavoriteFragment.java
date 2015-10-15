@@ -229,8 +229,7 @@ public class MyFavoriteFragment extends BaseFragment {
                                 processFavorite();
                                 break;
                             case R.id.overflow_copy:
-                                ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                                clip.setText(status.text); // 复制
+                                CommonUtil.copyToClipboard(context, status.text);
                                 CommonUtil.showSnackbar(getView(), R.string.copy_weibo_to_clipboard, getResources().getColor(R.color.Indigo_colorPrimary));
                                 break;
                         }

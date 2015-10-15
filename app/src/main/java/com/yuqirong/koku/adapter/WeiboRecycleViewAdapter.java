@@ -283,8 +283,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                     processFavorite();
                     break;
                 case R.id.overflow_copy:
-                    ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    clip.setText(status.text); // 复制
+                    CommonUtil.copyToClipboard(context,status.text);
                     CommonUtil.showSnackbar(view, R.string.copy_weibo_to_clipboard, context.getResources().getColor(R.color.Indigo_colorPrimary));
                     break;
             }

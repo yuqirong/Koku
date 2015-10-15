@@ -58,6 +58,7 @@
     <string name="load_web">加载网页</string>
     <string name="copy_to_clipboard">已将网址复制到剪贴板上</string>
     <string name="copy_weibo_to_clipboard">已将微博复制到剪贴板上</string>
+    <string name="copy_comment_to_clipboard">已将评论复制到剪贴板上</string>
     <string name="please_wait">请等待...</string>
     <string name="operation_success">操作成功</string>
     <string name="most_nine_pic">最多只能选择9张图片</string>

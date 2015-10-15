@@ -113,17 +113,17 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
                  public boolean onMenuItemClick(MenuItem item) {
                      switch (item.getItemId()){
                          case R.id.overflow_comment:
-//                            int requestCode = MainActivity.SEND_NEW_REPOST;
                              Intent intent = new Intent();
                              intent.setClass(v.getContext(), PublishActivity.class);
                              intent.putExtra("type", PublishActivity.REPLY_COMMENT);
                              intent.putExtra("cid", comment.idstr);
                              intent.putExtra("idstr", weiboId);
                              v.getContext().startActivity(intent);
-                             break;
+                             return true;
                          case R.id.overflow_copy:
-
-                             break;
+                             CommonUtil.copyToClipboard(v.getContext(),comment.text);
+                             CommonUtil.showSnackbar(v, R.string.copy_comment_to_clipboard, v.getContext().getResources().getColor(R.color.Indigo_colorPrimary));
+                             return true;
                      }
                      return false;
                  }

@@ -1,11 +1,13 @@
 package com.yuqirong.koku.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -13,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.adapter.LoadMoreAdapter;
 import com.yuqirong.koku.adapter.WeiboCommentAdapter;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
@@ -235,8 +239,28 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         });
         adapter.setOnItemClickListener(new WeiboRecycleViewAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-
+            public void onItemClick(final View v, int position) {
+                final Comment comment = adapter.getList().get(position);
+                CommonUtil.showPopupMenu(v.getContext(), v, R.menu.overflow_comment_popupmenu, new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()){
+                            case R.id.overflow_comment: //回复评论
+                                Intent intent = new Intent();
+                                intent.setClass(v.getContext(), PublishActivity.class);
+                                intent.putExtra("type", PublishActivity.REPLY_COMMENT);
+                                intent.putExtra("cid", comment.idstr);
+                                intent.putExtra("idstr", status.idstr);
+                                v.getContext().startActivity(intent);
+                                return true;
+                            case R.id.overflow_copy:
+                                CommonUtil.copyToClipboard(v.getContext(),comment.text);
+                                CommonUtil.showSnackbar(v, R.string.copy_comment_to_clipboard, v.getContext().getResources().getColor(R.color.Indigo_colorPrimary));
+                                return true;
+                        }
+                        return false;
+                    }
+                });
             }
 
             @Override

@@ -12,6 +12,7 @@ import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
+import android.text.ClipboardManager;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -192,6 +193,16 @@ public class CommonUtil {
         progressDialog.setCancelable(cancelable);
         progressDialog.show();
         return progressDialog;
+    }
+
+    /**
+     * 把文本复制到粘贴板上
+     * @param context
+     * @param text
+     */
+    public static void copyToClipboard(Context context,String text){
+        ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        clip.setText(text); // 复制
     }
 
 }
