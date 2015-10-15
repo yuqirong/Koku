@@ -1,7 +1,11 @@
 package com.yuqirong.koku.activity;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -9,6 +13,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.yuqirong.koku.R;
+import com.yuqirong.koku.view.SystemBarTintManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,9 +35,35 @@ public abstract class BaseActivity extends AppCompatActivity {
         synchronized (activities) {
             activities.add(this);
         }
+//        initSystemBar();
         initView();
         initToolBar();
         initData(savedInstanceState);
+    }
+
+    private void initSystemBar() {
+        if(this instanceof SplashActivity){
+            return;
+        }
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+        }
+        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        tintManager.setStatusBarTintEnabled(true);
+        tintManager.setStatusBarTintResource(R.color.Indigo_nav_color);
+    }
+
+    @TargetApi(19)
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
     }
 
     @Override
@@ -73,7 +105,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
         mQueue.add(jsonObjectRequest);
     }
-
 
 
 }

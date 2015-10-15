@@ -8,12 +8,5 @@
         <item name="android:navigationBarColor">@color/Indigo_colorPrimary</item>
     </style>
 
-    <!--Toolbar Style-->
-    <style name="MyToolBarTheme" parent="Base.ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">@android:color/white</item>
-        <!--Toolbar颜色-->
-        <item name="colorPrimary">@color/Indigo_colorPrimary</item>
-
-    </style>
 </resources>
 
