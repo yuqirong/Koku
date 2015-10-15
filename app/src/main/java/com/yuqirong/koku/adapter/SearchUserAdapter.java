@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lidroid.xutils.BitmapUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.User;
 import com.yuqirong.koku.util.BitmapUtil;
@@ -24,7 +25,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
 
     private Context context;
     private List<User> list = new ArrayList<>();
-    private BitmapUtils bitmapUtils;
+    private ImageLoader imageLoader;
+    private static DisplayImageOptions options;
 
     public void setIsSearchMode(boolean isSearchMode) {
         this.isSearchMode = isSearchMode;
@@ -45,8 +47,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
 
     public SearchUserAdapter(Context context) {
         this.context = context;
-        bitmapUtils = BitmapUtil.getBitmapUtils(context);
-        bitmapUtils.configMemoryCacheEnabled(false);
+        imageLoader = ImageLoader.getInstance();
+        options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, false);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
         holder.tv_follower_count.setText(CommonUtil.getNumString(user.followers_count));
         if (!isSearchMode) {
             holder.iv_avatar.setVisibility(View.VISIBLE);
-            bitmapUtils.display(holder.iv_avatar, user.profile_image_url);
+            imageLoader.displayImage(user.profile_image_url,holder.iv_avatar,options);
         } else {
             holder.iv_avatar.setVisibility(View.GONE);
         }

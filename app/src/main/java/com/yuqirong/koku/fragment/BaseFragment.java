@@ -13,7 +13,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.lidroid.xutils.BitmapUtils;
 import com.yuqirong.koku.util.BitmapUtil;
 
 import cn.sharesdk.framework.ShareSDK;
@@ -25,14 +24,12 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 public abstract class BaseFragment extends Fragment {
 
     public Context context;
-    protected BitmapUtils bitmapUtils;
     protected RequestQueue mQueue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        bitmapUtils = BitmapUtil.getBitmapUtils(context);
         mQueue = Volley.newRequestQueue(context);
     }
 

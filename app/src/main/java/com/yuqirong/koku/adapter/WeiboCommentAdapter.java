@@ -34,7 +34,6 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
     private static ImageLoader imageLoader;
     private static DisplayImageOptions options;
     private static WeiboRecycleViewAdapter.OnItemClickListener listener;
-    public static final int REPLY_COMMENT = 1007;
     private String weiboId;
 
    public void setOnItemClickListener(WeiboRecycleViewAdapter.OnItemClickListener listener){

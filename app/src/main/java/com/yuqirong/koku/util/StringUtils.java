@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 public class StringUtils {
 
     // 定义正则表达式
-    private static final String AT = "@[\u4e00-\u9fa5\\w]+";// @人
+    private static final String AT = "@[\u4e00-\u9fa5-\\w]+";// @人
     private static final String TOPIC = "#[\u4e00-\u9fa5\\w]+#";// ##话题
     private static final String EMOJI = "\\[[\u4e00-\u9fa5\\w]+\\]";// 表情
     private static final String URL = "http://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";// url

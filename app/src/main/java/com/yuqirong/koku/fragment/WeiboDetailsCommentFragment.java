@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.adapter.LoadMoreAdapter;
@@ -31,6 +33,7 @@ import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.Status;
+import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.JsonUtils;
@@ -91,6 +94,10 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private Status status;
     private View headerView;
+
+    private static ImageLoader imageLoader = ImageLoader.getInstance();
+    private static DisplayImageOptions options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, true);
+    private static DisplayImageOptions ninepic_options = BitmapUtil.getDisplayImageOptions(R.drawable.thumbnail_default, true, true);
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -241,7 +248,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             @Override
             public void onItemClick(final View v, int position) {
                 final Comment comment = adapter.getList().get(position);
-                CommonUtil.showPopupMenu(v.getContext(), v, R.menu.overflow_comment_popupmenu, new PopupMenu.OnMenuItemClickListener() {
+                CommonUtil.showPopupMenu(v.getContext(), v.findViewById(R.id.iv_overflow), R.menu.overflow_comment_popupmenu, new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()){
@@ -297,7 +304,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void initWeiboData(Status status) {
         tv_screen_name.setText(status.user.name);
-        bitmapUtils.display(iv_avatar, status.user.profile_image_url);
+        imageLoader.displayImage(status.user.profile_image_url, iv_avatar, options);
         tv_time.setText(DateUtils.getWeiboDate(status.created_at));
         tv_device.setText(Html.fromHtml(status.source));
         //设置认证图标
@@ -372,7 +379,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         for (int i = 0; i < iv_arrays.size(); i++) {
             if (i < pic_urls.size()) {
                 iv_arrays.get(i).setVisibility(View.VISIBLE);
-                bitmapUtils.display(iv_arrays.get(i), pic_urls.get(i).thumbnail_pic);
+                imageLoader.displayImage(pic_urls.get(i).thumbnail_pic, iv_arrays.get(i), ninepic_options);
             } else {
                 iv_arrays.get(i).setVisibility(View.GONE);
             }

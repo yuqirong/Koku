@@ -1,5 +1,6 @@
 package com.yuqirong.koku.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,9 +12,12 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.User;
+import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
@@ -25,22 +29,16 @@ import com.yuqirong.koku.view.CircleImageView;
  */
 public class DrawerLayoutFragment extends BaseFragment {
 
-    /**
-     * 用户头像
-     */
-    private CircleImageView civ_avatar;
-    /**
-     * 用户昵称
-     */
-    private TextView tv_screen_name;
-    /**
-     * 用户封面图
-     */
-    private ImageView iv_cover;
-    /**
-     * 用户
-     */
-    private User user;
+    private CircleImageView civ_avatar; //用户头像
+    private TextView tv_screen_name; //用户昵称
+    private ImageView iv_cover; //用户封面图
+    private User user; //用户
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private static DisplayImageOptions options = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -85,8 +83,8 @@ public class DrawerLayoutFragment extends BaseFragment {
     //处理数据
     private void processData(User user) {
         tv_screen_name.setText(user.screen_name);
-        bitmapUtils.display(iv_cover, user.cover_image_phone);
-        bitmapUtils.display(civ_avatar, user.avatar_large);
+        imageLoader.displayImage(user.cover_image_phone, iv_cover, options);
+        imageLoader.displayImage(user.avatar_large, civ_avatar, options);
     }
 
     @Override
@@ -95,12 +93,6 @@ public class DrawerLayoutFragment extends BaseFragment {
         civ_avatar = (CircleImageView) view.findViewById(R.id.civ_avatar);
         iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
         tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);
-        iv_cover.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
         return view;
     }
 
