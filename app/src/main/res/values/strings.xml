@@ -52,6 +52,8 @@
     <string name="click_to_refresh">点击刷新</string>
     <string name="comment_to_original_weibo">是否同时评论给原微博</string>
     <string name="follower">粉丝：</string>
+    <string name="follow">关注：</string>
+    <string name="weibo">微博：</string>
     <string name="follower_num_limit">温馨提示：由于新浪微博接口限制，只返回同样授权本应用的用户</string>
     <string name="friends_list">好友列表</string>
     <string name="search_result_list">搜索结果</string>

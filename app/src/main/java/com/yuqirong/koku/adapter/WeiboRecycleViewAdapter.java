@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.ClipboardManager;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -197,11 +196,10 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
             Intent intent = new Intent();
             switch (v.getId()) {
                 case R.id.tv_screen_name: //点击用户昵称
-                    intent.setClass(context, UserDetailsActivity.class);
-                    context.startActivity(intent);
-                    break;
+
                 case R.id.iv_avatar: //点击用户头像事件
                     intent.setClass(context, UserDetailsActivity.class);
+                    intent.putExtra("Status",status);
                     context.startActivity(intent);
                     break;
                 case R.id.tv_comment_count: //点击评论数事件
