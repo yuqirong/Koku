@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_hot"
             android:icon="@drawable/ic_hot_dark"
-            android:title="@string/hot_topic" />
+            android:title="@string/public_weibo" />
         <item
             android:id="@+id/nav_favorite"
             android:icon="@drawable/ic_favorite_dark"

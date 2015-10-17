@@ -33,13 +33,13 @@ public class CommonUtil {
      * @return
      */
     public static String getNumString(int num) {
+        if (num < 100000) {
+            return String.valueOf(num);
+        }else{
             int number = num / 10000;
-            if (number == 0) {
-                return String.valueOf(num);
-            } else {
-                return number + "万";
-            }
+            return number + "万";
         }
+    }
 
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
@@ -60,7 +60,7 @@ public class CommonUtil {
     /**
      * 创建一个对话框
      */
-    public static void createMessageAlertDialog(Context context, String title, String message, String negativeMessage, DialogInterface.OnClickListener negativeListener, String positiveMessage, DialogInterface.OnClickListener positiveListener,boolean cancelable) {
+    public static void createMessageAlertDialog(Context context, String title, String message, String negativeMessage, DialogInterface.OnClickListener negativeListener, String positiveMessage, DialogInterface.OnClickListener positiveListener, boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title).setMessage(message).setNegativeButton(negativeMessage, negativeListener).setPositiveButton(positiveMessage, positiveListener).setCancelable(cancelable).create().show();
     }
@@ -154,6 +154,7 @@ public class CommonUtil {
 
     /**
      * 显示Snackbar
+     *
      * @param v
      * @param text
      * @param backgroundColor
@@ -168,13 +169,13 @@ public class CommonUtil {
         Snackbar.make(v, text, Snackbar.LENGTH_SHORT).show();
     }
 
-    public static void showSnackbar(View v, int text, int backgroundColor,int length,int actionText, View.OnClickListener listener) {
-        Snackbar sb = Snackbar.make(v, text, length).setAction(actionText,listener);
+    public static void showSnackbar(View v, int text, int backgroundColor, int length, int actionText, View.OnClickListener listener) {
+        Snackbar sb = Snackbar.make(v, text, length).setAction(actionText, listener);
         sb.getView().setBackgroundColor(backgroundColor);
         sb.show();
     }
 
-    public static void showPopupMenu(Context context,View v,int resId,PopupMenu.OnMenuItemClickListener listener){
+    public static void showPopupMenu(Context context, View v, int resId, PopupMenu.OnMenuItemClickListener listener) {
         PopupMenu mPopupMenu = new PopupMenu(context, v);
         mPopupMenu.getMenuInflater().inflate(resId, mPopupMenu.getMenu());
         mPopupMenu.setOnMenuItemClickListener(listener);
@@ -183,11 +184,12 @@ public class CommonUtil {
 
     /**
      * 显示ProgressDialog
+     *
      * @param context
      * @param stringResId
      * @param cancelable
      */
-    public static ProgressDialog showProgressDialog(Context context,int stringResId,boolean cancelable){
+    public static ProgressDialog showProgressDialog(Context context, int stringResId, boolean cancelable) {
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getResources().getString(stringResId));
         progressDialog.setCancelable(cancelable);
@@ -197,10 +199,11 @@ public class CommonUtil {
 
     /**
      * 把文本复制到粘贴板上
+     *
      * @param context
      * @param text
      */
-    public static void copyToClipboard(Context context,String text){
+    public static void copyToClipboard(Context context, String text) {
         ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         clip.setText(text); // 复制
     }

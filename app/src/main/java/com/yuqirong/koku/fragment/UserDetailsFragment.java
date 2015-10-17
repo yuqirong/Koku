@@ -42,13 +42,13 @@ import java.util.Map;
  * 微博主页
  * Created by Anyway on 2015/8/30.
  */
-public class WeiboTimeLineFragment extends BaseFragment {
+public class UserDetailsFragment extends BaseFragment {
 
     // 下拉刷新组件
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
     private WeiboRecycleViewAdapter adapter;
     // 判断是否为第一次进入主页,若是则自动刷新
-    private boolean first = false;   //true
+    private boolean first = true;   //true
     // 判断是否上拉加载，默认为false
     private boolean load = false;
 
@@ -104,7 +104,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
         }
         try {
             JSONObject jsonObject = new JSONObject(cache);
-            max_id = jsonObject.getString("max_id");
+            max_id = jsonObject.getString("next_cursor");
             String statuses = jsonObject.getString("statuses");
             processData(statuses);
         } catch (JSONException e) {
@@ -122,7 +122,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                 max_id = "0";
                 adapter.initFooterViewHolder();
             }
-            String url = this.baseUrl + "?access_token=" + access_token + "&max_id=" + max_id;
+            String url = this.baseUrl + "&access_token=" + access_token + "&next_cursor=" + max_id;
             LogUtils.i("url  : " + url);
             getJsonData(url, listener, errorListener);
         }
@@ -133,7 +133,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
         public void onResponse(final JSONObject jsonObject) {
             String statuses = null;
             try {
-                max_id = jsonObject.getString("max_id");
+                String error = "{\"error\"";
+                if (jsonObject.toString().startsWith(error)){
+                    return;
+                }
+                max_id = jsonObject.getString("next_cursor");
                 statuses = jsonObject.getString("statuses");
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     new Thread(new Runnable() {
@@ -151,6 +155,9 @@ public class WeiboTimeLineFragment extends BaseFragment {
     };
 
     private void processData(String statuses) {
+        if (statuses == null) {
+            return;
+        }
         if (mSwipeRefreshLayout.isRefreshing()) {
             adapter.clearData();
             adapter.getList().add(new Status());
@@ -230,7 +237,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
                                 //TODO: 2015/10/4 分享
-                                showShare(status.user.screen_name,status.text);
+                                showShare(status.user.screen_name, status.text);
                                 break;
                             case R.id.overflow_favorite:
                                 processFavorite();

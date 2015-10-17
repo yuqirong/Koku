@@ -62,8 +62,7 @@
         <activity
             android:name=".activity.UserDetailsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
             android:name=".activity.SearchUserActivity"
@@ -76,9 +75,9 @@
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.HotTopicActivity"
+            android:name=".activity.PublicWeiboActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
             android:name=".activity.MyFavoriteActivity"

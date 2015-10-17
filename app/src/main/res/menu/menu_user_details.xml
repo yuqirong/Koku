@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".UserDetailsActivity">
+
+    <item
+        android:id="@+id/action_follow_or_cancel"
+        android:title="@string/cancel_follow"
+        app:showAsAction="always" />
+
+</menu>

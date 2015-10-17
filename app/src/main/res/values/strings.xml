@@ -26,7 +26,7 @@
     <string name="serach_user">搜索用户</string>
     <string name="at_friends">\@好友</string>
     <string name="nearly_dynamic">周边动态</string>
-    <string name="hot_topic">热门话题</string>
+    <string name="public_weibo">公共微博</string>
     <string name="my_favorite">我的收藏</string>
     <string name="draft">草稿箱</string>
     <string name="share_new">分享新鲜事</string>
@@ -71,4 +71,10 @@
     <string name="delete_draft">确定删除选中的草稿吗？</string>
     <string name="rb_repost">转发</string>
     <string name="rb_comment">评论</string>
+    <string name="follow_he">关注他</string>
+    <string name="follow_she">关注她</string>
+    <string name="cancel_follow">取消关注</string>
+    <string name="all">全部</string>
+    <string name="original">原创</string>
+    <string name="picture">图片</string>
 </resources>

@@ -39,10 +39,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 微博主页
- * Created by Anyway on 2015/8/30.
+ * 公共微博Fragment
+ * Created by Anyway on 2015/9/19.
  */
-public class WeiboTimeLineFragment extends BaseFragment {
+public class PublicWeiboFragment extends BaseFragment {
 
     // 下拉刷新组件
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
@@ -53,22 +53,16 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private boolean load = false;
 
     private AutoLoadRecyclerView mRecyclerView;
-    private String baseUrl = "";
     public String CACHE_FOLDER_NAME = "timeline";
-    public String TIME_LINE_CACHE_NAME = "timeline_cache";
+    public String TIME_LINE_CACHE_NAME = "public_weibo_cache";
     protected ACache aCache;
-    //若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
-    private String max_id = "0";
+    //返回结果的页码，默认为1。
+    private int page = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         aCache = ACache.get(context, CACHE_FOLDER_NAME);
-        Bundle args = getArguments();
-        if (args != null) {
-            baseUrl = args.getString("url");
-            TIME_LINE_CACHE_NAME += baseUrl;
-        }
     }
 
     @Override
@@ -99,12 +93,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private void getCache() {
         String cache = aCache.getAsString(TIME_LINE_CACHE_NAME);
         if (TextUtils.isEmpty(cache)) {
-            //TODO 设置recyclerview为emptyView
             return;
         }
         try {
             JSONObject jsonObject = new JSONObject(cache);
-            max_id = jsonObject.getString("max_id");
+            //TODO
             String statuses = jsonObject.getString("statuses");
             processData(statuses);
         } catch (JSONException e) {
@@ -119,29 +112,24 @@ public class WeiboTimeLineFragment extends BaseFragment {
         String access_token = SharePrefUtil.getString(context, "access_token", "");
         if (!TextUtils.isEmpty(access_token)) {
             if (mSwipeRefreshLayout.isRefreshing()) {
-                max_id = "0";
+                page = 1;
                 adapter.initFooterViewHolder();
             }
-            String url = this.baseUrl + "?access_token=" + access_token + "&max_id=" + max_id;
-            LogUtils.i("url  : " + url);
-            getJsonData(url, listener, errorListener);
+            String url = AppConstant.STATUSES_PUBLIC_TIMELINE_URL + "?access_token=" + access_token + "&count=20&page=" + page;
+            LogUtils.i("公共微博 url ：" + url);
+            getData(url, listener, errorListener);
         }
     }
 
-    Response.Listener<JSONObject> listener = new Response.Listener<JSONObject>() {
+    Response.Listener<String> listener = new Response.Listener<String>() {
         @Override
-        public void onResponse(final JSONObject jsonObject) {
+        public void onResponse(String stringResult) {
             String statuses = null;
             try {
-                max_id = jsonObject.getString("max_id");
+                JSONObject jsonObject = new JSONObject(stringResult);
                 statuses = jsonObject.getString("statuses");
                 if (mSwipeRefreshLayout.isRefreshing()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            aCache.put(TIME_LINE_CACHE_NAME, jsonObject.toString());
-                        }
-                    }).start();
+                    aCache.put(TIME_LINE_CACHE_NAME, stringResult);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -155,14 +143,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
             adapter.clearData();
             adapter.getList().add(new Status());
         }
-        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
+        adapter.getList().addAll(adapter.getList().size() -1,JsonUtils.getListFromJson(statuses, Status.class));
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
             adapter.completeLoadMore(true);
-            if ("0".equals(max_id)) {
-                adapter.setNoMoreWeibo();
-            }
             load = false;
         }
     }
@@ -203,9 +188,9 @@ public class WeiboTimeLineFragment extends BaseFragment {
             @Override
             public void onItemClick(View view, int position) {
                 LogUtils.i("click the item " + position);
-                Status status = adapter.getList().get(position);
+                Status item = adapter.getList().get(position);
                 Intent intent = new Intent(context, WeiboDetailsActivity.class);
-                intent.putExtra("Status", status);
+                intent.putExtra("Status", item);
                 startActivity(intent);
             }
 
@@ -220,13 +205,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
                     menuResId = R.menu.overflow_popupmenu;
                 }
                 CommonUtil.showPopupMenu(context, view.findViewById(R.id.iv_overflow), menuResId, new PopupMenu.OnMenuItemClickListener() {
-
                     private ProgressDialog mProgressDialog;
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         LogUtils.i("click: " + status + status.user.screen_name);
-
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
                                 //TODO: 2015/10/4 分享
@@ -279,19 +262,15 @@ public class WeiboTimeLineFragment extends BaseFragment {
         });
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
     WeiboRecycleViewAdapter.OnLoadingMoreListener loadingMoreListener = new WeiboRecycleViewAdapter.OnLoadingMoreListener() {
         @Override
         public void onLoadingMore() {
             load = true;
-            if (!"0".equals(max_id))
-                getDataFromServer();
+            page++;
+            getDataFromServer();
         }
     };
+
 
     /**
      * 下拉刷新Listener
@@ -318,5 +297,4 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
         }
     };
-
 }

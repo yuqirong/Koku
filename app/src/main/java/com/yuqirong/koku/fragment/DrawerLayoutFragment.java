@@ -1,10 +1,10 @@
 package com.yuqirong.koku.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -15,9 +15,9 @@ import com.android.volley.VolleyError;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.UserDetailsActivity;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.User;
-import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
@@ -75,6 +75,7 @@ public class DrawerLayoutFragment extends BaseFragment {
     private void getCache() {
         user = new User();
         user.screen_name = SharePrefUtil.getString(context, "screen_name", "");
+        user.idstr = SharePrefUtil.getString(context,"uid","");
         user.cover_image_phone = SharePrefUtil.getString(context, "cover_image_phone", "");
         user.avatar_large = SharePrefUtil.getString(context, "avatar_large", "");
         processData(user);
@@ -93,6 +94,14 @@ public class DrawerLayoutFragment extends BaseFragment {
         civ_avatar = (CircleImageView) view.findViewById(R.id.civ_avatar);
         iv_cover = (ImageView) view.findViewById(R.id.iv_cover);
         tv_screen_name = (TextView) view.findViewById(R.id.tv_screen_name);
+        civ_avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, UserDetailsActivity.class);
+                intent.putExtra("User", user);
+                context.startActivity(intent);
+            }
+        });
         return view;
     }
 

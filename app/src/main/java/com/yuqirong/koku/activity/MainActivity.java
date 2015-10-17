@@ -296,7 +296,7 @@ public class MainActivity extends BaseActivity {
                                 handler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        HotTopicActivity.actionStart(MainActivity.this);
+                                        PublicWeiboActivity.actionStart(MainActivity.this);
                                     }
                                 }, 500);
                                 break;

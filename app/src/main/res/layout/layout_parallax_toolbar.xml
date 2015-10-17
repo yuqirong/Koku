@@ -14,94 +14,106 @@
         app:expandedTitleMarginStart="48dp"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/header_bg"
+            app:layout_collapseMode="parallax"
+            app:layout_collapseParallaxMultiplier="0.7" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:layout_marginTop="195dp"
+            android:background="@android:color/white"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp">
 
-            <ImageView
-                android:id="@+id/iv_cover"
-                android:layout_width="match_parent"
-                android:layout_height="195dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/header_bg"
-                app:layout_collapseMode="parallax"
-                android:layout_alignParentTop="true"
-                app:layout_collapseParallaxMultiplier="0.7" />
+            <TextView
+                android:id="@+id/tv_screen_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:textColor="#bb111111"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="量院速冻" />
 
-            <com.yuqirong.koku.view.CircleImageView
-                android:id="@+id/civ_avatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="160dp"
-                android:src="@drawable/img_empty_avatar" />
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_screen_name"
+                android:layout_marginTop="10dp"
+                tools:text="浙江" />
 
-            <RelativeLayout
+
+            <TextView
+                android:id="@+id/tv_follower_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_location"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/follower"
+                tools:text="粉丝：20525" />
+
+            <TextView
+                android:id="@+id/tv_follow_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_location"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:text="@string/follow"
+                tools:text="关注：20525" />
+
+            <TextView
+                android:id="@+id/tv_weibo_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_location"
+                android:layout_marginTop="10dp"
+                android:text="@string/weibo"
+                tools:text="微博：20525" />
+
+            <TextView
+                android:id="@+id/tv_verified_reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/civ_avatar"
-                android:background="@android:color/white"
-                android:padding="@dimen/activity_vertical_margin">
+                android:layout_below="@+id/tv_follower_num"
+                android:layout_marginBottom="5dp"
+                tools:text="xxxxx" />
 
-                <TextView
-                    android:id="@+id/tv_screen_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="量院速冻"
-                    tools:text="量院速冻" />
-
-                <TextView
-                    android:id="@+id/tv_city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_screen_name"
-                    android:text="浙江"
-                    tools:text="浙江" />
-
-
-                <TextView
-                    android:id="@+id/tv_follower_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_city"
-                    android:text="@string/follower"
-                    tools:text="粉丝：20525" />
-
-                <TextView
-                    android:id="@+id/tv_follow_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_city"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/follow"
-                    tools:text="关注：20525" />
-
-                <TextView
-                    android:id="@+id/tv_weibo_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/tv_city"
-                    android:text="@string/weibo"
-                    tools:text="微博：20525" />
-
-                <TextView
-                    android:id="@+id/tv_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_follower_num"
-                    tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_verified_reason"
+                tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
         </RelativeLayout>
 
+        <com.yuqirong.koku.view.CircleImageView
+            android:id="@+id/civ_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="125dp"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/img_empty_avatar" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/mToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:theme="@style/MyToolBarTheme"
-            app:layout_collapseMode="pin" />
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_collapseMode="pin"
+            app:theme="@style/UserDetailsToolBarTheme" />
 
     </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -109,7 +121,6 @@
         android:id="@+id/mTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
-        app:layout_collapseMode="pin" />
+        android:background="@android:color/background_light" />
 
 </android.support.design.widget.AppBarLayout>
