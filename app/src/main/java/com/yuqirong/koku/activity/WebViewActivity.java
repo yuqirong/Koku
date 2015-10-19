@@ -80,7 +80,9 @@ public class WebViewActivity extends SwipeBackActivity {
         mToolbar.setTitle(R.string.load_web);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

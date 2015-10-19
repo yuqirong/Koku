@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_follow_or_cancel"
-        android:title="@string/cancel_follow"
+        android:title=""
         app:showAsAction="always" />
 
 </menu>

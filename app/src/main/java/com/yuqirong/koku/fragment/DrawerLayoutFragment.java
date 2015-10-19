@@ -1,6 +1,5 @@
 package com.yuqirong.koku.fragment;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -97,9 +96,7 @@ public class DrawerLayoutFragment extends BaseFragment {
         civ_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, UserDetailsActivity.class);
-                intent.putExtra("User", user);
-                context.startActivity(intent);
+                UserDetailsActivity.actionStart(context,user.screen_name);
             }
         });
         return view;

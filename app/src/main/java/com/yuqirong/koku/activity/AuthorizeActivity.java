@@ -53,7 +53,9 @@ public class AuthorizeActivity extends BaseActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_drawer_oauth_sina_normal);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(false);
+        if(actionBar!=null){
+            actionBar.setHomeButtonEnabled(false);
+        }
     }
 
     @Override

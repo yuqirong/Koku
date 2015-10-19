@@ -198,9 +198,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 case R.id.tv_screen_name: //点击用户昵称
 
                 case R.id.iv_avatar: //点击用户头像事件
-                    intent.setClass(context, UserDetailsActivity.class);
-                    intent.putExtra("User",status.user);
-                    context.startActivity(intent);
+                    UserDetailsActivity.actionStart(context,status.user.screen_name);
                     break;
                 case R.id.tv_comment_count: //点击评论数事件
                     requestCode = MainActivity.SEND_NEW_COMMENT;

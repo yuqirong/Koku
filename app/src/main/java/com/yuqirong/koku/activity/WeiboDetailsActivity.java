@@ -42,7 +42,9 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(actionBar!=null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

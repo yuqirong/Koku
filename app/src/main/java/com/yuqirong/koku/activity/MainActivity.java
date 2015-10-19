@@ -331,9 +331,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()){
+            case R.id.action_remind:
+                RemindActivity.actionStart(MainActivity.this);
+                break;
+            case R.id.action_settings:
+
+                break;
+
         }
         return toggle.onOptionsItemSelected(item) | super.onOptionsItemSelected(item);
     }

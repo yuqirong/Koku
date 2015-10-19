@@ -39,7 +39,9 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
         mToolbar.setTitle(R.string.nearly_dynamic);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override

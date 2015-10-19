@@ -1,27 +1,36 @@
 package com.yuqirong.koku.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.FragmentAdapter;
+import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.User;
 import com.yuqirong.koku.fragment.FragmentFactory;
 import com.yuqirong.koku.util.CommonUtil;
+import com.yuqirong.koku.util.JsonUtils;
+import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.view.CircleImageView;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
@@ -53,8 +62,9 @@ public class UserDetailsActivity extends SwipeBackActivity {
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
     private TabLayout mTabLayout;
-    private User user;
+    private String screen_name;
     private SwipeBackLayout mSwipeBackLayout;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +73,45 @@ public class UserDetailsActivity extends SwipeBackActivity {
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putString("screen_name", screen_name);
+    }
+
     @Override
     protected void initData(Bundle savedInstanceState) {
-
         if (savedInstanceState == null) {
-            user = (User) getIntent().getSerializableExtra("User");
+            screen_name = getIntent().getStringExtra("screen_name");
         } else {
+            screen_name = savedInstanceState.getString("screen_name");
+        }
+        if (TextUtils.isEmpty(screen_name)) {
+            return;
+        }
+        String url = AppConstant.USERS_SHOW_URL + "?access_token=" +
+                SharePrefUtil.getString(this, "access_token", "") + "&screen_name=" + screen_name;
+        LogUtils.i("用户信息url ：" + url);
+        getData(url, listener, errorListener);
+    }
+
+    Response.Listener<String> listener = new Response.Listener<String>() {
+        @Override
+        public void onResponse(String result) {
+            user = JsonUtils.getBeanFromJson(result, User.class);
+            initHeaderViewData();
+            initMenu();
+            setupViewPagerContent();
+        }
+    };
+
+    Response.ErrorListener errorListener = new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError volleyError) {
 
         }
-        initHeaderViewData();
-        setupViewPagerContent();
-    }
+    };
 
     private void initHeaderViewData() {
         if (user != null) {
@@ -110,7 +148,9 @@ public class UserDetailsActivity extends SwipeBackActivity {
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -152,10 +192,18 @@ public class UserDetailsActivity extends SwipeBackActivity {
         tv_description = (TextView) findViewById(R.id.tv_description);
     }
 
+    private Menu menu;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!user.idstr.equals(SharePrefUtil.getString(this, "uid", ""))) {
-            getMenuInflater().inflate(R.menu.menu_user_details, menu);
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_user_details, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void initMenu() {
+        if (user != null &&
+                !SharePrefUtil.getString(this, "uid", "").equals(user.idstr)) {
             if (user.following) {
                 menu.getItem(0).setTitle(R.string.cancel_follow);
             } else {
@@ -166,7 +214,7 @@ public class UserDetailsActivity extends SwipeBackActivity {
                 }
             }
         }
-        return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
@@ -177,6 +225,12 @@ public class UserDetailsActivity extends SwipeBackActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void actionStart(Context context, String screen_name) {
+        Intent intent = new Intent(context, UserDetailsActivity.class);
+        intent.putExtra("screen_name", screen_name);
+        context.startActivity(intent);
     }
 
 }

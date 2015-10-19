@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
@@ -38,7 +39,9 @@ public class PublicWeiboActivity extends SwipeBackActivity {
         mToolbar.setTitle(R.string.public_weibo);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -47,8 +50,20 @@ public class PublicWeiboActivity extends SwipeBackActivity {
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
     }
 
-    public static void actionStart(Context context){
-        Intent intent = new Intent(context,PublicWeiboActivity.class);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public static void actionStart(Context context) {
+        Intent intent = new Intent(context, PublicWeiboActivity.class);
         context.startActivity(intent);
     }
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.UserDetailsActivity;
 import com.yuqirong.koku.activity.WebViewActivity;
 import com.yuqirong.koku.db.EmotionsDB;
 
@@ -100,8 +101,9 @@ public class StringUtils {
                 MyClickableSpan clickableSpan = new MyClickableSpan(context) {
                     @Override
                     public void onClick(View widget) {
-                        //这里需要做跳转用户的实现，先用一个Toast代替
-                        Toast.makeText(context, "点击了用户：" + at, Toast.LENGTH_LONG).show();
+                        //点击了用户跳转事件
+                        LogUtils.i("点击了用户：" + at);
+                        UserDetailsActivity.actionStart(context, at.substring(1));
                     }
                 };
                 spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

@@ -39,7 +39,9 @@ public class DraftActivity extends SwipeBackActivity {
         mToolbar.setTitle(R.string.draft);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -61,7 +63,7 @@ public class DraftActivity extends SwipeBackActivity {
     }
 
     public static void actionStart(Context context) {
-        Intent intent = new Intent(context,DraftActivity.class);
+        Intent intent = new Intent(context, DraftActivity.class);
         context.startActivity(intent);
     }
 
