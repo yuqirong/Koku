@@ -64,10 +64,8 @@ public class MainActivity extends BaseActivity {
      */
     private boolean isDrawerOpened = false;
 
-    private NavigationView mNavigationView;
     private FloatingActionButton mFloatingActionButton;
     private Handler handler = new Handler();
-
     private ViewPager mViewPager;
 
     private FragmentAdapter adapter;
@@ -136,8 +134,10 @@ public class MainActivity extends BaseActivity {
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if(actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
+        }
         toggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -171,7 +171,7 @@ public class MainActivity extends BaseActivity {
         if (mTabLayout != null) {
             setupTabLayoutContent(mTabLayout);
         }
-        mNavigationView = (NavigationView) findViewById(R.id.mNavigationView);
+        NavigationView mNavigationView = (NavigationView) findViewById(R.id.mNavigationView);
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.mFloatingActionButton);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.mCoordinatorLayout);

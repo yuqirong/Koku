@@ -33,7 +33,6 @@ public class AuthorizeActivity extends BaseActivity {
 
     private Toolbar mToolbar;
     private WebView mWebView;
-    private WebSettings settings;
     public static final String RESPONSE_URL = "https://api.weibo.com/oauth2/default.html?code=";
 
     public static void actionStart(Context context) {
@@ -43,7 +42,11 @@ public class AuthorizeActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-
+        String url = AppConstant.AUTHORIZE_URL + "?redirect_uri=" + AppConstant.REDIRECT_URL + "&display=mobile&response_type=code" + "&client_id=" + AppConstant.APP_KEY + "&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
+        LogUtils.i("OAuth认证url ：" + url);
+        if (URLUtil.isNetworkUrl(url)) {
+            mWebView.loadUrl(url);
+        }
     }
 
     @Override
@@ -63,7 +66,7 @@ public class AuthorizeActivity extends BaseActivity {
         setContentView(R.layout.activity_authorize);
         mWebView = (WebView) findViewById(R.id.wv_main);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
-        settings = mWebView.getSettings();
+        WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         settings.setLoadWithOverviewMode(true);
@@ -85,7 +88,6 @@ public class AuthorizeActivity extends BaseActivity {
                         }
                     };
                     mQueue.add(stringRequest);
-
                 }
                 return false;
             }
@@ -129,13 +131,4 @@ public class AuthorizeActivity extends BaseActivity {
         }
     };
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String url = AppConstant.AUTHORIZE_URL + "?redirect_uri=" + AppConstant.REDIRECT_URL + "&display=mobile&response_type=code" + "&client_id=" + AppConstant.APP_KEY + "&scope=friendships_groups_read,friendships_groups_write,statuses_to_me_read,follow_app_official_microblog";
-        LogUtils.i("OAuth认证url ：" + url);
-        if (URLUtil.isNetworkUrl(url)) {
-            mWebView.loadUrl(AppConstant.AUTHORIZE_URL);
-        }
-    }
 }

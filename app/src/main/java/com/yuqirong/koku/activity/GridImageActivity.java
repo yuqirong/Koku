@@ -278,7 +278,7 @@ public class GridImageActivity extends Activity {
         }
 
         /**
-         * 给CheckBox加点击动画，利用开源库nineoldandroids设置动画
+         * 给CheckBox加点击动画
          *
          * @param view
          */
