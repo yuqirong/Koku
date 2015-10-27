@@ -7,6 +7,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.db.DraftDB;
 import com.yuqirong.koku.db.EmotionsDB;
 
@@ -28,13 +29,13 @@ public class SplashActivity extends BaseActivity {
         scaleAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                new Thread(new Runnable() {
+                MyApplication.getExecutor().execute(new Runnable() {
                     @Override
                     public void run() {
                         EmotionsDB.checkEmotions();
                         DraftDB.checkDraft();
                     }
-                }).start();
+                });
             }
 
             @Override

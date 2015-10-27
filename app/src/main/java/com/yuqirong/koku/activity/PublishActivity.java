@@ -1,5 +1,6 @@
 package com.yuqirong.koku.activity;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +44,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.EmotionAdapter;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.db.DraftDB;
 import com.yuqirong.koku.entity.Draft;
@@ -646,7 +648,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             return;
         }
         // 如果是回复评论，直接finish
-        if(type == REPLY_COMMENT){
+        if (type == REPLY_COMMENT) {
             finish();
             return;
         }
@@ -660,18 +662,19 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             }, getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (draft_id == 0) {
-                                Draft d = new Draft(0, type, content, strList, idstr);
-                                DraftDB.addDraft(d);
-                            } else {
-                                Draft d = new Draft(draft_id, type, content, strList, idstr);
-                                DraftDB.updateDraft(d);
-                            }
-                        }
-                    }).start();
+                    MyApplication.getExecutor().execute(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (draft_id == 0) {
+                                        Draft d = new Draft(0, type, content, strList, idstr);
+                                        DraftDB.addDraft(d);
+                                    } else {
+                                        Draft d = new Draft(draft_id, type, content, strList, idstr);
+                                        DraftDB.updateDraft(d);
+                                    }
+                                }
+                            });
                     if (draft_id != 0) {
                         setResult(REFRESH_DRAFT);
                     }

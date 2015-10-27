@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.adapter.DraftRecyclerViewAdapter;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.db.DraftDB;
 import com.yuqirong.koku.entity.Draft;
@@ -55,7 +56,7 @@ public class DraftFragment extends BaseFragment {
     }
 
     public void getDrafts() {
-        new Thread(new Runnable() {
+        MyApplication.getExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 adapter.getList().clear();
@@ -67,7 +68,7 @@ public class DraftFragment extends BaseFragment {
                     }
                 });
             }
-        }).start();
+        });
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.WeiboDetailsActivity;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.cache.ACache;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.Status;
@@ -51,7 +52,6 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private boolean first = false;   //true
     // 判断是否上拉加载，默认为false
     private boolean load = false;
-
     private AutoLoadRecyclerView mRecyclerView;
     private String baseUrl = "";
     public String CACHE_FOLDER_NAME = "timeline";
@@ -136,12 +136,12 @@ public class WeiboTimeLineFragment extends BaseFragment {
                 max_id = jsonObject.getString("max_id");
                 statuses = jsonObject.getString("statuses");
                 if (mSwipeRefreshLayout.isRefreshing()) {
-                    new Thread(new Runnable() {
+                    MyApplication.getExecutor().execute(new Runnable() {
                         @Override
                         public void run() {
                             aCache.put(TIME_LINE_CACHE_NAME, jsonObject.toString());
                         }
-                    }).start();
+                    });
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -230,7 +230,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
                                 //TODO: 2015/10/4 分享
-                                showShare(status.user.screen_name,status.text);
+                                showShare(status.user.screen_name, status.text);
                                 break;
                             case R.id.overflow_favorite:
                                 processFavorite();

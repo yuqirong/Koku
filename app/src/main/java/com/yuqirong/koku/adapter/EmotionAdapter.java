@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.db.EmotionsDB;
 import com.yuqirong.koku.entity.Emotion;
 
@@ -20,13 +21,13 @@ public class EmotionAdapter extends MBaseAdapter<Emotion, GridView> {
 
     public EmotionAdapter(Context context, final List<Emotion> list) {
         super(context, list);
-        new Thread(new Runnable() {
+        MyApplication.getExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 list.clear();
                 list.addAll(EmotionsDB.getAllEmotions());
             }
-        }).start();
+        });
     }
 
     @Override
