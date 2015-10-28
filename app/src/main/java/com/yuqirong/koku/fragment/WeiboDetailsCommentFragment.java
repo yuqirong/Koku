@@ -2,6 +2,7 @@ package com.yuqirong.koku.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.text.SpannableString;
@@ -29,6 +30,7 @@ import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.adapter.LoadMoreAdapter;
 import com.yuqirong.koku.adapter.WeiboCommentAdapter;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.entity.Pic_urls;
@@ -94,6 +96,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private Status status;
     private View headerView;
+    private Handler mHandler = new Handler();
 
     private static ImageLoader imageLoader = ImageLoader.getInstance();
     private static DisplayImageOptions options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, true);
@@ -101,12 +104,12 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             status = (Status) getArguments().getSerializable("Status");
-        }else{
+        } else {
             // TODO: 2015/10/12
         }
-        if(status != null){
+        if (status != null) {
             initAdapter(headerView);
             getStatusesCountData();
             initWeiboData(status);
@@ -117,13 +120,13 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(status.comments_count == 0){
+        if (status.comments_count == 0) {
             adapter.setIsLoadingMore(true);
             adapter.setLoadFinish();
         }
     }
 
-    private void getStatusesCountData(){
+    private void getStatusesCountData() {
         if (!TextUtils.isEmpty(status.idstr)) {
             String fresh_count_url = AppConstant.STATUSES_COUNT_URL + "?access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&ids=" + status.idstr;
             LogUtils.i("批量获取指定微博的转发数评论数url ：" + fresh_count_url);
@@ -153,8 +156,8 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void getDataFromServer() {
         if (!TextUtils.isEmpty(status.idstr)) {
-            if(refresh){
-                next_cursor=0;
+            if (refresh) {
+                next_cursor = 0;
                 adapter.initFooterViewHolder();
                 adapter.setIsLoadingMore(false);
             }
@@ -174,25 +177,35 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void processData(JSONObject object) {
         try {
-            if(refresh){
+            if (refresh) {
                 adapter.getList().clear();
                 adapter.getList().add(new Comment());
                 adapter.getList().add(new Comment());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-            String str = object.getString("comments");
+            final String str = object.getString("comments");
             next_cursor = object.getLong("next_cursor");
-            adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(str, Comment.class));
-            if (load) {
-                adapter.completeLoadMore(true);
-                load = false;
-            }
-            if (next_cursor == 0 && !refresh) {
-                adapter.setIsLoadingMore(true);
-                adapter.setLoadFinish();
-            }
-            refresh = false;
-            adapter.notifyDataSetChanged();
+            MyApplication.getExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(str, Comment.class));
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (load) {
+                                adapter.completeLoadMore(true);
+                                load = false;
+                            }
+                            if (next_cursor == 0 && !refresh) {
+                                adapter.setIsLoadingMore(true);
+                                adapter.setLoadFinish();
+                            }
+                            refresh = false;
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -207,8 +220,8 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.from(context).inflate(R.layout.fragment_weibo_comments,null);
-        headerView = inflater.from(context).inflate(R.layout.fragment_weibo_comments_header,null);
+        View view = inflater.from(context).inflate(R.layout.fragment_weibo_comments, null);
+        headerView = inflater.from(context).inflate(R.layout.fragment_weibo_comments_header, null);
         initHeaderView(headerView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(FixedSwipeRefreshLayout.SWIPE_REFRESH_LAYOUT_COLOR);
@@ -226,7 +239,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     }
 
     private void initAdapter(View headerView) {
-        adapter = new WeiboCommentAdapter(context,status.idstr);
+        adapter = new WeiboCommentAdapter(context, status.idstr);
         if (headerView != null) {
             ViewParent parent = headerView.getParent();
             if (parent != null) {
@@ -251,7 +264,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                 CommonUtil.showPopupMenu(v.getContext(), v.findViewById(R.id.iv_overflow), R.menu.overflow_comment_popupmenu, new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()){
+                        switch (item.getItemId()) {
                             case R.id.overflow_comment: //回复评论
                                 Intent intent = new Intent();
                                 intent.setClass(v.getContext(), PublishActivity.class);
@@ -261,7 +274,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                                 v.getContext().startActivity(intent);
                                 return true;
                             case R.id.overflow_copy:
-                                CommonUtil.copyToClipboard(v.getContext(),comment.text);
+                                CommonUtil.copyToClipboard(v.getContext(), comment.text);
                                 CommonUtil.showSnackbar(v, R.string.copy_comment_to_clipboard, v.getContext().getResources().getColor(R.color.Indigo_colorPrimary));
                                 return true;
                         }

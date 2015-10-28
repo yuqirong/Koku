@@ -60,6 +60,8 @@ public class WeiboTimeLineFragment extends BaseFragment {
     //若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
     private String max_id = "0";
 
+    private static Handler mHandler = new Handler();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,13 +152,23 @@ public class WeiboTimeLineFragment extends BaseFragment {
         }
     };
 
-    private void processData(String statuses) {
+    private void processData(final String statuses) {
         if (mSwipeRefreshLayout.isRefreshing()) {
-            adapter.clearData();
+            adapter.getList().clear();
             adapter.getList().add(new Status());
         }
-        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
-        adapter.notifyDataSetChanged();
+        MyApplication.getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
             adapter.completeLoadMore(true);
