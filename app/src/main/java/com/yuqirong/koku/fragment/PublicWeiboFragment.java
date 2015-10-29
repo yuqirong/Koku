@@ -67,7 +67,12 @@ public class PublicWeiboFragment extends BaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        getCache();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getCache();
+            }
+        }, 1000);
         if (first) {
             refreshWeibo();
         }
@@ -93,6 +98,7 @@ public class PublicWeiboFragment extends BaseFragment {
     private void getCache() {
         String cache = aCache.getAsString(TIME_LINE_CACHE_NAME);
         if (TextUtils.isEmpty(cache)) {
+            getDataFromServer();
             return;
         }
         try {
@@ -143,7 +149,7 @@ public class PublicWeiboFragment extends BaseFragment {
             adapter.clearData();
             adapter.getList().add(new Status());
         }
-        adapter.getList().addAll(adapter.getList().size() -1,JsonUtils.getListFromJson(statuses, Status.class));
+        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
@@ -213,7 +219,7 @@ public class PublicWeiboFragment extends BaseFragment {
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
                                 //TODO: 2015/10/4 分享
-                                showShare(status.user.screen_name,status.text);
+                                showShare(status.user.screen_name, status.text);
                                 break;
                             case R.id.overflow_favorite:
                                 processFavorite();

@@ -1,13 +1,11 @@
 package com.yuqirong.koku.fragment;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -97,6 +95,12 @@ public class MyFavoriteFragment extends BaseFragment {
     private void getCache() {
         String cache = aCache.getAsString(TIME_LINE_CACHE_NAME);
         if (TextUtils.isEmpty(cache)) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getDataFromServer();
+                }
+            },1000);
             return;
         }
         try {
@@ -220,7 +224,7 @@ public class MyFavoriteFragment extends BaseFragment {
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
                                 //TODO: 2015/10/4 分享
-                                showShare(status.user.screen_name,status.text);
+                                showShare(status.user.screen_name, status.text);
                                 break;
                             case R.id.overflow_favorite:
                                 processFavorite();

@@ -75,7 +75,12 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        getCache();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getCache();
+            }
+        }, 1000);
         if (first) {
             refreshWeibo();
         }
@@ -101,7 +106,8 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private void getCache() {
         String cache = aCache.getAsString(TIME_LINE_CACHE_NAME);
         if (TextUtils.isEmpty(cache)) {
-            //TODO 设置recyclerview为emptyView
+            //若没有缓存，则从网络中读取新数据
+            getDataFromServer();
             return;
         }
         try {

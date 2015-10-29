@@ -28,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.ImageBrowserActivity;
 import com.yuqirong.koku.activity.MainActivity;
 import com.yuqirong.koku.activity.MyFavoriteActivity;
 import com.yuqirong.koku.activity.NearlyDynamicActivity;
@@ -137,7 +138,6 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 viewHolder.ll_item.removeView(viewHolder.view_retweeted);
         }
         //判断此微博有没有地理位置
-
         if (status.annotations != null && status.annotations.get(0).place != null && status.annotations.get(0).place.title != null) {
             viewHolder.tv_location.setVisibility(View.VISIBLE);
             viewHolder.tv_location.setText(status.annotations.get(0).place.title);
@@ -198,7 +198,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 case R.id.tv_screen_name: //点击用户昵称
 
                 case R.id.iv_avatar: //点击用户头像事件
-                    UserDetailsActivity.actionStart(context,status.user.screen_name);
+                    UserDetailsActivity.actionStart(context, status.user.screen_name);
                     break;
                 case R.id.tv_comment_count: //点击评论数事件
                     requestCode = MainActivity.SEND_NEW_COMMENT;
@@ -279,7 +279,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                     processFavorite();
                     break;
                 case R.id.overflow_copy:
-                    CommonUtil.copyToClipboard(context,status.text);
+                    CommonUtil.copyToClipboard(context, status.text);
                     CommonUtil.showSnackbar(view, R.string.copy_weibo_to_clipboard, context.getResources().getColor(R.color.Indigo_colorPrimary));
                     break;
             }
@@ -367,7 +367,6 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
             viewHolder.tv_retweeted_name_text.setText(weiBoContent);
         }
 
-
         if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {
             viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, status.retweeted_status.pic_urls);
         } else {
@@ -427,11 +426,22 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         public WeiboWidghtOnClickListener onClickListener;
         public MyOnMenuItemClickListener onMenuItemClickListener;
 
-        private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {
+        private void initImageView(RelativeLayout rl, final List<ImageView> iv_arrays, final List<Pic_urls> pic_urls) {
             rl.setVisibility(View.VISIBLE);
             for (int i = 0; i < iv_arrays.size(); i++) {
                 if (i < pic_urls.size()) {
+                    final int position = i;
                     iv_arrays.get(i).setVisibility(View.VISIBLE);
+                    iv_arrays.get(i).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ArrayList<String> urls = new ArrayList();
+                            for (Pic_urls url : pic_urls) {
+                                urls.add(url.thumbnail_pic);
+                            }
+                            ImageBrowserActivity.actionStart(context, urls,position);
+                        }
+                    });
                     imageLoader.displayImage(pic_urls.get(i).thumbnail_pic, iv_arrays.get(i), ninepic_options);
                 } else {
                     iv_arrays.get(i).setVisibility(View.GONE);

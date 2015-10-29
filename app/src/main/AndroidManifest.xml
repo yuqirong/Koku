@@ -99,6 +99,12 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
+        <activity
+            android:name=".activity.ImageBrowserActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Transparent">
+        </activity>
+
         <!-- ShareSdk ：添加activity信息 -->
         <activity
             android:name="com.mob.tools.MobUIShell"

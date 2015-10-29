@@ -83,7 +83,9 @@ public class DrawerLayoutFragment extends BaseFragment {
     //处理数据
     private void processData(User user) {
         tv_screen_name.setText(user.screen_name);
-        imageLoader.displayImage(user.cover_image_phone, iv_cover, options);
+        if(!TextUtils.isEmpty(user.cover_image_phone)) {
+            imageLoader.displayImage(user.cover_image_phone, iv_cover, options);
+        }
         imageLoader.displayImage(user.avatar_large, civ_avatar, options);
     }
 
