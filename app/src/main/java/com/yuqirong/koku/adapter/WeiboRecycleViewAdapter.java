@@ -267,6 +267,13 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
             switch (item.getItemId()) {
                 case R.id.overflow_share:
                     // TODO: 2015/10/4 share the weibo
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT,"weibo");
+                    //设置分享的内容
+                    intent.putExtra(Intent.EXTRA_TEXT, status.text);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(Intent.createChooser(intent,"share"));
                     break;
                 case R.id.overflow_favorite:
                     processFavorite();
