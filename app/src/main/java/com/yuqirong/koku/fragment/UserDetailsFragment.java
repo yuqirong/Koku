@@ -237,7 +237,6 @@ public class UserDetailsFragment extends BaseFragment {
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
                                 //TODO: 2015/10/4 分享
-                                showShare(status.user.screen_name, status.text);
                                 break;
                             case R.id.overflow_favorite:
                                 processFavorite();
