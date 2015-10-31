@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
@@ -18,6 +19,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.entity.Status;
 
 import java.util.List;
 
@@ -206,6 +208,18 @@ public class CommonUtil {
     public static void copyToClipboard(Context context, String text) {
         ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         clip.setText(text); // 复制
+    }
+
+    public static void shareWeibo(Context context, Status status) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        String title = context.getString(R.string.share_title);
+        title = String.format(title, status.user.name);
+        intent.putExtra(Intent.EXTRA_SUBJECT, title);
+        //设置分享的内容
+        intent.putExtra(Intent.EXTRA_TEXT, status.text);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share)));
     }
 
 }

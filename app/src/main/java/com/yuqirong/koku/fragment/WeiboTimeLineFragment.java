@@ -171,18 +171,19 @@ public class WeiboTimeLineFragment extends BaseFragment {
                     @Override
                     public void run() {
                         adapter.notifyDataSetChanged();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        if (load) {
+                            adapter.completeLoadMore(true);
+                            if ("0".equals(max_id)) {
+                                adapter.setNoMoreWeibo();
+                            }
+                            load = false;
+                        }
                     }
                 });
             }
         });
-        mSwipeRefreshLayout.setRefreshing(false);
-        if (load) {
-            adapter.completeLoadMore(true);
-            if ("0".equals(max_id)) {
-                adapter.setNoMoreWeibo();
-            }
-            load = false;
-        }
+
     }
 
     Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -247,7 +248,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
-                                //TODO: 2015/10/4 分享
+                                CommonUtil.shareWeibo(context,status);
                                 break;
                             case R.id.overflow_favorite:
                                 processFavorite();

@@ -218,7 +218,7 @@ public class PublicWeiboFragment extends BaseFragment {
                         LogUtils.i("click: " + status + status.user.screen_name);
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
-                                //TODO: 2015/10/4 分享
+                                CommonUtil.shareWeibo(context,status);
                                 break;
                             case R.id.overflow_favorite:
                                 processFavorite();

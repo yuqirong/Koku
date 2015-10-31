@@ -80,4 +80,6 @@
     <string name="picture">图片</string>
     <string name="comment">评论</string>
     <string name="refer_to">提及</string>
+    <string name="share">分享到</string>
+    <string name="share_title">%1$s的微博</string>
 </resources>

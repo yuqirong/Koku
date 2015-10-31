@@ -11,6 +11,7 @@ import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.Status;
 
 /**
+ * 微博详情页面
  * Created by Anyway on 2015/9/18.
  */
 public class WeiboDetailsFragment extends BaseFragment {

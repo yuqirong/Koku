@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.entity.Status;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
 
@@ -87,10 +88,13 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
                 startActivityForResult(intent, requestCode);
                 break;
             case R.id.action_share:
+                CommonUtil.shareWeibo(this, status);
                 break;
             case R.id.action_favorite:
+
                 break;
             case R.id.action_copy:
+                CommonUtil.copyToClipboard(this,status.text);
                 break;
             default:
                 break;
