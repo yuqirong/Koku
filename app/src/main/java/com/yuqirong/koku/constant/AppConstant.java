@@ -108,4 +108,8 @@ public class AppConstant {
      * 返回最新的公共微博
      */
     public static final String STATUSES_PUBLIC_TIMELINE_URL = "https://api.weibo.com/2/statuses/public_timeline.json";
+    /**
+     * 获取某个用户的各种消息未读数
+     */
+    public static final String REMIND_UNREAD_COUNT_URL = "https://rm.api.weibo.com/2/remind/unread_count.json";
 }

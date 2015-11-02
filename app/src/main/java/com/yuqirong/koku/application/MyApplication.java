@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -37,10 +39,20 @@ public class MyApplication extends Application {
             return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
         }
     };
+    private static RequestQueue mQueue;
+
+    /**
+     * 得到volley队列
+     * @return
+     */
+    public static RequestQueue getRequestQueue() {
+            return mQueue;
+    }
 
     public static Context getContext() {
         return context;
     }
+
     public static ThreadPoolExecutor getExecutor() {
         return executor;
     }
@@ -56,8 +68,9 @@ public class MyApplication extends Application {
                 .diskCacheFileCount(300).tasksProcessingOrder(QueueProcessingType.LIFO)
                 .build();
         ImageLoader.getInstance().init(config);
-        executor = new ThreadPoolExecutor(CORE_POOL_SIZE,MAXIMUM_POOL_SIZE,KEEP_ALIVE,
-                TimeUnit.SECONDS,sPoolWorkQueue,sThreadFactory);
+        executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+                TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
+        mQueue = Volley.newRequestQueue(context);
     }
 
 }

@@ -82,4 +82,5 @@
     <string name="refer_to">提及</string>
     <string name="share">分享到</string>
     <string name="share_title">%1$s的微博</string>
+    <string name="unread_weibo">%1$d条新微博，点击刷新</string>
 </resources>

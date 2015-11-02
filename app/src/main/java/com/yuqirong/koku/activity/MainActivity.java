@@ -1,6 +1,7 @@
 package com.yuqirong.koku.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -32,6 +34,8 @@ import com.yuqirong.koku.adapter.FragmentAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.fragment.FragmentFactory;
 import com.yuqirong.koku.fragment.WeiboTimeLineFragment;
+import com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver;
+import com.yuqirong.koku.service.CheckUnreadService;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
@@ -45,7 +49,7 @@ import java.util.Map;
 /**
  * 主页面
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements RefreshWeiboTimelineReceiver.OnUpdateUIListener {
 
     /**
      * 抽屉
@@ -76,10 +80,25 @@ public class MainActivity extends BaseActivity {
     private boolean isLastShown = false; //用于fabbutton上一个状态是否显示
     private long firstTime;
     private CoordinatorLayout mCoordinatorLayout;
+    private RefreshWeiboTimelineReceiver receiver;
+    private TextView tv_unread_remind;
 
     @Override
     protected void initData(Bundle savedInstanceState) {
         checkTokenExpireIn();
+        startService(new Intent(MainActivity.this, CheckUnreadService.class));
+        receiver = new RefreshWeiboTimelineReceiver();
+        receiver.setOnUpdateUIListener(this);
+        registerReceiver(receiver, new IntentFilter("com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(MainActivity.this, CheckUnreadService.class));
+        if(receiver!=null){
+            unregisterReceiver(receiver);
+        }
+        super.onDestroy();
     }
 
     //查询用户access_token的授权相关信息
@@ -175,6 +194,7 @@ public class MainActivity extends BaseActivity {
         mFloatingActionButton = (FloatingActionButton) findViewById(R.id.mFloatingActionButton);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.mCoordinatorLayout);
+        tv_unread_remind = (TextView) findViewById(R.id.tv_unread_remind);
         if (adapter == null) {
             setupViewPagerContent();
         }
@@ -365,4 +385,9 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    @Override
+    public void updateUI(int unreadCount) {
+        String title = String.format(getString(R.string.unread_weibo),unreadCount);
+        tv_unread_remind.setText(title);
+    }
 }
