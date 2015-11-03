@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.yuqirong.koku.view.AboutTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:content="v1.2"
+        app:subject="版本号" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#cccccc" />
+
+    <com.yuqirong.koku.view.AboutTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:content="\@活得好像一条狗"
+        app:subject="开发者" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#cccccc" />
+
+    <com.yuqirong.koku.view.AboutTextView
+        android:id="@+id/atv_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:content="觉得这个应用不错？"
+        app:subject="分享给好友" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#cccccc" />
+
+    <com.yuqirong.koku.view.AboutTextView
+        android:id="@+id/atv_grade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:subject="给应用打分"
+        app:content="赞还是吐槽？" />
+
+</LinearLayout>

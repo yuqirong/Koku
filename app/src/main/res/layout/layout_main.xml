@@ -26,6 +26,7 @@
             android:gravity="center"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
+            app:layout_behavior="com.yuqirong.koku.view.ScrollAwareFABBehavior"
             android:background="@color/transparent_Indigo_colorPrimary" />
     </RelativeLayout>
 

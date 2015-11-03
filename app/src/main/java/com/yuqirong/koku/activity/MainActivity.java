@@ -89,7 +89,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
         startService(new Intent(MainActivity.this, CheckUnreadService.class));
         receiver = new RefreshWeiboTimelineReceiver();
         receiver.setOnUpdateUIListener(this);
-        registerReceiver(receiver, new IntentFilter("com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver"));
+        registerReceiver(receiver, new IntentFilter(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME));
     }
 
     @Override
@@ -357,6 +357,9 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
                 break;
             case R.id.action_settings:
 
+                break;
+            case R.id.action_about:
+                AboutActivity.actionStart(MainActivity.this);
                 break;
 
         }

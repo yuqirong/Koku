@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AboutTextView">
+        <attr name="subject" format="string" />
+        <attr name="content" format="string" />
+    </declare-styleable>
+</resources>

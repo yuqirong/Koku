@@ -12,6 +12,7 @@ import com.yuqirong.koku.util.LogUtils;
  */
 public class RefreshWeiboTimelineReceiver extends BroadcastReceiver {
 
+    public static final String INTENT_FILTER_NAME = "com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver";
     private OnUpdateUIListener listener;
 
     public void setOnUpdateUIListener(OnUpdateUIListener listener) {

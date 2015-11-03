@@ -86,8 +86,7 @@ public class CheckUnreadService extends Service {
                             if (status_count > 0) {
                                 Intent intent = new Intent();
                                 intent.putExtra("unread_count", status_count);
-                                // TODO: 2015/11/2
-                                intent.setAction("com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver");
+                                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME);
                                 sendBroadcast(intent);
                             }
                         } catch (JSONException e) {
