@@ -6,12 +6,35 @@
     android:orientation="vertical">
 
     <com.yuqirong.koku.view.AboutTextView
+        android:id="@+id/atv_font_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        android:clickable="true"
-        app:content="v1.2"
-        app:subject="版本号" />
+        app:content="标准字体"
+        app:subject="@string/font_size" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#cccccc" />
+
+    <com.yuqirong.koku.view.SettingsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:setting_subject="使用内置浏览器" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#cccccc" />
+
+    <com.yuqirong.koku.view.SettingsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:setting_subject="振动反馈" />
 
     <View
         android:layout_width="match_parent"
@@ -21,12 +44,11 @@
         android:background="#cccccc" />
 
     <com.yuqirong.koku.view.AboutTextView
+        android:id="@+id/atv_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        android:clickable="true"
-        app:content="\@活得好像一条狗"
-        app:subject="开发者" />
+        app:content="我要狂吐槽！"
+        app:subject="意见反馈" />
 
     <View
         android:layout_width="match_parent"
@@ -36,41 +58,10 @@
         android:background="#cccccc" />
 
     <com.yuqirong.koku.view.AboutTextView
-        android:id="@+id/atv_address"
+        android:id="@+id/atv_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:content="https://github.com/yuqirong/Koku"
-        app:subject="GitHub" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc" />
-
-    <com.yuqirong.koku.view.AboutTextView
-        android:id="@+id/atv_share"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:content="觉得这个应用不错？"
-        app:subject="分享给好友" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc" />
-
-    <com.yuqirong.koku.view.AboutTextView
-        android:id="@+id/atv_grade"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:content="赞还是吐槽？"
-        app:subject="给应用打分" />
+        app:content="取消授权"
+        app:subject="注销" />
 
 </LinearLayout>

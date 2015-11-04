@@ -27,6 +27,8 @@ public class AboutFragment extends BaseFragment {
         atv_share.setOnClickListener(listener);
         AboutTextView atv_grade = (AboutTextView) view.findViewById(R.id.atv_grade);
         atv_grade.setOnClickListener(listener);
+        AboutTextView atv_address = (AboutTextView) view.findViewById(R.id.atv_address);
+        atv_address.setOnClickListener(listener);
         return view;
     }
 
@@ -37,12 +39,21 @@ public class AboutFragment extends BaseFragment {
                 case R.id.atv_share:
                     shareApp();
                     break;
+                case R.id.atv_address:
+                    visitGit();
+                    break;
                 case R.id.atv_grade:
                     gradeApp();
                     break;
             }
         }
     };
+
+    private void visitGit(){
+        Uri uri = Uri.parse("https://github.com/yuqirong/Koku");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
+    }
 
     private void gradeApp() {
         Uri uri = Uri.parse("market://details?id=" + context.getPackageName());

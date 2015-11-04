@@ -1,6 +1,8 @@
 package com.yuqirong.koku.util;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
@@ -9,9 +11,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.ClipboardManager;
 import android.view.View;
@@ -37,7 +41,7 @@ public class CommonUtil {
     public static String getNumString(int num) {
         if (num < 100000) {
             return String.valueOf(num);
-        }else{
+        } else {
             int number = num / 10000;
             return number + "万";
         }
@@ -152,6 +156,30 @@ public class CommonUtil {
     public static void setVubator(Context context, long[] pattern, boolean isRepeat) {
         Vibrator vib = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE);
         vib.vibrate(pattern, isRepeat ? 1 : -1);
+    }
+
+    /**
+     * 发布通知
+     *
+     * @param context
+     * @param titleId
+     * @param contentId
+     * @param drawableId icon资源文件
+     * @param cancelable
+     */
+    public static void showNotification(Context context, int titleId, int contentId, int drawableId, boolean cancelable) {
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        builder.setContentTitle(context.getString(titleId));
+        builder.setContentText(context.getString(contentId));
+        if (SharePrefUtil.getBoolean(context, "vibrate_feedback", true)) {
+            builder.setVibrate(new long[]{300});
+        }
+        builder.setSmallIcon(drawableId);
+        builder.setAutoCancel(cancelable);
+        Notification mNotification = builder.build();
+        notificationManager.notify(0, mNotification);
     }
 
     /**

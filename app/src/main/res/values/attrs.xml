@@ -4,4 +4,7 @@
         <attr name="subject" format="string" />
         <attr name="content" format="string" />
     </declare-styleable>
+    <declare-styleable name="SettingsView">
+        <attr name="setting_subject" format="string" />
+    </declare-styleable>
 </resources>

@@ -107,7 +107,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         if (savedInstanceState == null) {
             status = (Status) getArguments().getSerializable("Status");
         } else {
-            // TODO: 2015/10/12
+            status = (Status) savedInstanceState.getSerializable("Status");
         }
         if (status != null) {
             initAdapter(headerView);
@@ -234,7 +234,6 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             }
         });
         mAutoLoadRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mAutoLoadRecyclerView);
-//        mAutoLoadRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
         return view;
     }
 

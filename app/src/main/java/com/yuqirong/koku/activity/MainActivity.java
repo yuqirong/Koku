@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
     @Override
     protected void onDestroy() {
         stopService(new Intent(MainActivity.this, CheckUnreadService.class));
-        if(receiver!=null){
+        if (receiver != null) {
             unregisterReceiver(receiver);
         }
         super.onDestroy();
@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
 
         }
@@ -212,9 +212,8 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
         switch (requestCode) {
             case SEND_NEW_WEIBO:
                 if (resultCode == PublishActivity.SEND_WEIBO_SUCCESS) {
-                    // 发布广播
                     LogUtils.i("send weibo success");
-                    CommonUtil.setVubator(MainActivity.this, 300);
+                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done, true);
                     final Fragment item = adapter.getItem(0);
                     View rootView = item.getView();
                     CommonUtil.showSnackbar(rootView, R.string.publish_success, getResources().getColor(R.color.Indigo_colorPrimary), Snackbar.LENGTH_LONG, R.string.click_to_refresh, new View.OnClickListener() {
@@ -227,12 +226,14 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
                 break;
             case SEND_NEW_COMMENT:
                 if (resultCode == PublishActivity.SEND_COMMENT_SUCCESS) {
-                    CommonUtil.setVubator(MainActivity.this, 300);
+                    LogUtils.i("send comment success");
+                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done, true);
                 }
                 break;
             case SEND_NEW_REPOST:
                 if (resultCode == PublishActivity.SEND_REPOST_SUCCESS) {
-                    CommonUtil.setVubator(MainActivity.this, 300);
+                    LogUtils.i("send repost success");
+                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done, true);
                 }
                 break;
         }
@@ -351,12 +352,12 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_remind:
                 RemindActivity.actionStart(MainActivity.this);
                 break;
             case R.id.action_settings:
-
+                SettingsActivity.actionStart(MainActivity.this);
                 break;
             case R.id.action_about:
                 AboutActivity.actionStart(MainActivity.this);
@@ -390,7 +391,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
 
     @Override
     public void updateUI(int unreadCount) {
-        String title = String.format(getString(R.string.unread_weibo),unreadCount);
+        String title = String.format(getString(R.string.unread_weibo), unreadCount);
         tv_unread_remind.setText(title);
     }
 }

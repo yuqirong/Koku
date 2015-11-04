@@ -19,24 +19,32 @@ public class WeiboDetailsFragment extends BaseFragment {
     private FragmentManager fragmentManager;
     private WeiboDetailsCommentFragment commentFragment;
     private WeiboDetailsRepostFragment repostFragment;
+    private Status status = null;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (status != null) {
+            outState.putSerializable("Status", status);
+        }
+    }
 
     @Override
     public void initData(Bundle savedInstanceState) {
         fragmentManager = getFragmentManager();
-        Status status = null;
         if (savedInstanceState == null) {
             Intent intent = getActivity().getIntent();
             if (intent != null) {
                 status = (Status) intent.getSerializableExtra("Status");
             }
         } else {
-            // TODO: 2015/10/12
+            status = (Status) savedInstanceState.getSerializable("Status");
         }
         commentFragment = new WeiboDetailsCommentFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("Status",status);
+        bundle.putSerializable("Status", status);
         commentFragment.setArguments(bundle);
-        fragmentManager.beginTransaction().replace(R.id.mFrameLayout, commentFragment, "commentFragment").commit();
+        fragmentManager.beginTransaction().replace(R.id.mFrameLayout, commentFragment, "CommentFragment").commit();
     }
 
 

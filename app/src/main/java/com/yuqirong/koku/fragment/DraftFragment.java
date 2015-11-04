@@ -2,10 +2,8 @@ package com.yuqirong.koku.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -34,7 +33,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,11 +42,12 @@ import java.util.Map;
 public class DraftFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
-    protected static DraftRecyclerViewAdapter adapter;
+    private DraftRecyclerViewAdapter adapter;
     private static final int START_PUBLISH_ACTIVITY = 1300;
 
     private static Handler handler = new Handler();
     private Draft draft;
+    private TextView tv_no_draft;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -64,7 +63,13 @@ public class DraftFragment extends BaseFragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.notifyDataSetChanged();
+                        if (adapter.getList().size() == 0) {
+                            tv_no_draft.setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.GONE);
+                        } else {
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            adapter.notifyDataSetChanged();
+                        }
                     }
                 });
             }
@@ -74,6 +79,7 @@ public class DraftFragment extends BaseFragment {
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_draft, null);
+        tv_no_draft = (TextView) view.findViewById(R.id.tv_no_draft);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.mRecyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -131,15 +137,15 @@ public class DraftFragment extends BaseFragment {
                     JSONObject jsonObject = new JSONObject(s);
                     String idstr = jsonObject.getString("idstr");
                     if (!TextUtils.isEmpty(idstr)) {
-                        new Thread(new Runnable() {
+                        MyApplication.getExecutor().execute(new Runnable() {
                             @Override
                             public void run() {
                                 DraftDB.deleteDraft(id);
                             }
-                        }).start();
+                        });
                         adapter.getList().remove(position);
                         adapter.notifyDataSetChanged();
-                        CommonUtil.setVubator(context,300);
+                        CommonUtil.setVubator(context, 300);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -195,7 +201,7 @@ public class DraftFragment extends BaseFragment {
                     || resultCode == PublishActivity.SEND_COMMENT_SUCCESS
                     || resultCode == PublishActivity.SEND_REPOST_SUCCESS) {
                 if (draft != null) {
-                    new Thread(new Runnable() {
+                    MyApplication.getExecutor().execute(new Runnable() {
                         @Override
                         public void run() {
                             DraftDB.deleteDraft(draft.id);
@@ -206,7 +212,7 @@ public class DraftFragment extends BaseFragment {
                                 }
                             });
                         }
-                    }).start();
+                    });
                     CommonUtil.setVubator(context, 300);
                 }
             }
@@ -214,12 +220,12 @@ public class DraftFragment extends BaseFragment {
     }
 
     private void processDeleteDraft(final int id, int position) {
-        new Thread(new Runnable() {
+        MyApplication.getExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 DraftDB.deleteDraft(id);
             }
-        }).start();
+        });
         adapter.getList().remove(position);
         adapter.notifyDataSetChanged();
     }

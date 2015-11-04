@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg_color"
-    android:orientation="vertical">
+    android:background="@color/activity_bg_color">
+
+    <TextView
+        android:id="@+id/tv_no_draft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone"
+        android:text="@string/no_draft"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mRecyclerView"
@@ -12,4 +20,4 @@
         android:clipToPadding="false"
         android:padding="5dp" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -30,7 +30,7 @@ public class AboutTextView extends LinearLayout {
     }
 
     private void initView(Context context, String title, String content) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_text,this);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_about_item,this);
         TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
         TextView tv_content = (TextView) view.findViewById(R.id.tv_content);
         tv_title.setText(title);

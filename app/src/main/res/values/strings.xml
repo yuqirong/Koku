@@ -84,4 +84,8 @@
     <string name="share_title">%1$s的微博</string>
     <string name="unread_weibo">%1$d条新微博，点击刷新</string>
     <string name="share_app">Koku是一款全新的微博第三方客户端，流畅的效果和简洁大方的界面，带给你不同的视角效果和体验。快来试试吧：http://t.cn/RUJWpUR</string>
+    <string name="no_draft">没有草稿</string>
+    <string name="font_size">字体大小</string>
+    <string name="send_remind">发送提醒</string>
+    <string name="send_success">发送成功</string>
 </resources>

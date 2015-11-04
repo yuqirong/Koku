@@ -21,7 +21,6 @@
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         tools:text="设置" />
 
 </LinearLayout>
