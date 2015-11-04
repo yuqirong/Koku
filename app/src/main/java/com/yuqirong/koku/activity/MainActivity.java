@@ -213,7 +213,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
             case SEND_NEW_WEIBO:
                 if (resultCode == PublishActivity.SEND_WEIBO_SUCCESS) {
                     LogUtils.i("send weibo success");
-                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done, true);
+                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done_light, true);
                     final Fragment item = adapter.getItem(0);
                     View rootView = item.getView();
                     CommonUtil.showSnackbar(rootView, R.string.publish_success, getResources().getColor(R.color.Indigo_colorPrimary), Snackbar.LENGTH_LONG, R.string.click_to_refresh, new View.OnClickListener() {
@@ -227,13 +227,13 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
             case SEND_NEW_COMMENT:
                 if (resultCode == PublishActivity.SEND_COMMENT_SUCCESS) {
                     LogUtils.i("send comment success");
-                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done, true);
+                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done_light, true);
                 }
                 break;
             case SEND_NEW_REPOST:
                 if (resultCode == PublishActivity.SEND_REPOST_SUCCESS) {
                     LogUtils.i("send repost success");
-                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done, true);
+                    CommonUtil.showNotification(MainActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done_light, true);
                 }
                 break;
         }

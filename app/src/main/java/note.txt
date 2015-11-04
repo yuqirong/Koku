@@ -12,3 +12,9 @@ picSelect
 Acache
 SwipeBackLayout
 PhotoView
+
+1.豌豆荚
+2.小米商店
+3.360应用市场
+4.应用宝
+5.百度手机市场

@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;

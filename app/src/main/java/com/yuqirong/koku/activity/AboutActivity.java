@@ -13,6 +13,7 @@ import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
 
 /**
+ * 关于
  * Created by Anyway on 2015/10/6.
  */
 public class AboutActivity extends SwipeBackActivity {
