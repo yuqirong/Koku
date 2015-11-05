@@ -28,6 +28,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.util.CommonUtil;
+import com.yuqirong.koku.util.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,13 +74,13 @@ public class GridImageActivity extends Activity {
     }
 
     public void select(View v) {
-        if(selectedPicture.size()==0){
-            CommonUtil.showSnackbar(recycler_image,R.string.no_pic,getResources().getColor(R.color.Indigo_colorPrimary));
+        if (selectedPicture.size() == 0) {
+            CommonUtil.showSnackbar(recycler_image, R.string.no_pic, getResources().getColor(R.color.Indigo_colorPrimary));
             return;
         }
         Intent intent = new Intent();
-        intent.putStringArrayListExtra("urls",selectedPicture);
-        setResult(RESULT_OK,intent);
+        intent.putStringArrayListExtra("urls", selectedPicture);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -238,25 +239,27 @@ public class GridImageActivity extends Activity {
 
         @Override
         public void onBindViewHolder(final ImageViewHolder holder, final int position) {
-
-
             final ImageItem item = currentImageFolder.images.get(position);
             loader.displayImage("file://" + item.path, holder.imageView, options);
-//            holder.imageView.setImageResource(R.drawable.default_image);
-//            hanks.com.mylibrary.util.ImageLoader.getInstance().loadImage(item.path,holder.imageView);
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.mCheckBox.setChecked(!holder.mCheckBox.isChecked());
+                }
+            });
             holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
                         addAnimation(holder.mCheckBox);
                         if (selectedPicture.size() >= 9) {
-                            CommonUtil.showSnackbar(recycler_image,R.string.most_nine_pic,getResources().getColor(R.color.Indigo_colorPrimary));
+                            CommonUtil.showSnackbar(recycler_image, R.string.most_nine_pic, getResources().getColor(R.color.Indigo_colorPrimary));
                             buttonView.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     buttonView.setChecked(false);
                                 }
-                            },300);
+                            }, 300);
 
                             return;
                         }

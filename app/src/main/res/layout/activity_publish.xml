@@ -34,6 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="6dp"
+        android:scrollbarSize="4dp"
+        android:scrollbarStyle="outsideInset"
         android:scrollbars="horizontal"
         android:visibility="gone">
 

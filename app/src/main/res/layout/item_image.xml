@@ -10,7 +10,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/default_image" />
 
-
     <CheckBox
         android:id="@+id/mCheckBox"
         android:layout_alignParentRight="true"

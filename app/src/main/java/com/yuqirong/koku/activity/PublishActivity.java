@@ -53,6 +53,7 @@ import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
+import com.yuqirong.koku.view.DeleteImageView;
 import com.yuqirong.koku.view.RevealBackgroundView;
 
 import org.json.JSONArray;
@@ -93,7 +94,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     private TextView tv_word_num;
     private LinearLayout ll_images;
     private HorizontalScrollView mHorizontalScrollView;
-    private Map<ImageView, String> imageMap = new HashMap<>();
+    private Map<DeleteImageView, String> imageMap = new HashMap<>();
     private List<String> strList = new ArrayList<>();
     private LoadImageAsyncTask loadImageAsyncTask;
     private GridView gv_emotion;
@@ -430,17 +431,22 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
     // 处理点击 位置 事件
     private void processLocation() {
         Location location = CommonUtil.getLocation(PublishActivity.this);
-        if (location == null) {
-            tv_location.setVisibility(View.VISIBLE);
-            tv_location.setText(R.string.unknown_address);
+        if (!isLocation) {
+            if (location == null) {
+                tv_location.setVisibility(View.VISIBLE);
+                tv_location.setText(R.string.unknown_address);
+            } else {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                isLocation = true;
+                LogUtils.i("GPS坐标  longitude :" + longitude + ", latitude :" + latitude);
+                String url = AppConstant.GEO_TO_ADDRESS_URL + "?access_token=" + SharePrefUtil.getString(PublishActivity.this, "access_token", "") + "&coordinate=" + longitude + "," + latitude;
+                LogUtils.i("根据地理信息坐标返回实际地址 :" + url);
+                getJsonData(url, jsonlistener, errorListener);
+            }
         } else {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            isLocation = true;
-            LogUtils.i("GPS坐标  longitude :" + longitude + ", latitude :" + latitude);
-            String url = AppConstant.GEO_TO_ADDRESS_URL + "?access_token=" + SharePrefUtil.getString(PublishActivity.this, "access_token", "") + "&coordinate=" + longitude + "," + latitude;
-            LogUtils.i("根据地理信息坐标返回实际地址 :" + url);
-            getJsonData(url, jsonlistener, errorListener);
+            tv_location.setVisibility(View.GONE);
+            isLocation = false;
         }
     }
 
@@ -518,10 +524,22 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
 
     class LoadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
-        private ImageView imageView;
+        private DeleteImageView mDeleteImageView;
         private String url;
         private int imageWidth;
         private int imageHeight;
+        private View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ll_images.removeView(mDeleteImageView);
+                if (imageMap.containsKey(mDeleteImageView)) {
+                    imageMap.remove(mDeleteImageView);
+                }
+                if(imageMap.size() == 0){
+                    mHorizontalScrollView.setVisibility(View.GONE);
+                }
+            }
+        };
 
         @Override
         protected Bitmap doInBackground(String... params) {
@@ -535,8 +553,9 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-                imageMap.put(imageView, url);
+                mDeleteImageView.setImageBitmap(bitmap);
+                mDeleteImageView.setOnDeleteClickListener(listener);
+                imageMap.put(mDeleteImageView, url);
                 strList.add(url);
             }
             if (imageMap.size() > 8) {
@@ -551,11 +570,10 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             if (mHorizontalScrollView.getVisibility() != View.VISIBLE) {
                 mHorizontalScrollView.setVisibility(View.VISIBLE);
             }
-            imageView = new ImageView(PublishActivity.this);
-            imageView.setBackgroundResource(R.drawable.bg_unselected_card_item_light);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            ll_images.addView(imageView, ll_images.getChildCount() - 1);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+            mDeleteImageView = new DeleteImageView(PublishActivity.this);
+            mDeleteImageView.setBackgroundResource(R.drawable.bg_unselected_card_item_light);
+            ll_images.addView(mDeleteImageView, ll_images.getChildCount() - 1);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mDeleteImageView.getLayoutParams();
             layoutParams.width = CommonUtil.dip2px(PublishActivity.this, 90);
             layoutParams.height = CommonUtil.dip2px(PublishActivity.this, 90);
             layoutParams.setMargins(CommonUtil.dip2px(PublishActivity.this, 10), 0, CommonUtil.dip2px(PublishActivity.this, 10), 0);

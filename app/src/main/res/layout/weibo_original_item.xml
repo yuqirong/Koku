@@ -32,6 +32,9 @@
             android:layout_toRightOf="@id/iv_avatar"
             android:onClick="true"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxWidth="200dp"
+            android:singleLine="true"
             tools:text="username" />
 
         <ImageView
@@ -41,6 +44,7 @@
             android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignTop="@id/tv_screen_name"
             android:layout_marginLeft="4dp"
+            android:src="@drawable/avatar_vip"
             android:layout_toRightOf="@id/tv_screen_name"
             android:onClick="true" />
 
