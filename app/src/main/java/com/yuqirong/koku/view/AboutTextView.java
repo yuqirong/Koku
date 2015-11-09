@@ -15,6 +15,9 @@ import com.yuqirong.koku.R;
  */
 public class AboutTextView extends LinearLayout {
 
+    private TextView tv_title;
+    private TextView tv_content;
+
     public AboutTextView(Context context) {
         this(context, null);
     }
@@ -25,17 +28,24 @@ public class AboutTextView extends LinearLayout {
                 R.styleable.AboutTextView);
         String title = a.getString(R.styleable.AboutTextView_subject);
         String content = a.getString(R.styleable.AboutTextView_content);
-        initView(context,title,content);
+        initView(context, title, content);
         a.recycle();
     }
 
     private void initView(Context context, String title, String content) {
-        View view = LayoutInflater.from(context).inflate(R.layout.layout_about_item,this);
-        TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
-        TextView tv_content = (TextView) view.findViewById(R.id.tv_content);
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_about_item, this);
+        tv_title = (TextView) view.findViewById(R.id.tv_title);
+        tv_content = (TextView) view.findViewById(R.id.tv_content);
         tv_title.setText(title);
         tv_content.setText(content);
     }
 
+    public void setTitle(String title) {
+        tv_title.setText(title);
+    }
+
+    public void setContent(String content) {
+        tv_content.setText(content);
+    }
 
 }

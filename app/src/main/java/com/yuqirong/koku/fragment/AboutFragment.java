@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.view.AboutTextView;
 
 /**
@@ -24,11 +25,14 @@ public class AboutFragment extends BaseFragment {
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, null);
         AboutTextView atv_share = (AboutTextView) view.findViewById(R.id.atv_share);
-        atv_share.setOnClickListener(listener);
         AboutTextView atv_grade = (AboutTextView) view.findViewById(R.id.atv_grade);
-        atv_grade.setOnClickListener(listener);
         AboutTextView atv_address = (AboutTextView) view.findViewById(R.id.atv_address);
+        AboutTextView atv_version = (AboutTextView) view.findViewById(R.id.atv_version);
+        atv_version.setContent(CommonUtil.getVersionName(context));
+        atv_version.setOnClickListener(listener);
         atv_address.setOnClickListener(listener);
+        atv_grade.setOnClickListener(listener);
+        atv_share.setOnClickListener(listener);
         return view;
     }
 
@@ -49,7 +53,7 @@ public class AboutFragment extends BaseFragment {
         }
     };
 
-    private void visitGit(){
+    private void visitGit() {
         Uri uri = Uri.parse("https://github.com/yuqirong/Koku");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
@@ -57,7 +61,7 @@ public class AboutFragment extends BaseFragment {
 
     private void gradeApp() {
         Uri uri = Uri.parse("market://details?id=" + context.getPackageName());
-        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

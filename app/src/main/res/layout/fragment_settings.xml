@@ -5,10 +5,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="常规设置"
+        android:textColor="@color/Teal_colorPrimary"/>
+
     <com.yuqirong.koku.view.AboutTextView
         android:id="@+id/atv_font_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selector_about_item"
         app:content="标准字体"
         app:subject="@string/font_size" />
 
@@ -20,8 +31,10 @@
         android:background="#cccccc" />
 
     <com.yuqirong.koku.view.SettingsView
+        android:id="@+id/sv_browser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selector_about_item"
         app:setting_subject="使用内置浏览器" />
 
     <View
@@ -32,21 +45,27 @@
         android:background="#cccccc" />
 
     <com.yuqirong.koku.view.SettingsView
+        android:id="@+id/sv_vibrator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selector_about_item"
         app:setting_subject="振动反馈" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="20dp"
+        android:text="其他设置"
+        android:textColor="@color/Teal_colorPrimary"/>
 
     <com.yuqirong.koku.view.AboutTextView
         android:id="@+id/atv_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selector_about_item"
         app:content="我要狂吐槽！"
         app:subject="意见反馈" />
 
@@ -61,6 +80,7 @@
         android:id="@+id/atv_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/selector_about_item"
         app:content="取消授权"
         app:subject="注销" />
 

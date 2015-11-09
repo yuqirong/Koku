@@ -88,4 +88,7 @@
     <string name="font_size">字体大小</string>
     <string name="send_remind">发送提醒</string>
     <string name="send_success">发送成功</string>
+    <string name="cancel_auth_fail">取消授权失败</string>
+    <string name="confirm_cacel_auth">确定要取消授权吗？</string>
+    <string name="feedback_text">#Koku意见反馈# @活得好像一条狗</string>
 </resources>

@@ -8,9 +8,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -142,7 +145,7 @@ public class CommonUtil {
      * @param context
      * @param milliseconds 震动的时长，单位是毫秒
      */
-    public static void setVubator(Context context, long milliseconds) {
+    public static void setVibrator(Context context, long milliseconds) {
         Vibrator vibator = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE); // 取得震动服务
         vibator.vibrate(milliseconds);
     }
@@ -152,7 +155,7 @@ public class CommonUtil {
      * long[] pattern  ：自定义震动模式 。数组中数字的含义依次是[静止时长，震动时长，静止时长，震动时长。。。]时长的单位是毫秒
      * boolean isRepeat ： 是否反复震动，如果是true，反复震动，如果是false，只震动一次
      */
-    public static void setVubator(Context context, long[] pattern, boolean isRepeat) {
+    public static void setVibrator(Context context, long[] pattern, boolean isRepeat) {
         Vibrator vib = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE);
         vib.vibrate(pattern, isRepeat ? 1 : -1);
     }
@@ -172,13 +175,13 @@ public class CommonUtil {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle(context.getString(titleId));
         builder.setContentText(context.getString(contentId));
-        if (SharePrefUtil.getBoolean(context, "vibrate_feedback", true)) {
-            builder.setVibrate(new long[]{300});
-        }
         builder.setSmallIcon(drawableId);
         builder.setAutoCancel(cancelable);
         Notification mNotification = builder.build();
         notificationManager.notify(0, mNotification);
+        if (SharePrefUtil.getBoolean(context, "vibrate_feedback", true)) {
+            setVibrator(context,300);
+        }
     }
 
     /**
@@ -237,6 +240,10 @@ public class CommonUtil {
         clip.setText(text); // 复制
     }
 
+    /**
+     * @param context
+     * @param status
+     */
     public static void shareWeibo(Context context, Status status) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -247,6 +254,32 @@ public class CommonUtil {
         intent.putExtra(Intent.EXTRA_TEXT, status.text);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.share)));
+    }
+
+    /**
+     * 获取当前应用的版本号
+     *
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    public static String getVersionName(Context context) {
+        try {
+            // 获取packagemanager的实例
+            PackageManager packageManager = context.getPackageManager();
+            // getPackageName()是你当前类的包名，0代表是获取版本信息
+            PackageInfo packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return packInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void openInBrowser(Context context, String url) {
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
     }
 
 }

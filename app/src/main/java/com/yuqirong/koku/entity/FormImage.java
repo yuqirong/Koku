@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
  * Created by Administrator on 2015/11/5.
  */
 public class FormImage {
+
     //参数的名称
     private String mName;
     //文件名

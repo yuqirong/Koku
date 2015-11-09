@@ -10,6 +10,7 @@ import com.yuqirong.koku.R;
 import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.db.DraftDB;
 import com.yuqirong.koku.db.EmotionsDB;
+import com.yuqirong.koku.util.SharePrefUtil;
 
 /**
  * 闪屏页面Activity
@@ -21,6 +22,11 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+        if(!SharePrefUtil.getBoolean(this,"inited",false)){ //是否已完成初始化
+            SharePrefUtil.saveBoolean(this,"built-in_browser",true); //是否使用内置浏览器，默认是
+            SharePrefUtil.saveBoolean(this, "vibrate_feedback", true); //是否使用振动反馈，默认是
+            SharePrefUtil.saveBoolean(this, "inited", true);
+        }
         final ScaleAnimation scaleAnim = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);

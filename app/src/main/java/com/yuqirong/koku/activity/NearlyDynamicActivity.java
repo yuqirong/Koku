@@ -56,12 +56,12 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
         switch (requestCode) {
             case MainActivity.SEND_NEW_COMMENT:
                 if (resultCode == PublishActivity.SEND_COMMENT_SUCCESS) {
-                    CommonUtil.setVubator(NearlyDynamicActivity.this, 300);
+                    CommonUtil.showNotification(NearlyDynamicActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done_light, true);
                 }
                 break;
             case MainActivity.SEND_NEW_REPOST:
                 if (resultCode == PublishActivity.SEND_REPOST_SUCCESS) {
-                    CommonUtil.setVubator(NearlyDynamicActivity.this, 300);
+                    CommonUtil.showNotification(NearlyDynamicActivity.this, R.string.send_remind, R.string.send_success, R.drawable.ic_done_light, true);
                 }
                 break;
         }

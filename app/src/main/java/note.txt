@@ -6,6 +6,16 @@ fabbutton内容
 bug:
 评论的列表
 
+todo:
+发带图片的微博
+评论和@
+新微博提醒
+注销                           done
+微博详情里的图片点击事件
+drawerlayout里的item的列表要有末尾记号
+
+
+引用：
 SystemBarTint
 Universial ImageLoader
 picSelect
@@ -13,6 +23,8 @@ Acache
 SwipeBackLayout
 PhotoView
 
+
+市场：
 1.豌豆荚
 2.小米商店
 3.360应用市场

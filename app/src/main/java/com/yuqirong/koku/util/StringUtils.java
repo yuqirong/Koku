@@ -38,6 +38,7 @@ public class StringUtils {
 
     /**
      * 把String转化为List
+     *
      * @param pic_urls
      * @return
      */
@@ -53,13 +54,14 @@ public class StringUtils {
 
     /**
      * 把String转化为List
+     *
      * @param list
      * @return
      */
     public static String convertListToString(List<String> list) {
         StringBuilder builder = new StringBuilder();
-        for (int i=0;i<list.size();i++){
-            builder.append(list.get(i)+",");
+        for (int i = 0; i < list.size(); i++) {
+            builder.append(list.get(i) + ",");
         }
         return builder.toString();
     }
@@ -149,7 +151,11 @@ public class StringUtils {
                     @Override
                     public void onClick(View widget) {
                         LogUtils.i("点击了网址：" + url);
-                        WebViewActivity.actionStart(context, url);
+                        if (SharePrefUtil.getBoolean(context, "built-in_browser", true)) {
+                            WebViewActivity.actionStart(context, url);
+                        } else {
+                            CommonUtil.openInBrowser(context, url);
+                        }
                     }
                 };
                 spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

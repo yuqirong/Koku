@@ -112,4 +112,8 @@ public class AppConstant {
      * 获取某个用户的各种消息未读数
      */
     public static final String REMIND_UNREAD_COUNT_URL = "https://rm.api.weibo.com/2/remind/unread_count.json";
+    /**
+     * 授权回收接口，帮助开发者主动取消用户的授权。
+     */
+    public static final String OAUTH2_REVOKEOAUTH2 = "https://api.weibo.com/oauth2/revokeoauth2";
 }

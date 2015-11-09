@@ -145,7 +145,7 @@ public class DraftFragment extends BaseFragment {
                         });
                         adapter.getList().remove(position);
                         adapter.notifyDataSetChanged();
-                        CommonUtil.setVubator(context, 300);
+                        CommonUtil.showNotification(context, R.string.send_remind, R.string.send_success, R.drawable.ic_done_light, true);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -213,7 +213,7 @@ public class DraftFragment extends BaseFragment {
                             });
                         }
                     });
-                    CommonUtil.setVubator(context, 300);
+                    CommonUtil.showNotification(context, R.string.send_remind, R.string.send_success, R.drawable.ic_done_light, true);
                 }
             }
         }

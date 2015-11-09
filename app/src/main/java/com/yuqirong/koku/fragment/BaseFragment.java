@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.yuqirong.koku.application.MyApplication;
 
 /**
  * Created by Anyway on 2015/8/28.
@@ -26,7 +27,7 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        mQueue = Volley.newRequestQueue(context);
+        mQueue = MyApplication.getRequestQueue();
     }
 
     @Override
