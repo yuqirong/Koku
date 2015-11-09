@@ -68,14 +68,27 @@ public class CommonUtil {
     /**
      * 创建一个对话框
      */
-    public static void createMessageAlertDialog(Context context, String title, String message, String negativeMessage, DialogInterface.OnClickListener negativeListener, String positiveMessage, DialogInterface.OnClickListener positiveListener, boolean cancelable) {
+    public static void createMessageAlertDialog(Context context, String title, String message,
+                                                String negativeMessage, DialogInterface.OnClickListener negativeListener,
+                                                String positiveMessage, DialogInterface.OnClickListener positiveListener, boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title).setMessage(message).setNegativeButton(negativeMessage, negativeListener).setPositiveButton(positiveMessage, positiveListener).setCancelable(cancelable).create().show();
     }
 
-    public static void createItemAlertDialog(Context context, CharSequence[] items, DialogInterface.OnClickListener listener) {
+    public static void createItemAlertDialog(Context context, CharSequence[] items,
+                                             DialogInterface.OnClickListener listener,boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setItems(items, listener).setCancelable(true).create().show();
+        builder.setItems(items, listener).setCancelable(cancelable).create().show();
+    }
+
+    public static void createSingleChoiceAlertDialog(Context context, CharSequence[] items, int checkedId,
+                                                     DialogInterface.OnClickListener singleChoiceItemListener,String negativeMessage,
+                                                     DialogInterface.OnClickListener negativeListener, String positiveMessage,
+                                                     DialogInterface.OnClickListener positiveListener, boolean cancelable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setSingleChoiceItems(items, checkedId, singleChoiceItemListener)
+                .setNegativeButton(negativeMessage, negativeListener).setPositiveButton(positiveMessage, positiveListener)
+                .setCancelable(cancelable).create().show();
     }
 
 
@@ -180,7 +193,7 @@ public class CommonUtil {
         Notification mNotification = builder.build();
         notificationManager.notify(0, mNotification);
         if (SharePrefUtil.getBoolean(context, "vibrate_feedback", true)) {
-            setVibrator(context,300);
+            setVibrator(context, 300);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.yuqirong.koku.activity;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -513,7 +512,7 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
                         break;
                 }
             }
-        });
+        },true);
     }
 
     // 处理点击 # 事件
