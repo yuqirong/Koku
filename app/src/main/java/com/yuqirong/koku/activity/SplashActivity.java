@@ -25,7 +25,11 @@ public class SplashActivity extends BaseActivity {
         if(!SharePrefUtil.getBoolean(this,"inited",false)){ //是否已完成初始化
             SharePrefUtil.saveBoolean(this,"built-in_browser",true); //是否使用内置浏览器，默认是
             SharePrefUtil.saveBoolean(this, "vibrate_feedback", true); //是否使用振动反馈，默认是
+            SharePrefUtil.saveBoolean(this, "user_remark", true); //是否显示备注名，默认是
+            SharePrefUtil.saveBoolean(this, "timeline_refresh", true); //是否缓存失效后自动刷新，默认是
             SharePrefUtil.saveInt(this, "font_size", 0); //字体大小，默认是标准大小
+            SharePrefUtil.saveInt(this, "fab_function", 0); //fab按钮功能，默认是发微博
+            SharePrefUtil.saveInt(this, "fab_function", 1); //fab按钮位置，默认是右侧
             SharePrefUtil.saveBoolean(this, "inited", true);
         }
         final ScaleAnimation scaleAnim = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,

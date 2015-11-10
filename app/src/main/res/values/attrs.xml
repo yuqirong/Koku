@@ -7,4 +7,8 @@
     <declare-styleable name="SettingsView">
         <attr name="setting_subject" format="string" />
     </declare-styleable>
+    <declare-styleable name="DoubleTextSettingsView">
+        <attr name="double_text_setting_subject" format="string" />
+        <attr name="double_text_setting_content" format="string" />
+    </declare-styleable>
 </resources>

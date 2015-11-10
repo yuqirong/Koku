@@ -1,86 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:clipToPadding="false">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:text="常规设置"
-        android:textColor="@color/Teal_colorPrimary"/>
-
-    <com.yuqirong.koku.view.AboutTextView
-        android:id="@+id/atv_font_size"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:subject="@string/font_size" />
+        android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="阅读设置"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/Teal_colorPrimary" />
 
-    <com.yuqirong.koku.view.SettingsView
-        android:id="@+id/sv_browser"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:setting_subject="使用内置浏览器" />
+        <com.yuqirong.koku.view.AboutTextView
+            android:id="@+id/atv_font_size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:subject="@string/font_size" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
 
-    <com.yuqirong.koku.view.SettingsView
-        android:id="@+id/sv_vibrator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:setting_subject="振动反馈" />
+        <com.yuqirong.koku.view.SettingsView
+            android:id="@+id/sv_remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:setting_subject="显示备注名" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="20dp"
-        android:text="其他设置"
-        android:textColor="@color/Teal_colorPrimary"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
 
-    <com.yuqirong.koku.view.AboutTextView
-        android:id="@+id/atv_feedback"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:content="我要狂吐槽！"
-        app:subject="意见反馈" />
+        <com.yuqirong.koku.view.SettingsView
+            android:id="@+id/sv_hd_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:setting_subject="加载高清大图" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="#cccccc" />
 
-    <com.yuqirong.koku.view.AboutTextView
-        android:id="@+id/atv_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/selector_about_item"
-        app:content="取消授权"
-        app:subject="注销" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="操作设置"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/Teal_colorPrimary" />
 
-</LinearLayout>
+        <com.yuqirong.koku.view.AboutTextView
+            android:id="@+id/atv_fab_function"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:subject="@string/fab_function" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
+
+        <com.yuqirong.koku.view.AboutTextView
+            android:id="@+id/atv_fab_position"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:subject="@string/fab_position" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
+
+        <com.yuqirong.koku.view.DoubleTextSettingsView
+            android:id="@+id/dsv_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:double_text_setting_content="缓存数据有效期失效后"
+            app:double_text_setting_subject="列表自动刷新" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
+
+        <com.yuqirong.koku.view.SettingsView
+            android:id="@+id/sv_browser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:setting_subject="使用内置浏览器" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
+
+        <com.yuqirong.koku.view.DoubleTextSettingsView
+            android:id="@+id/dsv_vibrator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:double_text_setting_content="内容发送成功后振动反馈"
+            app:double_text_setting_subject="振动反馈" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:text="其他设置"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/Teal_colorPrimary" />
+
+        <com.yuqirong.koku.view.AboutTextView
+            android:id="@+id/atv_clear_cache"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:content="缓存大小20MB"
+            app:subject="清理缓存" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
+
+        <com.yuqirong.koku.view.AboutTextView
+            android:id="@+id/atv_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:content="我要狂吐槽！"
+            app:subject="意见反馈" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="#cccccc" />
+
+        <com.yuqirong.koku.view.AboutTextView
+            android:id="@+id/atv_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_about_item"
+            app:content="取消授权"
+            app:subject="注销" />
+
+    </LinearLayout>
+</ScrollView>

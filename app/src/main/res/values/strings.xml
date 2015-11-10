@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Koku</string>
 
+    <string name="action_send_weibo">发微博</string>
     <string name="action_settings">设置</string>
     <string name="action_search">搜索</string>
     <string name="action_about">关于</string>
+    <string name="action_exit">退出</string>
     <string name="action_remind">提醒</string>
     <string name="action_repost">转发</string>
     <string name="action_share">分享</string>
@@ -91,4 +93,19 @@
     <string name="cancel_auth_fail">取消授权失败</string>
     <string name="confirm_cacel_auth">确定要取消授权吗？</string>
     <string name="feedback_text">#Koku意见反馈# @活得好像一条狗</string>
+    <string name="fab_function">Fab按钮功能</string>
+    <string name="fab_position">Fab按钮位置</string>
+    <array name="fab_function">
+        <item>发微博</item>
+        <item>刷新</item>
+    </array>
+    <array name="fab_position">
+        <item>左侧</item>
+        <item>右侧</item>
+    </array>
+    <array name="font_size">
+        <item>小号字体</item>
+        <item>标准字体</item>
+        <item>大号字体</item>
+    </array>
 </resources>

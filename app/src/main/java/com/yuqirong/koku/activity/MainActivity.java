@@ -3,8 +3,7 @@ package com.yuqirong.koku.activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
+import android.os.*;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -18,10 +17,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -219,6 +221,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
                     CommonUtil.showSnackbar(rootView, R.string.publish_success, getResources().getColor(R.color.Indigo_colorPrimary), Snackbar.LENGTH_LONG, R.string.click_to_refresh, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            mViewPager.setCurrentItem(0,true);
                             ((WeiboTimeLineFragment) item).refreshWeibo();
                         }
                     });
@@ -248,24 +251,44 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
     }
 
     private void setupFloatingActionButtonContent(FloatingActionButton mFloatingActionButton) {
+        //Fab功能
+        final int flag = SharePrefUtil.getInt(this, "fab_function", 0);
+        if (0 == flag) {
+            mFloatingActionButton.setImageResource(R.drawable.ic_create_light);
+        } else {
+            mFloatingActionButton.setImageResource(R.drawable.ic_refresh_light);
+        }
+        // Fab位置
+        final int position = SharePrefUtil.getInt(this, "fab_position", 1);
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionButton.getLayoutParams();
+        if (1 == position) {
+            layoutParams.anchorGravity = Gravity.END|Gravity.BOTTOM|Gravity.RIGHT;
+        } else {
+            layoutParams.anchorGravity = Gravity.START|Gravity.BOTTOM|Gravity.LEFT;
+        }
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 得到状态栏的高度
-                DisplayMetrics dm = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(dm);
-                int topOffset = dm.heightPixels - mCoordinatorLayout.getMeasuredHeight();
+                if (0 == flag) {
+                    // 得到状态栏的高度
+                    DisplayMetrics dm = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(dm);
+                    int topOffset = dm.heightPixels - mCoordinatorLayout.getMeasuredHeight();
 
-                int[] startingLocation = new int[2];
-                view.getLocationOnScreen(startingLocation);
-                startingLocation[0] += view.getWidth() / 2;
-                startingLocation[1] = startingLocation[1] - topOffset + view.getHeight() / 2;
-                Intent intent = new Intent(MainActivity.this, PublishActivity.class);
-                intent.putExtra("type", PublishActivity.SEND_WEIBO);
-                intent.putExtra("isFromFAButton", true);
-                intent.putExtra(PublishActivity.ARG_REVEAL_START_LOCATION, startingLocation);
-                startActivityForResult(intent, SEND_NEW_WEIBO);
-                overridePendingTransition(0, 0);
+                    int[] startingLocation = new int[2];
+                    view.getLocationOnScreen(startingLocation);
+                    startingLocation[0] += view.getWidth() / 2;
+                    startingLocation[1] = startingLocation[1] - topOffset + view.getHeight() / 2;
+                    Intent intent = new Intent(MainActivity.this, PublishActivity.class);
+                    intent.putExtra("type", PublishActivity.SEND_WEIBO);
+                    intent.putExtra("isFromFAButton", true);
+                    intent.putExtra(PublishActivity.ARG_REVEAL_START_LOCATION, startingLocation);
+                    startActivityForResult(intent, SEND_NEW_WEIBO);
+                    overridePendingTransition(0, 0);
+                }else{
+                    Fragment frag = adapter.getItem(mViewPager.getCurrentItem());
+                    ((WeiboTimeLineFragment)frag).refreshWeibo();
+                }
             }
         });
     }
@@ -356,11 +379,21 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
             case R.id.action_remind:
                 RemindActivity.actionStart(MainActivity.this);
                 break;
+            case R.id.action_send_weibo:
+                Intent intent = new Intent();
+                intent.setClass(this, PublishActivity.class);
+                intent.putExtra("type", PublishActivity.SEND_WEIBO);
+                startActivity(intent);
+                break;
             case R.id.action_settings:
                 SettingsActivity.actionStart(MainActivity.this);
                 break;
             case R.id.action_about:
                 AboutActivity.actionStart(MainActivity.this);
+                break;
+            case R.id.action_exit:
+                finish();
+                removeAllActivities();
                 break;
 
         }
@@ -393,5 +426,10 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
     public void updateUI(int unreadCount) {
         String title = String.format(getString(R.string.unread_weibo), unreadCount);
         tv_unread_remind.setText(title);
+    }
+
+    @Override
+    public void updateFab() {
+        setupFloatingActionButtonContent(mFloatingActionButton);
     }
 }

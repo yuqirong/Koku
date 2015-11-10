@@ -85,6 +85,7 @@ public class CheckUnreadService extends Service {
                             LogUtils.i("微博未读数：" + status_count);
                             if (status_count > 0) {
                                 Intent intent = new Intent();
+                                intent.putExtra("flag", 0);
                                 intent.putExtra("unread_count", status_count);
                                 intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME);
                                 sendBroadcast(intent);

@@ -1,5 +1,6 @@
 package com.yuqirong.koku.fragment;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -18,10 +19,12 @@ import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.AuthorizeActivity;
 import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.view.AboutTextView;
+import com.yuqirong.koku.view.DoubleTextSettingsView;
 import com.yuqirong.koku.view.SettingsView;
 
 import org.json.JSONException;
@@ -33,16 +36,44 @@ import org.json.JSONObject;
 public class SettingsFragment extends BaseFragment {
 
     private SettingsView sv_browser;
-    private SettingsView sv_vibrator;
-    private CharSequence[] charSequence = new CharSequence[]{"小号字体", "标准字体", "大号字体"};
+    private DoubleTextSettingsView dsv_vibrator;
+    private DoubleTextSettingsView dsv_refresh;
+    private SettingsView sv_remark;
+    private String[] fontSizeArray;
+    private String[] fabStringArray;
+    private String[] fabPositionStringArray;
     private AboutTextView atv_font_size;
+    private AboutTextView atv_fab_function;
+    private AboutTextView atv_fab_position;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fontSizeArray = context.getResources().getStringArray(R.array.font_size);
+        fabStringArray = context.getResources().getStringArray(R.array.fab_function);
+        fabPositionStringArray = context.getResources().getStringArray(R.array.fab_position);
+    }
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        //是否内置浏览器
         sv_browser.setChecked(SharePrefUtil.getBoolean(context, "built-in_browser", true));
-        sv_vibrator.setChecked(SharePrefUtil.getBoolean(context, "vibrate_feedback", true));
+        //是否振动反馈
+        dsv_vibrator.setChecked(SharePrefUtil.getBoolean(context, "vibrate_feedback", true));
+        //用户名备注
+        sv_remark.setChecked(SharePrefUtil.getBoolean(context, "user_remark", true));
+        //字体大小
         int selectedSize = SharePrefUtil.getInt(context, "font_size", 1);
-        atv_font_size.setContent(charSequence[selectedSize].toString());
+        atv_font_size.setContent(fontSizeArray[selectedSize].toString());
+        //列表自动刷新
+        dsv_refresh.setChecked(SharePrefUtil.getBoolean(context, "timeline_refresh", true));
+        //fab功能
+        int fabFunction = SharePrefUtil.getInt(context, "fab_function", 0);
+        atv_fab_function.setContent(fabStringArray[fabFunction].toString());
+        //fab位置
+        int fabPosition = SharePrefUtil.getInt(context, "fab_position", 0);
+        atv_fab_position.setContent(fabPositionStringArray[fabPosition].toString());
     }
 
     @Override
@@ -50,23 +81,39 @@ public class SettingsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_settings, null);
         AboutTextView atv_logout = (AboutTextView) view.findViewById(R.id.atv_logout);
         AboutTextView atv_feedback = (AboutTextView) view.findViewById(R.id.atv_feedback);
+        atv_fab_position = (AboutTextView) view.findViewById(R.id.atv_fab_position);
+        atv_fab_function = (AboutTextView) view.findViewById(R.id.atv_fab_function);
         sv_browser = (SettingsView) view.findViewById(R.id.sv_browser);
-        sv_vibrator = (SettingsView) view.findViewById(R.id.sv_vibrator);
+        dsv_refresh = (DoubleTextSettingsView) view.findViewById(R.id.dsv_refresh);
+        dsv_vibrator = (DoubleTextSettingsView) view.findViewById(R.id.dsv_vibrator);
         atv_font_size = (AboutTextView) view.findViewById(R.id.atv_font_size);
-
+        sv_remark = (SettingsView) view.findViewById(R.id.sv_remark);
+        sv_remark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharePrefUtil.saveBoolean(context, "user_remark", isChecked);
+            }
+        });
         sv_browser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharePrefUtil.saveBoolean(context, "built-in_browser", isChecked);
             }
         });
-
-        sv_vibrator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        dsv_vibrator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharePrefUtil.saveBoolean(context, "vibrate_feedback", isChecked);
             }
         });
+        dsv_refresh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharePrefUtil.saveBoolean(context, "timeline_refresh", isChecked);
+            }
+        });
+        atv_fab_position.setOnClickListener(listener);
+        atv_fab_function.setOnClickListener(listener);
         atv_font_size.setOnClickListener(listener);
         atv_feedback.setOnClickListener(listener);
         atv_logout.setOnClickListener(listener);
@@ -86,18 +133,89 @@ public class SettingsFragment extends BaseFragment {
                 case R.id.atv_font_size:
                     selectFontSize();
                     break;
+                case R.id.atv_fab_function:
+                    selectFabFunction();
+                    break;
+                case R.id.atv_fab_position:
+                    selectFabPosition();
             }
         }
 
     };
 
+    private void selectFabPosition() {
+        final int fabPosition = SharePrefUtil.getInt(context, "fab_position", 1);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.fab_position).setSingleChoiceItems(R.array.fab_position, fabPosition, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharePrefUtil.saveInt(context, "fab_position", which);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharePrefUtil.saveInt(context, "fab_position", fabPosition);
+            }
+        }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int fabPosition = SharePrefUtil.getInt(context, "fab_position", 0);
+                atv_fab_position.setContent(fabPositionStringArray[fabPosition]);
+                Intent intent = new Intent();
+                intent.putExtra("flag", 1);
+                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME);
+                context.sendBroadcast(intent);
+            }
+        }).setCancelable(true).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                SharePrefUtil.saveInt(context, "fab_position", fabPosition);
+            }
+        }).create().show();
+    }
+
+    //选择fab功能
+    private void selectFabFunction() {
+        final int fabFunction = SharePrefUtil.getInt(context, "fab_function", 0);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.fab_function).setSingleChoiceItems(R.array.fab_function, fabFunction, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharePrefUtil.saveInt(context, "fab_function", which);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharePrefUtil.saveInt(context, "fab_function", fabFunction);
+            }
+        }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int fabFunction = SharePrefUtil.getInt(context, "fab_function", 0);
+                atv_fab_function.setContent(fabStringArray[fabFunction]);
+                Intent intent = new Intent();
+                intent.putExtra("flag", 1);
+                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME);
+                context.sendBroadcast(intent);
+            }
+        }).setCancelable(true).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                SharePrefUtil.saveInt(context, "fab_function", fabFunction);
+            }
+        }).create().show();
+    }
+
+    //选择字体大小
     private void selectFontSize() {
         //可以通过getResources().updateConfiguration修改fontScale值，
         //会影响全部使用sp作单位的缩放系数
-        int selectedSize = SharePrefUtil.getInt(context, "font_size", 1);
+        final int selectedSize = SharePrefUtil.getInt(context, "font_size", 1);
         final Configuration configuration = new Configuration();
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setSingleChoiceItems(charSequence, selectedSize,
+        builder.setTitle(R.string.font_size).setSingleChoiceItems(R.array.font_size, selectedSize,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -112,18 +230,28 @@ public class SettingsFragment extends BaseFragment {
                                 configuration.fontScale = 1.2f;
                                 break;
                         }
-                        context.getResources().updateConfiguration(configuration, null);
                         SharePrefUtil.saveInt(context, "font_size", which);
                     }
                 });
-        builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SharePrefUtil.saveInt(context, "font_size", selectedSize);
+            }
+        }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                context.getResources().updateConfiguration(configuration, null);
                 int selectedSize = SharePrefUtil.getInt(context, "font_size", 1);
-                atv_font_size.setContent(charSequence[selectedSize].toString());
+                atv_font_size.setContent(fontSizeArray[selectedSize].toString());
             }
         });
-        builder.setCancelable(true).create().show();
+        builder.setCancelable(true).setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                SharePrefUtil.saveInt(context, "font_size", selectedSize);
+            }
+        }).create().show();
     }
 
     //意见反馈

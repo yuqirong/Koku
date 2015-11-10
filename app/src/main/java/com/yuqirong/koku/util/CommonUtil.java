@@ -76,17 +76,17 @@ public class CommonUtil {
     }
 
     public static void createItemAlertDialog(Context context, CharSequence[] items,
-                                             DialogInterface.OnClickListener listener,boolean cancelable) {
+                                             DialogInterface.OnClickListener listener, boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setItems(items, listener).setCancelable(cancelable).create().show();
     }
 
-    public static void createSingleChoiceAlertDialog(Context context, CharSequence[] items, int checkedId,
-                                                     DialogInterface.OnClickListener singleChoiceItemListener,String negativeMessage,
+    public static void createSingleChoiceAlertDialog(Context context, int itemsId, int checkedId,
+                                                     DialogInterface.OnClickListener singleChoiceItemListener, String negativeMessage,
                                                      DialogInterface.OnClickListener negativeListener, String positiveMessage,
                                                      DialogInterface.OnClickListener positiveListener, boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setSingleChoiceItems(items, checkedId, singleChoiceItemListener)
+        builder.setSingleChoiceItems(itemsId, checkedId, singleChoiceItemListener)
                 .setNegativeButton(negativeMessage, negativeListener).setPositiveButton(positiveMessage, positiveListener)
                 .setCancelable(cancelable).create().show();
     }

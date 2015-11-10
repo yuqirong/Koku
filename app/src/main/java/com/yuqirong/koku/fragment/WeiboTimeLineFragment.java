@@ -106,8 +106,10 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private void getCache() {
         String cache = aCache.getAsString(TIME_LINE_CACHE_NAME);
         if (TextUtils.isEmpty(cache)) {
-            //若没有缓存，则从网络中读取新数据
-            getDataFromServer();
+            if(SharePrefUtil.getBoolean(context,"timeline_refresh",true)){
+                //若没有缓存，则从网络中读取新数据
+                getDataFromServer();
+            }
             return;
         }
         try {

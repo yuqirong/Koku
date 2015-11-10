@@ -90,8 +90,11 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         //创建监听器实例
         viewHolder.onMenuItemClickListener = new MyOnMenuItemClickListener(position);
         viewHolder.onClickListener = new WeiboWidghtOnClickListener(position, viewHolder.onMenuItemClickListener);
-
-        viewHolder.tv_screen_name.setText(status.user.name);
+        if (SharePrefUtil.getBoolean(context, "user_remark", true)) {
+            viewHolder.tv_screen_name.setText(status.user.name);
+        } else {
+            viewHolder.tv_screen_name.setText(status.user.screen_name);
+        }
         imageLoader.displayImage(status.user.profile_image_url, viewHolder.iv_avatar, options);
         viewHolder.tv_time.setText(DateUtils.getWeiboDate(status.created_at));
         viewHolder.tv_device.setText(Html.fromHtml(status.source));
@@ -266,7 +269,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
             LogUtils.i(status + status.user.screen_name);
             switch (item.getItemId()) {
                 case R.id.overflow_share:
-                    CommonUtil.shareWeibo(context,status);
+                    CommonUtil.shareWeibo(context, status);
                     break;
                 case R.id.overflow_favorite:
                     processFavorite();

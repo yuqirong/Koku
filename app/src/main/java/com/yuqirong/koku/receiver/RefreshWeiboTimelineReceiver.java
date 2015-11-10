@@ -24,14 +24,20 @@ public class RefreshWeiboTimelineReceiver extends BroadcastReceiver {
          * 接受到广播后更新ui
          */
         void updateUI(int unreadCount);
+        void updateFab();
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         LogUtils.i("broadcast receiver received");
+        int flag = intent.getIntExtra("flag",0); //如果是0，则是unreadcount，是1，则是updateFab
         if(listener!=null){
-            int unreadCount = intent.getIntExtra("unread_count",0);
-            listener.updateUI(unreadCount);
+            if(flag == 0) {
+                int unreadCount = intent.getIntExtra("unread_count", 0);
+                listener.updateUI(unreadCount);
+            }else if(flag == 1){
+                listener.updateFab();
+            }
         }
     }
 
