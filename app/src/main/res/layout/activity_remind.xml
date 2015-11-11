@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/layout_toolbar" />
+    <include layout="@layout/layout_tab_toolbar" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mViewPager"

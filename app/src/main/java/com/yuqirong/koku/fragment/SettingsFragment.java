@@ -11,7 +11,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -36,6 +38,7 @@ import org.json.JSONObject;
 public class SettingsFragment extends BaseFragment {
 
     private SettingsView sv_browser;
+    private SettingsView sv_hd_pic;
     private DoubleTextSettingsView dsv_vibrator;
     private DoubleTextSettingsView dsv_refresh;
     private SettingsView sv_remark;
@@ -74,6 +77,8 @@ public class SettingsFragment extends BaseFragment {
         //fab位置
         int fabPosition = SharePrefUtil.getInt(context, "fab_position", 0);
         atv_fab_position.setContent(fabPositionStringArray[fabPosition].toString());
+        //加载高清大图
+        sv_hd_pic.setChecked(SharePrefUtil.getBoolean(context, "load_hd_pic", false));
     }
 
     @Override
@@ -88,30 +93,13 @@ public class SettingsFragment extends BaseFragment {
         dsv_vibrator = (DoubleTextSettingsView) view.findViewById(R.id.dsv_vibrator);
         atv_font_size = (AboutTextView) view.findViewById(R.id.atv_font_size);
         sv_remark = (SettingsView) view.findViewById(R.id.sv_remark);
-        sv_remark.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharePrefUtil.saveBoolean(context, "user_remark", isChecked);
-            }
-        });
-        sv_browser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharePrefUtil.saveBoolean(context, "built-in_browser", isChecked);
-            }
-        });
-        dsv_vibrator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharePrefUtil.saveBoolean(context, "vibrate_feedback", isChecked);
-            }
-        });
-        dsv_refresh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharePrefUtil.saveBoolean(context, "timeline_refresh", isChecked);
-            }
-        });
+        sv_hd_pic = (SettingsView) view.findViewById(R.id.sv_hd_pic);
+
+        sv_hd_pic.setOnCheckedChangeListener(onCheckedChangeListener);
+        sv_remark.setOnCheckedChangeListener(onCheckedChangeListener);
+        sv_browser.setOnCheckedChangeListener(onCheckedChangeListener);
+        dsv_vibrator.setOnCheckedChangeListener(onCheckedChangeListener);
+        dsv_refresh.setOnCheckedChangeListener(onCheckedChangeListener);
         atv_fab_position.setOnClickListener(listener);
         atv_fab_function.setOnClickListener(listener);
         atv_font_size.setOnClickListener(listener);
@@ -119,6 +107,31 @@ public class SettingsFragment extends BaseFragment {
         atv_logout.setOnClickListener(listener);
         return view;
     }
+
+    CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            ViewParent parent = buttonView.getParent().getParent();
+            ViewGroup viewGroup = (ViewGroup) parent;
+            switch (viewGroup.getId()){
+                case R.id.sv_browser:
+                    SharePrefUtil.saveBoolean(context, "built-in_browser", isChecked);
+                    break;
+                case R.id.dsv_vibrator:
+                    SharePrefUtil.saveBoolean(context, "vibrate_feedback", isChecked);
+                    break;
+                case R.id.dsv_refresh:
+                    SharePrefUtil.saveBoolean(context, "timeline_refresh", isChecked);
+                    break;
+                case R.id.sv_remark:
+                    SharePrefUtil.saveBoolean(context, "user_remark", isChecked);
+                    break;
+                case R.id.sv_hd_pic:
+                    SharePrefUtil.saveBoolean(context, "load_hd_pic", isChecked);
+                    break;
+            }
+        }
+    };
 
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
@@ -143,6 +156,7 @@ public class SettingsFragment extends BaseFragment {
 
     };
 
+    //选择fab位置
     private void selectFabPosition() {
         final int fabPosition = SharePrefUtil.getInt(context, "fab_position", 1);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

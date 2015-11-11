@@ -8,6 +8,7 @@
     <string name="action_exit">退出</string>
     <string name="action_remind">提醒</string>
     <string name="action_repost">转发</string>
+    <string name="action_save">保存</string>
     <string name="action_share">分享</string>
     <string name="action_favorite">收藏</string>
     <string name="action_cancel_favorite">取消收藏</string>
@@ -95,6 +96,7 @@
     <string name="feedback_text">#Koku意见反馈# @活得好像一条狗</string>
     <string name="fab_function">Fab按钮功能</string>
     <string name="fab_position">Fab按钮位置</string>
+    <string name="pic_num">%1$d/%2$d</string>
     <array name="fab_function">
         <item>发微博</item>
         <item>刷新</item>

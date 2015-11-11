@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/activity_bg_color">
 
-    <include layout="@layout/layout_toolbar" />
+    <include layout="@layout/layout_tab_toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"

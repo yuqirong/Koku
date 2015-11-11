@@ -244,7 +244,6 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
     }
 
     private void setupTabLayoutContent(TabLayout mTabLayout) {
-        mTabLayout.setVisibility(View.VISIBLE);
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
         mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
         mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(android.R.color.white));

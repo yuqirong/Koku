@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.LogUtils;
+import com.yuqirong.koku.util.SharePrefUtil;
 
 import java.util.List;
 
@@ -48,8 +49,13 @@ public class ImagePagerAdapter extends PagerAdapter {
         PhotoView mPhotoView = (PhotoView) view.findViewById(R.id.mPhotoView);
         mPhotoView.enable();
         String url = list.get(position);
-        url = url.replace("thumbnail", "bmiddle");
-        LogUtils.i("中等尺寸图片地址 ：" + url);
+        if(SharePrefUtil.getBoolean(context,"load_hd_pic",false)) {
+            url = url.replace("thumbnail", "large");
+            LogUtils.i("原图尺寸图片地址 ：" + url);
+        }else{
+            url = url.replace("thumbnail", "bmiddle");
+            LogUtils.i("中等尺寸图片地址 ：" + url);
+        }
         imageLoader.displayImage(url, mPhotoView, options);
         container.addView(view);
         return view;
