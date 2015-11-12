@@ -26,7 +26,9 @@ import com.android.volley.VolleyError;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.activity.ImageBrowserActivity;
 import com.yuqirong.koku.activity.PublishActivity;
+import com.yuqirong.koku.activity.UserDetailsActivity;
 import com.yuqirong.koku.adapter.LoadMoreAdapter;
 import com.yuqirong.koku.adapter.WeiboCommentAdapter;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
@@ -315,7 +317,11 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     }
 
     private void initWeiboData(Status status) {
-        tv_screen_name.setText(status.user.name);
+        if (SharePrefUtil.getBoolean(context, "user_remark", true)) {
+            tv_screen_name.setText(status.user.name);
+        } else {
+            tv_screen_name.setText(status.user.screen_name);
+        }
         imageLoader.displayImage(status.user.profile_image_url, iv_avatar, options);
         tv_time.setText(DateUtils.getWeiboDate(status.created_at));
         tv_device.setText(Html.fromHtml(status.source));
@@ -358,7 +364,23 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         tv_favorite.setText(CommonUtil.getNumString(status.attitudes_count));
         rb_comment.setOnCheckedChangeListener(onCheckedChangeListener);
         rb_repost.setOnCheckedChangeListener(onCheckedChangeListener);
+
+        tv_screen_name.setOnClickListener(onClickListener);
+        iv_avatar.setOnClickListener(onClickListener);
     }
+
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.tv_screen_name: //点击用户昵称
+
+                case R.id.iv_avatar: //点击用户头像事件
+                    UserDetailsActivity.actionStart(context, status.user.screen_name);
+                    break;
+            }
+        }
+    };
 
     // 处理被转发的View
     private void processRetweeted() {
@@ -386,11 +408,22 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.retweeted_status.comments_count));
     }
 
-    private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, List<Pic_urls> pic_urls) {
+    private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, final List<Pic_urls> pic_urls) {
         rl.setVisibility(View.VISIBLE);
         for (int i = 0; i < iv_arrays.size(); i++) {
             if (i < pic_urls.size()) {
+                final int position = i;
                 iv_arrays.get(i).setVisibility(View.VISIBLE);
+                iv_arrays.get(i).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> urls = new ArrayList();
+                        for (Pic_urls url : pic_urls) {
+                            urls.add(url.thumbnail_pic);
+                        }
+                        ImageBrowserActivity.actionStart(context, urls, position);
+                    }
+                });
                 imageLoader.displayImage(pic_urls.get(i).thumbnail_pic, iv_arrays.get(i), ninepic_options);
             } else {
                 iv_arrays.get(i).setVisibility(View.GONE);

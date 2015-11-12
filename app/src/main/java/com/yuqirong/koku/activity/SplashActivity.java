@@ -27,9 +27,9 @@ public class SplashActivity extends BaseActivity {
             SharePrefUtil.saveBoolean(this, "vibrate_feedback", true); //是否使用振动反馈，默认是
             SharePrefUtil.saveBoolean(this, "user_remark", true); //是否显示备注名，默认是
             SharePrefUtil.saveBoolean(this, "timeline_refresh", true); //是否缓存失效后自动刷新，默认是
-            SharePrefUtil.saveInt(this, "font_size", 0); //字体大小，默认是标准大小
+            SharePrefUtil.saveInt(this, "font_size", 1); //字体大小，默认是标准大小
             SharePrefUtil.saveInt(this, "fab_function", 0); //fab按钮功能，默认是发微博
-            SharePrefUtil.saveInt(this, "fab_function", 1); //fab按钮位置，默认是右侧
+            SharePrefUtil.saveInt(this, "fab_position", 1); //fab按钮位置，默认是右侧
             SharePrefUtil.saveBoolean(this, "load_hd_pic", false); //加载高清大图，默认是false
             SharePrefUtil.saveBoolean(this, "inited", true);
         }

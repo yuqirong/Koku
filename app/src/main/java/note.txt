@@ -1,6 +1,7 @@
 设置：
 
-清理缓存
+清理缓存                        done
+显示大图                        done
 自动刷新，缓存失效后              done
 fabbutton功能                  done
 fabbutton按钮位置               done
@@ -13,11 +14,11 @@ bug:
 评论的列表
 
 todo:
+关闭屏幕时禁止查询新微博           done
+保存图片
 发带图片的微博
 评论和@
-新微博提醒
-
-微博详情里的图片点击事件
+新微博提醒                       done
 drawerlayout里的item的列表要有末尾记号
 
 
@@ -28,7 +29,7 @@ picSelect
 Acache
 SwipeBackLayout
 PhotoView
-
+CircleImageView
 
 市场：
 1.豌豆荚

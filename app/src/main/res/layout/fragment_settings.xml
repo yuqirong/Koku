@@ -147,8 +147,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_about_item"
-            app:content="缓存大小20MB"
-            app:subject="清理缓存" />
+            app:content="@string/clear_cache"
+            app:subject="清理图片缓存" />
 
         <View
             android:layout_width="match_parent"

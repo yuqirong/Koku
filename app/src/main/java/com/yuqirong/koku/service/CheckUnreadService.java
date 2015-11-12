@@ -33,6 +33,8 @@ import java.util.TimerTask;
 public class CheckUnreadService extends Service {
 
     private Timer mTimer;
+    public static final String START_TIMER = "start_timer";
+    public static final String STOP_TIMER = "stop_timer";
 
     @Nullable
     @Override
@@ -41,8 +43,11 @@ public class CheckUnreadService extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
+        mTimer.purge();
+        mTimer = null;
     }
 
     @Override
@@ -53,16 +58,25 @@ public class CheckUnreadService extends Service {
 //        Intent i = new Intent(this, RefreshWeiboTimelineReceiver.class);
 //        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
 //        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
-        int anHour = 60 * 1000; //60s
-        if (null == mTimer) {
-            mTimer = new Timer();
-        }
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                checkUpdate();
+        String action = intent.getAction();
+        if (STOP_TIMER.equals(action)) {
+            if (mTimer != null) {
+                mTimer.cancel();
+                mTimer.purge();
+                mTimer = null;
             }
-        }, 0, anHour);
+        } else if (START_TIMER.equals(action)) {
+            if (mTimer == null) {
+                mTimer = new Timer();
+            }
+            int anHour = 60 * 1000; //60s
+            mTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    checkUpdate();
+                }
+            }, 0, anHour);
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -85,9 +99,8 @@ public class CheckUnreadService extends Service {
                             LogUtils.i("微博未读数：" + status_count);
                             if (status_count > 0) {
                                 Intent intent = new Intent();
-                                intent.putExtra("flag", 0);
                                 intent.putExtra("unread_count", status_count);
-                                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME);
+                                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_UNREAD_UPDATE);
                                 sendBroadcast(intent);
                             }
                         } catch (JSONException e) {

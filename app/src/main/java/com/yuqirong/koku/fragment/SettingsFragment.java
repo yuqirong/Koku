@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.AuthorizeActivity;
 import com.yuqirong.koku.activity.PublishActivity;
@@ -31,6 +32,8 @@ import com.yuqirong.koku.view.SettingsView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * Created by Administrator on 2015/11/4.
@@ -48,6 +51,8 @@ public class SettingsFragment extends BaseFragment {
     private AboutTextView atv_font_size;
     private AboutTextView atv_fab_function;
     private AboutTextView atv_fab_position;
+    private AboutTextView atv_clear_cache;
+    private ImageLoader mImageLoader;
 
 
     @Override
@@ -56,6 +61,7 @@ public class SettingsFragment extends BaseFragment {
         fontSizeArray = context.getResources().getStringArray(R.array.font_size);
         fabStringArray = context.getResources().getStringArray(R.array.fab_function);
         fabPositionStringArray = context.getResources().getStringArray(R.array.fab_position);
+        mImageLoader = ImageLoader.getInstance();
     }
 
     @Override
@@ -75,10 +81,27 @@ public class SettingsFragment extends BaseFragment {
         int fabFunction = SharePrefUtil.getInt(context, "fab_function", 0);
         atv_fab_function.setContent(fabStringArray[fabFunction].toString());
         //fab位置
-        int fabPosition = SharePrefUtil.getInt(context, "fab_position", 0);
+        int fabPosition = SharePrefUtil.getInt(context, "fab_position", 1);
         atv_fab_position.setContent(fabPositionStringArray[fabPosition].toString());
         //加载高清大图
         sv_hd_pic.setChecked(SharePrefUtil.getBoolean(context, "load_hd_pic", false));
+        //清除图片缓存
+        File directory = mImageLoader.getDiskCache().getDirectory();
+        double size = getCacheSize(directory);
+        String content = String.format(context.getString(R.string.clear_cache), String.valueOf(size));
+        atv_clear_cache.setContent(content);
+    }
+
+    private double getCacheSize(File directory) {
+        double size = 0d;
+        if (directory.isDirectory()) {
+            File[] children = directory.listFiles();
+            for (File f : children)
+                size += f.length();
+        }
+        size = Math.round(size * 100 / (1024 * 1024));
+        size /= 100;
+        return size;
     }
 
     @Override
@@ -94,6 +117,7 @@ public class SettingsFragment extends BaseFragment {
         atv_font_size = (AboutTextView) view.findViewById(R.id.atv_font_size);
         sv_remark = (SettingsView) view.findViewById(R.id.sv_remark);
         sv_hd_pic = (SettingsView) view.findViewById(R.id.sv_hd_pic);
+        atv_clear_cache = (AboutTextView) view.findViewById(R.id.atv_clear_cache);
 
         sv_hd_pic.setOnCheckedChangeListener(onCheckedChangeListener);
         sv_remark.setOnCheckedChangeListener(onCheckedChangeListener);
@@ -105,6 +129,7 @@ public class SettingsFragment extends BaseFragment {
         atv_font_size.setOnClickListener(listener);
         atv_feedback.setOnClickListener(listener);
         atv_logout.setOnClickListener(listener);
+        atv_clear_cache.setOnClickListener(listener);
         return view;
     }
 
@@ -113,7 +138,7 @@ public class SettingsFragment extends BaseFragment {
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             ViewParent parent = buttonView.getParent().getParent();
             ViewGroup viewGroup = (ViewGroup) parent;
-            switch (viewGroup.getId()){
+            switch (viewGroup.getId()) {
                 case R.id.sv_browser:
                     SharePrefUtil.saveBoolean(context, "built-in_browser", isChecked);
                     break;
@@ -151,10 +176,27 @@ public class SettingsFragment extends BaseFragment {
                     break;
                 case R.id.atv_fab_position:
                     selectFabPosition();
+                    break;
+                case R.id.atv_clear_cache:
+                    clearCache();
+                    break;
             }
         }
 
     };
+
+    //清除缓存
+    private void clearCache() {
+        CommonUtil.createMessageAlertDialog(context, R.string.tip, R.string.confirm_clear_cache, R.string.cancel, null, R.string.confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mImageLoader.getDiskCache().clear();
+                double size = getCacheSize(mImageLoader.getDiskCache().getDirectory());
+                String content = String.format(context.getString(R.string.clear_cache), String.valueOf(size));
+                atv_clear_cache.setContent(content);
+            }
+        }, true);
+    }
 
     //选择fab位置
     private void selectFabPosition() {
@@ -177,8 +219,7 @@ public class SettingsFragment extends BaseFragment {
                 int fabPosition = SharePrefUtil.getInt(context, "fab_position", 0);
                 atv_fab_position.setContent(fabPositionStringArray[fabPosition]);
                 Intent intent = new Intent();
-                intent.putExtra("flag", 1);
-                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME);
+                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FAB_CHANGE);
                 context.sendBroadcast(intent);
             }
         }).setCancelable(true).setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -211,7 +252,7 @@ public class SettingsFragment extends BaseFragment {
                 atv_fab_function.setContent(fabStringArray[fabFunction]);
                 Intent intent = new Intent();
                 intent.putExtra("flag", 1);
-                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME);
+                intent.setAction(RefreshWeiboTimelineReceiver.INTENT_FAB_CHANGE);
                 context.sendBroadcast(intent);
             }
         }).setCancelable(true).setOnCancelListener(new DialogInterface.OnCancelListener() {

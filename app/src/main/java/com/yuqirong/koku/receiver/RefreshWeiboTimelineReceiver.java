@@ -12,30 +12,44 @@ import com.yuqirong.koku.util.LogUtils;
  */
 public class RefreshWeiboTimelineReceiver extends BroadcastReceiver {
 
-    public static final String INTENT_FILTER_NAME = "com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver";
+    public static final String INTENT_UNREAD_UPDATE = "com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver.update_unread";
+    public static final String INTENT_FAB_CHANGE = "com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver.fab_change";
+
     private OnUpdateUIListener listener;
 
     public void setOnUpdateUIListener(OnUpdateUIListener listener) {
         this.listener = listener;
     }
 
-    public interface OnUpdateUIListener{
+    public interface OnUpdateUIListener {
         /**
          * 接受到广播后更新ui
          */
         void updateUI(int unreadCount);
+
         void updateFab();
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogUtils.i("broadcast receiver received");
-        int flag = intent.getIntExtra("flag",0); //如果是0，则是unreadcount，是1，则是updateFab
-        if(listener!=null){
-            if(flag == 0) {
+        String action = intent.getAction();
+        if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+            LogUtils.i("broadcast receiver received : Screen Off");
+            Intent it = new Intent(context, CheckUnreadService.class);
+            it.setAction(CheckUnreadService.STOP_TIMER);
+            context.startService(it);
+        } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
+            LogUtils.i("broadcast receiver received : Screen Unlock");
+            Intent it = new Intent(context, CheckUnreadService.class);
+            it.setAction(CheckUnreadService.START_TIMER);
+            context.startService(it);
+        } else if (INTENT_UNREAD_UPDATE.equals(action)) {
+            if (listener != null) {
                 int unreadCount = intent.getIntExtra("unread_count", 0);
                 listener.updateUI(unreadCount);
-            }else if(flag == 1){
+            }
+        } else if (INTENT_FAB_CHANGE.equals(action)) {
+            if (listener != null) {
                 listener.updateFab();
             }
         }

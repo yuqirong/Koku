@@ -75,6 +75,13 @@ public class CommonUtil {
         builder.setTitle(title).setMessage(message).setNegativeButton(negativeMessage, negativeListener).setPositiveButton(positiveMessage, positiveListener).setCancelable(cancelable).create().show();
     }
 
+    public static void createMessageAlertDialog(Context context, int titleId, int messageId,
+                                                int negativeMessageId, DialogInterface.OnClickListener negativeListener,
+                                                int positiveMessageId, DialogInterface.OnClickListener positiveListener, boolean cancelable) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(titleId).setMessage(messageId).setNegativeButton(negativeMessageId, negativeListener).setPositiveButton(positiveMessageId, positiveListener).setCancelable(cancelable).create().show();
+    }
+
     public static void createItemAlertDialog(Context context, CharSequence[] items,
                                              DialogInterface.OnClickListener listener, boolean cancelable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);

@@ -115,5 +115,13 @@ public class AppConstant {
     /**
      * 授权回收接口，帮助开发者主动取消用户的授权。
      */
-    public static final String OAUTH2_REVOKEOAUTH2 = "https://api.weibo.com/oauth2/revokeoauth2";
+    public static final String OAUTH2_REVOKEOAUTH2_URL = "https://api.weibo.com/oauth2/revokeoauth2";
+    /**
+     * 获取最新的提到当前登录用户的评论，即@我的评论
+     */
+    public static final String COMMENTS_MENTIONS_URL = "https://api.weibo.com/2/comments/mentions.json";
+    /**
+     * 获取当前登录用户所接收到的评论列表
+     */
+    public static final String COMMENTS_TO_ME_URL = "https://api.weibo.com/2/comments/to_me.json";
 }

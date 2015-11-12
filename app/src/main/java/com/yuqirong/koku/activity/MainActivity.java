@@ -53,22 +53,11 @@ import java.util.Map;
  */
 public class MainActivity extends BaseActivity implements RefreshWeiboTimelineReceiver.OnUpdateUIListener {
 
-    /**
-     * 抽屉
-     */
-    private DrawerLayout mDrawerLayout;
-    /**
-     * 在ActionBar上的抽屉按钮
-     */
-    private ActionBarDrawerToggle toggle;
-
+    private DrawerLayout mDrawerLayout; //抽屉
+    private ActionBarDrawerToggle toggle; //在ActionBar上的抽屉按钮
     private Toolbar mToolbar;
-
     private TabLayout mTabLayout;
-    /**
-     * 判断DrawerLayout是否打开
-     */
-    private boolean isDrawerOpened = false;
+    private boolean isDrawerOpened = false; //判断DrawerLayout是否打开
 
     private FloatingActionButton mFloatingActionButton;
     private Handler handler = new Handler();
@@ -87,11 +76,21 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
 
     @Override
     protected void initData(Bundle savedInstanceState) {
+        //检查token是否过期
         checkTokenExpireIn();
-        startService(new Intent(MainActivity.this, CheckUnreadService.class));
+        //开启查询未读微博的service
+        Intent intent = new Intent(MainActivity.this, CheckUnreadService.class);
+        intent.setAction(CheckUnreadService.START_TIMER);
+        startService(intent);
+        //注册广播，用于监听屏幕开启，屏幕关闭，以及未读微博的更新提醒
         receiver = new RefreshWeiboTimelineReceiver();
         receiver.setOnUpdateUIListener(this);
-        registerReceiver(receiver, new IntentFilter(RefreshWeiboTimelineReceiver.INTENT_FILTER_NAME));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(RefreshWeiboTimelineReceiver.INTENT_UNREAD_UPDATE); //更新未读
+        filter.addAction(RefreshWeiboTimelineReceiver.INTENT_FAB_CHANGE); //改变fab
+        filter.addAction(Intent.ACTION_SCREEN_OFF); //关闭屏幕
+        filter.addAction(Intent.ACTION_USER_PRESENT); //解锁屏幕
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -221,7 +220,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
                     CommonUtil.showSnackbar(rootView, R.string.publish_success, getResources().getColor(R.color.Indigo_colorPrimary), Snackbar.LENGTH_LONG, R.string.click_to_refresh, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mViewPager.setCurrentItem(0,true);
+                            mViewPager.setCurrentItem(0, true);
                             ((WeiboTimeLineFragment) item).refreshWeibo();
                         }
                     });
@@ -261,9 +260,9 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
         final int position = SharePrefUtil.getInt(this, "fab_position", 1);
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mFloatingActionButton.getLayoutParams();
         if (1 == position) {
-            layoutParams.anchorGravity = Gravity.END|Gravity.BOTTOM|Gravity.RIGHT;
+            layoutParams.anchorGravity = Gravity.END | Gravity.BOTTOM | Gravity.RIGHT;
         } else {
-            layoutParams.anchorGravity = Gravity.START|Gravity.BOTTOM|Gravity.LEFT;
+            layoutParams.anchorGravity = Gravity.START | Gravity.BOTTOM | Gravity.LEFT;
         }
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,9 +283,9 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
                     intent.putExtra(PublishActivity.ARG_REVEAL_START_LOCATION, startingLocation);
                     startActivityForResult(intent, SEND_NEW_WEIBO);
                     overridePendingTransition(0, 0);
-                }else{
+                } else {
                     Fragment frag = adapter.getItem(mViewPager.getCurrentItem());
-                    ((WeiboTimeLineFragment)frag).refreshWeibo();
+                    ((WeiboTimeLineFragment) frag).refreshWeibo();
                 }
             }
         });

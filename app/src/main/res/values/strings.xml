@@ -97,6 +97,8 @@
     <string name="fab_function">Fab按钮功能</string>
     <string name="fab_position">Fab按钮位置</string>
     <string name="pic_num">%1$d/%2$d</string>
+    <string name="clear_cache">缓存大小%1$sMB</string>
+    <string name="confirm_clear_cache">是否清除图片缓存？</string>
     <array name="fab_function">
         <item>发微博</item>
         <item>刷新</item>
