@@ -115,13 +115,13 @@ public class UserDetailsActivity extends SwipeBackActivity {
 
     private void initHeaderViewData() {
         if (user != null) {
-            imageLoader.displayImage(user.avatar_large, civ_avatar, options);
-            imageLoader.displayImage(user.cover_image_phone, iv_cover, options);
-            tv_screen_name.setText(user.screen_name);
+            imageLoader.displayImage(user.getAvatar_large(), civ_avatar, options);
+            imageLoader.displayImage(user.getCover_image_phone(), iv_cover, options);
+            tv_screen_name.setText(user.getScreen_name());
             Drawable drawable = null;
-            if ("m".equals(user.gender)) {
+            if ("m".equals(user.getGender())) {
                 drawable = getResources().getDrawable(R.drawable.male);
-            } else if ("f".equals(user.gender)) {
+            } else if ("f".equals(user.getGender())) {
                 drawable = getResources().getDrawable(R.drawable.female);
             }
             if (drawable != null) {
@@ -129,16 +129,16 @@ public class UserDetailsActivity extends SwipeBackActivity {
                 tv_screen_name.setCompoundDrawables(null, null, drawable, null);
                 tv_screen_name.setCompoundDrawablePadding(CommonUtil.dip2px(this, 5));
             }
-            tv_location.setText(user.location);
-            tv_follower_num.setText(getResources().getString(R.string.follower) + CommonUtil.getNumString(user.followers_count));
-            tv_follow_num.setText(getResources().getString(R.string.follow) + CommonUtil.getNumString(user.friends_count));
-            tv_weibo_num.setText(getResources().getString(R.string.weibo) + CommonUtil.getNumString(user.statuses_count));
-            if (user.verified) {
-                tv_verified_reason.setText(user.verified_reason);
+            tv_location.setText(user.getLocation());
+            tv_follower_num.setText(getResources().getString(R.string.follower) + CommonUtil.getNumString(user.getFollowers_count()));
+            tv_follow_num.setText(getResources().getString(R.string.follow) + CommonUtil.getNumString(user.getFriends_count()));
+            tv_weibo_num.setText(getResources().getString(R.string.weibo) + CommonUtil.getNumString(user.getStatuses_count()));
+            if (user.isVerified()) {
+                tv_verified_reason.setText(user.getVerified_reason());
             } else {
                 tv_verified_reason.setVisibility(View.GONE);
             }
-            tv_description.setText(user.description);
+            tv_description.setText(user.getDescription());
         }
     }
 
@@ -173,9 +173,9 @@ public class UserDetailsActivity extends SwipeBackActivity {
     private void setupViewPagerContent() {
         fragmentManager = getSupportFragmentManager();
         adapter = new FragmentAdapter(fragmentManager);
-        adapter.addFragment(FragmentFactory.getDetailsFragment(user.idstr, 0), getResources().getString(R.string.all));
-        adapter.addFragment(FragmentFactory.getDetailsFragment(user.idstr, 1), getResources().getString(R.string.original));
-        adapter.addFragment(FragmentFactory.getDetailsFragment(user.idstr, 2), getResources().getString(R.string.picture));
+        adapter.addFragment(FragmentFactory.getDetailsFragment(user.getIdstr(), 0), getResources().getString(R.string.all));
+        adapter.addFragment(FragmentFactory.getDetailsFragment(user.getIdstr(), 1), getResources().getString(R.string.original));
+        adapter.addFragment(FragmentFactory.getDetailsFragment(user.getIdstr(), 2), getResources().getString(R.string.picture));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
@@ -203,13 +203,13 @@ public class UserDetailsActivity extends SwipeBackActivity {
 
     private void initMenu() {
         if (user != null &&
-                !SharePrefUtil.getString(this, "uid", "").equals(user.idstr)) {
-            if (user.following) {
+                !SharePrefUtil.getString(this, "uid", "").equals(user.getIdstr())) {
+            if (user.isFollowing()) {
                 menu.getItem(0).setTitle(R.string.cancel_follow);
             } else {
-                if ("m".equals(user.gender)) {
+                if ("m".equals(user.getGender())) {
                     menu.getItem(0).setTitle(R.string.follow_he);
-                } else if ("f".equals(user.gender)) {
+                } else if ("f".equals(user.getGender())) {
                     menu.getItem(0).setTitle(R.string.follow_she);
                 }
             }

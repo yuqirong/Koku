@@ -61,11 +61,11 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Vi
     @Override
     public void onBindViewHolder(SearchUserAdapter.ViewHolder holder, final int position) {
         User user = list.get(position);
-        holder.tv_screen_name.setText(user.screen_name);
-        holder.tv_follower_count.setText(CommonUtil.getNumString(user.followers_count));
+        holder.tv_screen_name.setText(user.getScreen_name());
+        holder.tv_follower_count.setText(CommonUtil.getNumString(user.getFollowers_count()));
         if (!isSearchMode) {
             holder.iv_avatar.setVisibility(View.VISIBLE);
-            imageLoader.displayImage(user.profile_image_url,holder.iv_avatar,options);
+            imageLoader.displayImage(user.getProfile_image_url(),holder.iv_avatar,options);
         } else {
             holder.iv_avatar.setVisibility(View.GONE);
         }

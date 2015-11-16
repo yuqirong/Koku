@@ -318,15 +318,15 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void initWeiboData(Status status) {
         if (SharePrefUtil.getBoolean(context, "user_remark", true)) {
-            tv_screen_name.setText(status.user.name);
+            tv_screen_name.setText(status.user.getName());
         } else {
-            tv_screen_name.setText(status.user.screen_name);
+            tv_screen_name.setText(status.user.getScreen_name());
         }
-        imageLoader.displayImage(status.user.profile_image_url, iv_avatar, options);
+        imageLoader.displayImage(status.user.getProfile_image_url(), iv_avatar, options);
         tv_time.setText(DateUtils.getWeiboDate(status.created_at));
         tv_device.setText(Html.fromHtml(status.source));
         //设置认证图标
-        switch (status.user.verified_type) {
+        switch (status.user.getVerified_type()) {
             case 0:
                 iv_verified.setImageResource(R.drawable.avatar_vip);
                 break;
@@ -376,7 +376,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                 case R.id.tv_screen_name: //点击用户昵称
 
                 case R.id.iv_avatar: //点击用户头像事件
-                    UserDetailsActivity.actionStart(context, status.user.screen_name);
+                    UserDetailsActivity.actionStart(context, status.user.getScreen_name());
                     break;
             }
         }
@@ -386,7 +386,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     private void processRetweeted() {
         view_retweeted = LayoutInflater.from(context).inflate(R.layout.weibo_retweeted_item, null);
         initRetweetedView();
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.name + context.getResources().getString(R.string.colon) + status.retweeted_status.text, tv_retweeted_name_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.getScreen_name() + context.getResources().getString(R.string.colon) + status.retweeted_status.text, tv_retweeted_name_text);
         tv_retweeted_name_text.setText(weiBoContent);
 
         if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {

@@ -268,7 +268,7 @@ public class CommonUtil {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         String title = context.getString(R.string.share_title);
-        title = String.format(title, status.user.name);
+        title = String.format(title, status.user.getScreen_name());
         intent.putExtra(Intent.EXTRA_SUBJECT, title);
         //设置分享的内容
         intent.putExtra(Intent.EXTRA_TEXT, status.text);

@@ -79,8 +79,8 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
         Comment comment = getList().get(position);
         ViewHolder mViewHolder = (ViewHolder) holder;
         ViewOnClickListener onClickListener = new ViewOnClickListener(comment, weiboId);
-        imageLoader.displayImage(comment.user.profile_image_url, mViewHolder.iv_avatar, options);
-        mViewHolder.tv_screen_name.setText(comment.user.screen_name);
+        imageLoader.displayImage(comment.user.getProfile_image_url(), mViewHolder.iv_avatar, options);
+        mViewHolder.tv_screen_name.setText(comment.user.getScreen_name());
         mViewHolder.tv_time.setText(DateUtils.getWeiboDate(comment.created_at));
         mViewHolder.tv_device.setText(Html.fromHtml(comment.source));
         SpannableString weiBoContent = StringUtils.getWeiBoContent(mViewHolder.context, comment.text, mViewHolder.tv_text);
@@ -115,7 +115,7 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
                 case R.id.tv_screen_name: //点击用户昵称
 
                 case R.id.iv_avatar: //点击用户头像事件
-                    UserDetailsActivity.actionStart(v.getContext(), comment.user.screen_name);
+                    UserDetailsActivity.actionStart(v.getContext(), comment.user.getScreen_name());
                     break;
                 case R.id.iv_overflow:
                     // TODO: 2015/10/14

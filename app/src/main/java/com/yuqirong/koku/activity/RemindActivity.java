@@ -14,6 +14,7 @@ import android.view.View;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.FragmentAdapter;
 import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.fragment.CommentRemindFragment;
 import com.yuqirong.koku.fragment.FragmentFactory;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
@@ -67,7 +68,7 @@ public class RemindActivity extends SwipeBackActivity {
 
     private void setViewPager(ViewPager mViewPager) {
         adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(FragmentFactory.newInstance(AppConstant.HOME_TIMELINE_URL), getResources().getString(R.string.comment));
+        adapter.addFragment(new CommentRemindFragment(), getResources().getString(R.string.comment));
         adapter.addFragment(FragmentFactory.newInstance(AppConstant.STATUSES_BILATERAL_TIMELINE_URL), getResources().getString(R.string.refer_to));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);

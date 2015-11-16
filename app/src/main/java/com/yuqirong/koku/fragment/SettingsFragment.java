@@ -333,7 +333,7 @@ public class SettingsFragment extends BaseFragment {
                 null, context.getString(R.string.confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String url = AppConstant.OAUTH2_REVOKEOAUTH2 + "?access_token=" +
+                        String url = AppConstant.OAUTH2_REVOKEOAUTH2_URL + "?access_token=" +
                                 SharePrefUtil.getString(context, "access_token", "");
                         LogUtils.i("取消授权的url ：" + url);
                         getJsonData(url, new Response.Listener<JSONObject>() {

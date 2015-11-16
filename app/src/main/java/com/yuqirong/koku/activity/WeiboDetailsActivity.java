@@ -75,7 +75,7 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
                 intent.putExtra("type", PublishActivity.SEND_REPOST);
                 intent.putExtra("idstr", status.idstr);
                 if (isReweeted) {
-                    intent.putExtra("text", "//@" + status.user.screen_name + getResources().getString(R.string.colon) + status.text);
+                    intent.putExtra("text", "//@" + status.user.getScreen_name() + getResources().getString(R.string.colon) + status.text);
                 }
                 startActivityForResult(intent, requestCode);
                 break;

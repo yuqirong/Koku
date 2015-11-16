@@ -110,7 +110,7 @@ public class WeiboDetailsRepostFragment extends BaseFragment {
             LogUtils.i("position : " + position);
             Comment comment = getList().get(position);
             ViewHolder mViewHolder = (ViewHolder) holder;
-            mViewHolder.tv_screen_name.setText(comment.user.screen_name);
+            mViewHolder.tv_screen_name.setText(comment.user.getScreen_name());
             mViewHolder.tv_time.setText(DateUtils.getWeiboDate(comment.created_at));
             mViewHolder.tv_device.setText(Html.fromHtml(comment.source));
             SpannableString weiBoContent = StringUtils.getWeiBoContent(mViewHolder.context, comment.text, mViewHolder.tv_text);

@@ -57,9 +57,9 @@ public class DrawerLayoutFragment extends BaseFragment {
         public void onResponse(String stringResult) {
             user = JsonUtils.getBeanFromJson(stringResult, User.class);
             processData(user);
-            SharePrefUtil.saveString(context, "screen_name", user.screen_name);
-            SharePrefUtil.saveString(context, "cover_image_phone", user.cover_image_phone);
-            SharePrefUtil.saveString(context, "avatar_large", user.avatar_large);
+            SharePrefUtil.saveString(context, "screen_name", user.getScreen_name());
+            SharePrefUtil.saveString(context, "cover_image_phone", user.getCover_image_phone());
+            SharePrefUtil.saveString(context, "avatar_large", user.getAvatar_large());
         }
     };
 
@@ -73,20 +73,20 @@ public class DrawerLayoutFragment extends BaseFragment {
     //得到缓存数据
     private void getCache() {
         user = new User();
-        user.screen_name = SharePrefUtil.getString(context, "screen_name", "");
-        user.idstr = SharePrefUtil.getString(context,"uid","");
-        user.cover_image_phone = SharePrefUtil.getString(context, "cover_image_phone", "");
-        user.avatar_large = SharePrefUtil.getString(context, "avatar_large", "");
+        user.setScreen_name(SharePrefUtil.getString(context, "screen_name", ""));
+        user.setIdstr(SharePrefUtil.getString(context, "uid", ""));
+        user.setCover_image_phone(SharePrefUtil.getString(context, "cover_image_phone", ""));
+        user.setAvatar_large(SharePrefUtil.getString(context, "avatar_large", ""));
         processData(user);
     }
 
     //处理数据
     private void processData(User user) {
-        tv_screen_name.setText(user.screen_name);
-        if(!TextUtils.isEmpty(user.cover_image_phone)) {
-            imageLoader.displayImage(user.cover_image_phone, iv_cover, options);
+        tv_screen_name.setText(user.getScreen_name());
+        if (!TextUtils.isEmpty(user.getCover_image_phone())) {
+            imageLoader.displayImage(user.getCover_image_phone(), iv_cover, options);
         }
-        imageLoader.displayImage(user.avatar_large, civ_avatar, options);
+        imageLoader.displayImage(user.getAvatar_large(), civ_avatar, options);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class DrawerLayoutFragment extends BaseFragment {
         civ_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserDetailsActivity.actionStart(context,user.screen_name);
+                UserDetailsActivity.actionStart(context, user.getScreen_name());
             }
         });
         return view;

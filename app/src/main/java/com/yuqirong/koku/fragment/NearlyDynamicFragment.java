@@ -222,7 +222,7 @@ public class NearlyDynamicFragment extends BaseFragment {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        LogUtils.i("click: " + status + status.user.screen_name);
+                        LogUtils.i("click: " + status + status.user.getScreen_name());
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
                                 CommonUtil.shareWeibo(context,status);
