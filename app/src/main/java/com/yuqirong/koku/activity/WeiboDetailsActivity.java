@@ -63,7 +63,7 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int requestCode;
-        boolean isReweeted = (status.retweeted_status != null);
+        boolean isReweeted = (status.getRetweeted_status() != null);
         Intent intent = new Intent();
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -73,9 +73,9 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
                 requestCode = MainActivity.SEND_NEW_REPOST;
                 intent.setClass(WeiboDetailsActivity.this, PublishActivity.class);
                 intent.putExtra("type", PublishActivity.SEND_REPOST);
-                intent.putExtra("idstr", status.idstr);
+                intent.putExtra("idstr", status.getIdstr());
                 if (isReweeted) {
-                    intent.putExtra("text", "//@" + status.user.getScreen_name() + getResources().getString(R.string.colon) + status.text);
+                    intent.putExtra("text", "//@" + status.getUser().getScreen_name() + getResources().getString(R.string.colon) + status.getText());
                 }
                 startActivityForResult(intent, requestCode);
                 break;
@@ -83,7 +83,7 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
                 requestCode = MainActivity.SEND_NEW_COMMENT;
                 intent.setClass(WeiboDetailsActivity.this, PublishActivity.class);
                 intent.putExtra("type", PublishActivity.SEND_COMMENT);
-                intent.putExtra("idstr", status.idstr);
+                intent.putExtra("idstr", status.getIdstr());
                 intent.putExtra("isReweeted", isReweeted);
                 startActivityForResult(intent, requestCode);
                 break;
@@ -94,7 +94,7 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
 
                 break;
             case R.id.action_copy:
-                CommonUtil.copyToClipboard(this,status.text);
+                CommonUtil.copyToClipboard(this,status.getText());
                 break;
             default:
                 break;

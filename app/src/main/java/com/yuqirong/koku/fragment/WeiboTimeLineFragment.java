@@ -235,7 +235,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                 int menuResId;
                 LogUtils.i("long click the item " + position);
                 final Status status = adapter.getList().get(position);
-                if (status.favorited) {
+                if (status.isFavorited()) {
                     menuResId = R.menu.overflow_popupmenu_02;
                 } else {
                     menuResId = R.menu.overflow_popupmenu;
@@ -246,7 +246,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        LogUtils.i("click: " + status + status.user.getScreen_name());
+                        LogUtils.i("click: " + status + status.getUser().getScreen_name());
 
                         switch (item.getItemId()) {
                             case R.id.overflow_share:
@@ -259,7 +259,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                                 processFavorite();
                                 break;
                             case R.id.overflow_copy:
-                                CommonUtil.copyToClipboard(context, status.text);
+                                CommonUtil.copyToClipboard(context, status.getText());
                                 CommonUtil.showSnackbar(getView(), R.string.copy_weibo_to_clipboard, getResources().getColor(R.color.Indigo_colorPrimary));
                                 break;
                         }
@@ -268,7 +268,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
 
                     private void processFavorite() {
                         String url;
-                        if (status.favorited) {
+                        if (status.isFavorited()) {
                             url = AppConstant.FAVORITE_DESTROY_URL;
                         } else {
                             url = AppConstant.FAVORITE_CREATE_URL;
@@ -285,13 +285,13 @@ public class WeiboTimeLineFragment extends BaseFragment {
                             @Override
                             protected Map<String, String> getParams() throws AuthFailureError {
                                 Map<String, String> map = new HashMap();
-                                map.put("id", status.idstr);
+                                map.put("id", status.getIdstr());
                                 map.put("access_token", SharePrefUtil.getString(context, "access_token", ""));
                                 return map;
                             }
                         };
                         mQueue.add(stringRequest);
-                        LogUtils.i("收藏微博url：" + AppConstant.FAVORITE_CREATE_URL + " , id=" + status.idstr);
+                        LogUtils.i("收藏微博url：" + AppConstant.FAVORITE_CREATE_URL + " , id=" + status.getIdstr());
                         mProgressDialog = CommonUtil.showProgressDialog(context, R.string.please_wait, true);
                     }
                 });

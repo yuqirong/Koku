@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="1dp"
@@ -21,7 +20,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/img_empty_avatar" />
+            tools:src="@drawable/img_empty_avatar" />
 
         <TextView
             android:id="@+id/tv_screen_name"
@@ -32,7 +31,6 @@
             android:layout_toRightOf="@id/iv_avatar"
             android:ellipsize="end"
             android:maxWidth="200dp"
-            android:onClick="true"
             android:singleLine="true"
             android:textStyle="bold"
             tools:text="username" />
@@ -45,8 +43,7 @@
             android:layout_alignTop="@id/tv_screen_name"
             android:layout_marginLeft="4dp"
             android:layout_toRightOf="@id/tv_screen_name"
-            android:onClick="true"
-            android:src="@drawable/avatar_vip" />
+            tools:src="@drawable/avatar_vip" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -73,17 +70,19 @@
             android:textSize="12sp"
             tools:text="iPhone 6 Plus" />
 
-        <ImageView
-            android:id="@+id/iv_comment"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+        <TextView
+            android:id="@+id/tv_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@id/tv_screen_name"
             android:layout_centerVertical="true"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
             android:background="@drawable/text_selector"
-            android:clickable="true"
-            android:src="@drawable/ic_detail_comment_dark" />
+            android:text="@string/reply"
+            android:drawableLeft="@drawable/ic_detail_comment_dark" />
 
     </RelativeLayout>
 
@@ -118,7 +117,8 @@
             android:id="@+id/iv_weibo_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@android:color/holo_red_dark" />
+            android:scaleType="centerCrop"
+            tools:src="@drawable/thumbnail_default" />
 
         <TextView
             android:id="@+id/iv_weibo_name"
@@ -126,6 +126,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/iv_weibo_avatar"
+            android:textStyle="bold"
+            android:singleLine="true"
             tools:text="\@量院速冻" />
 
         <TextView

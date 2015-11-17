@@ -37,6 +37,7 @@
     <string name="comment_weibo">评论微博</string>
     <string name="repost_weibo">转发微博</string>
     <string name="reply_comment">回复评论</string>
+    <string name="reply">回复</string>
     <array name="photo_items">
         <item>拍照</item>
         <item>最后一次拍照</item>
@@ -83,6 +84,7 @@
     <string name="picture">图片</string>
     <string name="comment">评论</string>
     <string name="refer_to">提及</string>
+    <string name="private_letter">私信</string>
     <string name="share">分享到</string>
     <string name="share_title">%1$s的微博</string>
     <string name="unread_weibo">%1$d条新微博，点击刷新</string>
@@ -99,6 +101,10 @@
     <string name="pic_num">%1$d/%2$d</string>
     <string name="clear_cache">缓存大小%1$sMB</string>
     <string name="confirm_clear_cache">是否清除图片缓存？</string>
+    <string name="notify">通知</string>
+    <string name="save_success">保存成功！图片路径:%1$s</string>
+    <string name="save_fail">保存失败</string>
+    <string name="no_sd_card">没有SD卡或SD卡已卸载</string>
     <array name="fab_function">
         <item>发微博</item>
         <item>刷新</item>

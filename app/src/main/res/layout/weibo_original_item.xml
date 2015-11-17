@@ -30,11 +30,10 @@
             android:layout_alignTop="@id/iv_avatar"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/iv_avatar"
-            android:onClick="true"
-            android:textStyle="bold"
             android:ellipsize="end"
             android:maxWidth="200dp"
             android:singleLine="true"
+            android:textStyle="bold"
             tools:text="username" />
 
         <ImageView
@@ -44,9 +43,8 @@
             android:layout_alignBottom="@id/tv_screen_name"
             android:layout_alignTop="@id/tv_screen_name"
             android:layout_marginLeft="4dp"
-            android:src="@drawable/avatar_vip"
             android:layout_toRightOf="@id/tv_screen_name"
-            android:onClick="true" />
+            tools:src="@drawable/avatar_vip" />
 
         <TextView
             android:id="@+id/tv_time"
@@ -129,7 +127,7 @@
         layout="@layout/weibo_pic_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="5dp" />
 
     <TextView
         android:id="@+id/tv_location"

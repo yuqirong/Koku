@@ -207,95 +207,453 @@ public class Status implements Serializable {
      */
 
     // 字符串型的微博ID
-    public String idstr;
+    private String idstr;
     // weibo创建时间
-    public String created_at;
+    private String created_at;
     // 微博ID
-    public long id;
+    private long id;
     // 微博MID
-    public long mid;
+    private long mid;
     // weibo来源
-    public String source;
+    private String source;
     //是否已收藏，true：是，false：否
-    public boolean favorited;
+    private boolean favorited;
     //是否被截断，true：是，false：否
-    public boolean truncated;
+    private boolean truncated;
     //地理信息字段
-    public Geo geo;
+    private Geo geo;
     // weibo转发数
-    public int reposts_count;
+    private int reposts_count;
     // weibo评论数
-    public int comments_count;
+    private int comments_count;
     //表态数
-    public int attitudes_count;
+    private int attitudes_count;
     // 微博作者的用户信息字段
-    public User user;
+    private User user;
     // 微博信息内容
-    public String text;
+    private String text;
     // 微博配图url
-    public List<Pic_urls> pic_urls;
+    private List<Pic_urls> pic_urls;
     // 转发微博状态
-    public Retweeted_status retweeted_status;
+    private Retweeted_status retweeted_status;
     //原始图片地址，没有时不返回此字段
-    public String original_pic;
+    private String original_pic;
     //中等尺寸图片地址，没有时不返回此字段
-    public String bmiddle_pic;
+    private String bmiddle_pic;
     //缩略图片地址，没有时不返回此字段
-    public String thumbnail_pic;
+    private String thumbnail_pic;
+    private List<Annotations> annotations;
 
-    public List<Annotations> annotations;
+    public String getIdstr() {
+        return idstr;
+    }
 
+    public void setIdstr(String idstr) {
+        this.idstr = idstr;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getMid() {
+        return mid;
+    }
+
+    public void setMid(long mid) {
+        this.mid = mid;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public boolean isFavorited() {
+        return favorited;
+    }
+
+    public void setFavorited(boolean favorited) {
+        this.favorited = favorited;
+    }
+
+    public boolean isTruncated() {
+        return truncated;
+    }
+
+    public void setTruncated(boolean truncated) {
+        this.truncated = truncated;
+    }
+
+    public Geo getGeo() {
+        return geo;
+    }
+
+    public void setGeo(Geo geo) {
+        this.geo = geo;
+    }
+
+    public int getReposts_count() {
+        return reposts_count;
+    }
+
+    public void setReposts_count(int reposts_count) {
+        this.reposts_count = reposts_count;
+    }
+
+    public int getComments_count() {
+        return comments_count;
+    }
+
+    public void setComments_count(int comments_count) {
+        this.comments_count = comments_count;
+    }
+
+    public int getAttitudes_count() {
+        return attitudes_count;
+    }
+
+    public void setAttitudes_count(int attitudes_count) {
+        this.attitudes_count = attitudes_count;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public List<Pic_urls> getPic_urls() {
+        return pic_urls;
+    }
+
+    public void setPic_urls(List<Pic_urls> pic_urls) {
+        this.pic_urls = pic_urls;
+    }
+
+    public Retweeted_status getRetweeted_status() {
+        return retweeted_status;
+    }
+
+    public void setRetweeted_status(Retweeted_status retweeted_status) {
+        this.retweeted_status = retweeted_status;
+    }
+
+    public String getOriginal_pic() {
+        return original_pic;
+    }
+
+    public void setOriginal_pic(String original_pic) {
+        this.original_pic = original_pic;
+    }
+
+    public String getBmiddle_pic() {
+        return bmiddle_pic;
+    }
+
+    public void setBmiddle_pic(String bmiddle_pic) {
+        this.bmiddle_pic = bmiddle_pic;
+    }
+
+    public String getThumbnail_pic() {
+        return thumbnail_pic;
+    }
+
+    public void setThumbnail_pic(String thumbnail_pic) {
+        this.thumbnail_pic = thumbnail_pic;
+    }
+
+    public List<Annotations> getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(List<Annotations> annotations) {
+        this.annotations = annotations;
+    }
 
     public class Retweeted_status implements Serializable {
 
         // 微博ID
-        public long id;
+        private long id;
         // 微博MID
-        public long mid;
+        private long mid;
         // weibo创建时间
-        public String created_at;
+        private String created_at;
         //是否已收藏，true：是，false：否
-        public boolean favorited;
+        private boolean favorited;
         //是否被截断，true：是，false：否
-        public boolean truncated;
+        private boolean truncated;
         // 字符串型的微博ID
-        public String idstr;
+        private String idstr;
         // 微博信息内容
-        public String text;
+        private String text;
         // 微博作者的用户信息字段
-        public User user;
+        private User user;
         //地理信息字段
-        public Geo geo;
+        private Geo geo;
         // weibo转发数
-        public int reposts_count;
+        private int reposts_count;
         // weibo评论数
-        public int comments_count;
+        private int comments_count;
         //表态数
-        public int attitudes_count;
+        private int attitudes_count;
         // 微博配图url
-        public List<Pic_urls> pic_urls;
+        private List<Pic_urls> pic_urls;
         //原始图片地址，没有时不返回此字段
-        public String original_pic;
+        private String original_pic;
         //中等尺寸图片地址，没有时不返回此字段
-        public String bmiddle_pic;
+        private String bmiddle_pic;
         //缩略图片地址，没有时不返回此字段
-        public String thumbnail_pic;
+        private String thumbnail_pic;
         //被转发微博是否被删除  "1"为是
-        public String deleted;
+        private String deleted;
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public long getMid() {
+            return mid;
+        }
+
+        public void setMid(long mid) {
+            this.mid = mid;
+        }
+
+        public String getCreated_at() {
+            return created_at;
+        }
+
+        public void setCreated_at(String created_at) {
+            this.created_at = created_at;
+        }
+
+        public boolean isFavorited() {
+            return favorited;
+        }
+
+        public void setFavorited(boolean favorited) {
+            this.favorited = favorited;
+        }
+
+        public boolean isTruncated() {
+            return truncated;
+        }
+
+        public void setTruncated(boolean truncated) {
+            this.truncated = truncated;
+        }
+
+        public String getIdstr() {
+            return idstr;
+        }
+
+        public void setIdstr(String idstr) {
+            this.idstr = idstr;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public User getUser() {
+            return user;
+        }
+
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+        public Geo getGeo() {
+            return geo;
+        }
+
+        public void setGeo(Geo geo) {
+            this.geo = geo;
+        }
+
+        public int getReposts_count() {
+            return reposts_count;
+        }
+
+        public void setReposts_count(int reposts_count) {
+            this.reposts_count = reposts_count;
+        }
+
+        public int getComments_count() {
+            return comments_count;
+        }
+
+        public void setComments_count(int comments_count) {
+            this.comments_count = comments_count;
+        }
+
+        public int getAttitudes_count() {
+            return attitudes_count;
+        }
+
+        public void setAttitudes_count(int attitudes_count) {
+            this.attitudes_count = attitudes_count;
+        }
+
+        public List<Pic_urls> getPic_urls() {
+            return pic_urls;
+        }
+
+        public void setPic_urls(List<Pic_urls> pic_urls) {
+            this.pic_urls = pic_urls;
+        }
+
+        public String getOriginal_pic() {
+            return original_pic;
+        }
+
+        public void setOriginal_pic(String original_pic) {
+            this.original_pic = original_pic;
+        }
+
+        public String getBmiddle_pic() {
+            return bmiddle_pic;
+        }
+
+        public void setBmiddle_pic(String bmiddle_pic) {
+            this.bmiddle_pic = bmiddle_pic;
+        }
+
+        public String getThumbnail_pic() {
+            return thumbnail_pic;
+        }
+
+        public void setThumbnail_pic(String thumbnail_pic) {
+            this.thumbnail_pic = thumbnail_pic;
+        }
+
+        public String getDeleted() {
+            return deleted;
+        }
+
+        public void setDeleted(String deleted) {
+            this.deleted = deleted;
+        }
     }
 
     public class Annotations implements Serializable {
-        public String client_mblogid;
-        public Place place;
-        public boolean mapi_request;
-        public int shooting;
+        private String client_mblogid;
+        private Place place;
+        private boolean mapi_request;
+        private int shooting;
+
+        public String getClient_mblogid() {
+            return client_mblogid;
+        }
+
+        public void setClient_mblogid(String client_mblogid) {
+            this.client_mblogid = client_mblogid;
+        }
+
+        public Place getPlace() {
+            return place;
+        }
+
+        public void setPlace(Place place) {
+            this.place = place;
+        }
+
+        public boolean isMapi_request() {
+            return mapi_request;
+        }
+
+        public void setMapi_request(boolean mapi_request) {
+            this.mapi_request = mapi_request;
+        }
+
+        public int getShooting() {
+            return shooting;
+        }
+
+        public void setShooting(int shooting) {
+            this.shooting = shooting;
+        }
 
         public class Place implements Serializable {
-            public double lat;
-            public double lon;
-            public String poiid;
-            public String title;
-            public String type;
+            private double lat;
+            private double lon;
+            private String poiid;
+            private String title;
+            private String type;
+
+            public double getLat() {
+                return lat;
+            }
+
+            public void setLat(double lat) {
+                this.lat = lat;
+            }
+
+            public double getLon() {
+                return lon;
+            }
+
+            public void setLon(double lon) {
+                this.lon = lon;
+            }
+
+            public String getPoiid() {
+                return poiid;
+            }
+
+            public void setPoiid(String poiid) {
+                this.poiid = poiid;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
         }
 
     }

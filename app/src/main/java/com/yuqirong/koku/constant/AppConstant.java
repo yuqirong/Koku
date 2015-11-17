@@ -124,4 +124,8 @@ public class AppConstant {
      * 获取当前登录用户所接收到的评论列表
      */
     public static final String COMMENTS_TO_ME_URL = "https://api.weibo.com/2/comments/to_me.json";
+    /**
+     * 获取最新的提到登录用户的微博列表，即@我的微博
+     */
+    public static final String STATUSES_MENTIONS_URL = "https://api.weibo.com/2/statuses/mentions.json";
 }

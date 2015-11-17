@@ -244,7 +244,7 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
 
     private void setupTabLayoutContent(TabLayout mTabLayout) {
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
-        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
+        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 2));
         mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(android.R.color.white));
     }
 
@@ -310,53 +310,21 @@ public class MainActivity extends BaseActivity implements RefreshWeiboTimelineRe
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         LogUtils.i(menuItem.getItemId() + "");
                         menuItem.setCheckable(false);
-                        isDrawerOpened = false;
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mDrawerLayout.closeDrawers();
-                            }
-                        }, 100);
                         switch (menuItem.getItemId()) {
                             case R.id.nav_search:
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        SearchUserActivity.actionStart(MainActivity.this, SearchUserActivity.SEARCH_USER);
-                                    }
-                                }, 500);
+                                SearchUserActivity.actionStart(MainActivity.this, SearchUserActivity.SEARCH_USER);
                                 break;
                             case R.id.nav_nearly:
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        NearlyDynamicActivity.actionStart(MainActivity.this);
-                                    }
-                                }, 500);
+                                NearlyDynamicActivity.actionStart(MainActivity.this);
                                 break;
                             case R.id.nav_hot:
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        PublicWeiboActivity.actionStart(MainActivity.this);
-                                    }
-                                }, 500);
+                                PublicWeiboActivity.actionStart(MainActivity.this);
                                 break;
                             case R.id.nav_favorite:
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        MyFavoriteActivity.actionStart(MainActivity.this);
-                                    }
-                                }, 500);
+                                MyFavoriteActivity.actionStart(MainActivity.this);
                                 break;
                             case R.id.nav_draft:
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        DraftActivity.actionStart(MainActivity.this);
-                                    }
-                                }, 500);
+                                DraftActivity.actionStart(MainActivity.this);
                                 break;
                         }
                         return true;

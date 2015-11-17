@@ -15,7 +15,7 @@ bug:
 
 todo:
 关闭屏幕时禁止查询新微博           done
-保存图片
+保存图片                        done
 发带图片的微博
 评论和@
 新微博提醒                       done
@@ -30,6 +30,7 @@ Acache
 SwipeBackLayout
 PhotoView
 CircleImageView
+Glide
 
 市场：
 1.豌豆荚

@@ -34,6 +34,7 @@ import com.yuqirong.koku.activity.MyFavoriteActivity;
 import com.yuqirong.koku.activity.NearlyDynamicActivity;
 import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.activity.UserDetailsActivity;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.Status;
@@ -63,7 +64,6 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
     public static final String AT = "@";
     private static final int[] IMAGEVIEW_IDS = new int[]{R.id.iv_01, R.id.iv_02, R.id.iv_03, R.id.iv_04, R.id.iv_05, R.id.iv_06, R.id.iv_07, R.id.iv_08, R.id.iv_09};
     private Status status;
-    private RequestQueue mQueue;
     private View view;
 
     public WeiboRecycleViewAdapter(Context context) {
@@ -72,7 +72,6 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, true);
         ninepic_options = BitmapUtil.getDisplayImageOptions(R.drawable.thumbnail_default, true, true);
         list.add(new Status());
-        mQueue = Volley.newRequestQueue(context);
     }
 
     @Override
@@ -91,15 +90,15 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         viewHolder.onMenuItemClickListener = new MyOnMenuItemClickListener(position);
         viewHolder.onClickListener = new WeiboWidghtOnClickListener(position, viewHolder.onMenuItemClickListener);
         if (SharePrefUtil.getBoolean(context, "user_remark", true)) {
-            viewHolder.tv_screen_name.setText(status.user.getName());
+            viewHolder.tv_screen_name.setText(status.getUser().getName());
         } else {
-            viewHolder.tv_screen_name.setText(status.user.getScreen_name());
+            viewHolder.tv_screen_name.setText(status.getUser().getScreen_name());
         }
-        imageLoader.displayImage(status.user.getProfile_image_url(), viewHolder.iv_avatar, options);
-        viewHolder.tv_time.setText(DateUtils.getWeiboDate(status.created_at));
-        viewHolder.tv_device.setText(Html.fromHtml(status.source));
+        imageLoader.displayImage(status.getUser().getProfile_image_url(), viewHolder.iv_avatar, options);
+        viewHolder.tv_time.setText(DateUtils.getWeiboDate(status.getCreated_at()));
+        viewHolder.tv_device.setText(Html.fromHtml(status.getSource()));
         //设置认证图标
-        switch (status.user.getVerified_type()) {
+        switch (status.getUser().getVerified_type()) {
             case 0:
                 viewHolder.iv_verified.setImageResource(R.drawable.avatar_vip);
                 break;
@@ -114,20 +113,20 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 break;
         }
         //设置微博 转发数和评论数
-        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(status.reposts_count));
-        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(status.comments_count));
+        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(status.getReposts_count()));
+        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(status.getComments_count()));
         //设置微博内容
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.text, viewHolder.tv_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.getText(), viewHolder.tv_text);
         viewHolder.tv_text.setText(weiBoContent);
         //判断此微博是否包含图片
-        if (status.pic_urls != null && status.pic_urls.size() > 0) {
-            viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, status.pic_urls);
+        if (status.getPic_urls() != null && status.getPic_urls().size() > 0) {
+            viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, status.getPic_urls());
         } else {
             if (viewHolder.iv_arrays != null)
                 viewHolder.rl_pics.setVisibility(View.GONE);
         }
         //判断此微博是否为转发微博
-        if (status.retweeted_status != null) {
+        if (status.getRetweeted_status() != null) {
             processRetweeted(viewHolder, status);
             viewHolder.ll_item.addView(viewHolder.view_retweeted);
             //设置监听器
@@ -138,9 +137,10 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 viewHolder.ll_item.removeView(viewHolder.view_retweeted);
         }
         //判断此微博有没有地理位置
-        if (status.annotations != null && status.annotations.get(0).place != null && status.annotations.get(0).place.title != null) {
+        if (status.getAnnotations() != null && status.getAnnotations().get(0).getPlace() != null
+                && status.getAnnotations().get(0).getPlace().getTitle() != null) {
             viewHolder.tv_location.setVisibility(View.VISIBLE);
-            viewHolder.tv_location.setText(status.annotations.get(0).place.title);
+            viewHolder.tv_location.setText(status.getAnnotations().get(0).getPlace().getTitle());
         } else {
             viewHolder.tv_location.setVisibility(View.GONE);
         }
@@ -184,7 +184,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         public WeiboWidghtOnClickListener(int position, MyOnMenuItemClickListener onMenuItemClickListener) {
             status = list.get(position);
             this.onMenuItemClickListener = onMenuItemClickListener;
-            isReweeted = (status.retweeted_status != null);
+            isReweeted = (status.getRetweeted_status() != null);
         }
 
         @Override
@@ -198,13 +198,13 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 case R.id.tv_screen_name: //点击用户昵称
 
                 case R.id.iv_avatar: //点击用户头像事件
-                    UserDetailsActivity.actionStart(context, status.user.getScreen_name());
+                    UserDetailsActivity.actionStart(context, status.getUser().getScreen_name());
                     break;
                 case R.id.tv_comment_count: //点击评论数事件
                     requestCode = MainActivity.SEND_NEW_COMMENT;
                     intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_COMMENT);
-                    intent.putExtra("idstr", status.idstr);
+                    intent.putExtra("idstr", status.getIdstr());
                     intent.putExtra("isReweeted", isReweeted);
                     switchToActivity(intent, requestCode);
                     break;
@@ -212,14 +212,14 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                     requestCode = MainActivity.SEND_NEW_REPOST;
                     intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_REPOST);
-                    intent.putExtra("idstr", status.idstr);
+                    intent.putExtra("idstr", status.getIdstr());
                     if (isReweeted) {
-                        intent.putExtra("text", "//@" + status.user.getScreen_name() + context.getResources().getString(R.string.colon) + status.text);
+                        intent.putExtra("text", "//@" + status.getUser().getScreen_name() + context.getResources().getString(R.string.colon) + status.getText());
                     }
                     switchToActivity(intent, requestCode);
                     break;
                 case R.id.iv_overflow:  //点击菜单图标事件
-                    if (status.favorited) {
+                    if (status.isFavorited()) {
                         CommonUtil.showPopupMenu(context, v, R.menu.overflow_popupmenu_02, onMenuItemClickListener);
                     } else {
                         CommonUtil.showPopupMenu(context, v, R.menu.overflow_popupmenu, onMenuItemClickListener);
@@ -229,14 +229,14 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                     requestCode = MainActivity.SEND_NEW_COMMENT;
                     intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_COMMENT);
-                    intent.putExtra("idstr", status.retweeted_status.idstr);
+                    intent.putExtra("idstr", status.getRetweeted_status().getIdstr());
                     switchToActivity(intent, requestCode);
                     break;
                 case R.id.tv_retweeted_repost_count: //点击被转发微博的转发数事件
                     requestCode = MainActivity.SEND_NEW_REPOST;
                     intent.setClass(context, PublishActivity.class);
                     intent.putExtra("type", PublishActivity.SEND_REPOST);
-                    intent.putExtra("idstr", status.retweeted_status.idstr);
+                    intent.putExtra("idstr", status.getRetweeted_status().getIdstr());
                     switchToActivity(intent, requestCode);
                     break;
             }
@@ -266,7 +266,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            LogUtils.i(status + status.user.getScreen_name());
+            LogUtils.i(status + status.getUser().getScreen_name());
             switch (item.getItemId()) {
                 case R.id.overflow_share:
                     CommonUtil.shareWeibo(context, status);
@@ -278,7 +278,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                     processFavorite();
                     break;
                 case R.id.overflow_copy:
-                    CommonUtil.copyToClipboard(context, status.text);
+                    CommonUtil.copyToClipboard(context, status.getText());
                     CommonUtil.showSnackbar(view, R.string.copy_weibo_to_clipboard, context.getResources().getColor(R.color.Indigo_colorPrimary));
                     break;
             }
@@ -287,7 +287,7 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
 
         private void processFavorite() {
             String url;
-            if (status.favorited) {
+            if (status.isFavorited()) {
                 url = AppConstant.FAVORITE_DESTROY_URL;
             } else {
                 url = AppConstant.FAVORITE_CREATE_URL;
@@ -309,13 +309,13 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> map = new HashMap();
-                    map.put("id", status.idstr);
+                    map.put("id", status.getIdstr());
                     map.put("access_token", SharePrefUtil.getString(context, "access_token", ""));
                     return map;
                 }
             };
-            mQueue.add(stringRequest);
-            LogUtils.i("收藏微博url：" + AppConstant.FAVORITE_CREATE_URL + " , id=" + status.idstr);
+            MyApplication.getRequestQueue().add(stringRequest);
+            LogUtils.i("收藏微博url：" + AppConstant.FAVORITE_CREATE_URL + " , id=" + status.getIdstr());
             mProgressDialog = CommonUtil.showProgressDialog(context, R.string.please_wait, true);
         }
 
@@ -332,23 +332,23 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
 
         //设置被转发微博内容
         //判断该被转发微博是否被删除
-        if (!TextUtils.isEmpty(status.retweeted_status.deleted) && status.retweeted_status.deleted.equals("1")) {
-            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.retweeted_status.text, viewHolder.tv_retweeted_name_text);
+        if (!TextUtils.isEmpty(status.getRetweeted_status().getDeleted()) && status.getRetweeted_status().getDeleted().equals("1")) {
+            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.getRetweeted_status().getText(), viewHolder.tv_retweeted_name_text);
             viewHolder.tv_retweeted_name_text.setText(weiBoContent);
         } else {
-            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.getName() + context.getResources().getString(R.string.colon) + status.retweeted_status.text, viewHolder.tv_retweeted_name_text);
+            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.getRetweeted_status().getUser().getName() + context.getResources().getString(R.string.colon) + status.getRetweeted_status().getText(), viewHolder.tv_retweeted_name_text);
             viewHolder.tv_retweeted_name_text.setText(weiBoContent);
         }
 
-        if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {
-            viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, status.retweeted_status.pic_urls);
+        if (status.getRetweeted_status().getPic_urls() != null && status.getRetweeted_status().getPic_urls().size() > 0) {
+            viewHolder.initImageView(viewHolder.rl_retweeted_pics, viewHolder.iv_retweeted_arrays, status.getRetweeted_status().getPic_urls());
         } else {
             if (viewHolder.iv_retweeted_arrays != null)
                 viewHolder.rl_retweeted_pics.setVisibility(View.GONE);
         }
         //设置被转发微博 转发数和评论数
-        viewHolder.tv_retweeted_repost_count.setText(CommonUtil.getNumString(status.retweeted_status.reposts_count));
-        viewHolder.tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.retweeted_status.comments_count));
+        viewHolder.tv_retweeted_repost_count.setText(CommonUtil.getNumString(status.getRetweeted_status().getReposts_count()));
+        viewHolder.tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.getRetweeted_status().getComments_count()));
 
         ViewParent parent = viewHolder.view_retweeted.getParent();
         if (parent != null) {

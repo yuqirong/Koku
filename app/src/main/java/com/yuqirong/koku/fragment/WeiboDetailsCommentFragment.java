@@ -122,15 +122,15 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (status.comments_count == 0) {
+        if (status.getComments_count() == 0) {
             adapter.setIsLoadingMore(true);
             adapter.setLoadFinish();
         }
     }
 
     private void getStatusesCountData() {
-        if (!TextUtils.isEmpty(status.idstr)) {
-            String fresh_count_url = AppConstant.STATUSES_COUNT_URL + "?access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&ids=" + status.idstr;
+        if (!TextUtils.isEmpty(status.getIdstr())) {
+            String fresh_count_url = AppConstant.STATUSES_COUNT_URL + "?access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&ids=" + status.getIdstr();
             LogUtils.i("批量获取指定微博的转发数评论数url ：" + fresh_count_url);
             getData(fresh_count_url, countListener, errorListener);
         }
@@ -142,14 +142,14 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             try {
                 JSONArray jsonArray = new JSONArray(result);
                 JSONObject object = (JSONObject) jsonArray.get(0);
-                status.comments_count = object.getInt("comments");
-                status.reposts_count = object.getInt("reposts");
-                status.attitudes_count = object.getInt("attitudes");
-                String comments = getResources().getString(R.string.rb_comment) + CommonUtil.getNumString(status.comments_count);
+                status.setComments_count(object.getInt("comments"));
+                status.setReposts_count(object.getInt("reposts"));
+                status.setAttitudes_count(object.getInt("attitudes"));
+                String comments = getResources().getString(R.string.rb_comment) + CommonUtil.getNumString(status.getComments_count());
                 rb_comment.setText(comments);
-                String reposts = getResources().getString(R.string.rb_repost) + CommonUtil.getNumString(status.reposts_count);
+                String reposts = getResources().getString(R.string.rb_repost) + CommonUtil.getNumString(status.getReposts_count());
                 rb_repost.setText(reposts);
-                tv_favorite.setText(CommonUtil.getNumString(status.attitudes_count));
+                tv_favorite.setText(CommonUtil.getNumString(status.getAttitudes_count()));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -157,13 +157,13 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     };
 
     private void getDataFromServer() {
-        if (!TextUtils.isEmpty(status.idstr)) {
+        if (!TextUtils.isEmpty(status.getIdstr())) {
             if (refresh) {
                 next_cursor = 0;
                 adapter.initFooterViewHolder();
                 adapter.setIsLoadingMore(false);
             }
-            String url = AppConstant.COMMENTS_SHOW_URL + "?count=20&id=" + status.idstr +
+            String url = AppConstant.COMMENTS_SHOW_URL + "?count=20&id=" + status.getIdstr() +
                     "&access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&max_id=" + next_cursor;
             LogUtils.i("评论url ：" + url);
             getJsonData(url, listener, errorListener);
@@ -240,7 +240,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     }
 
     private void initAdapter(View headerView) {
-        adapter = new WeiboCommentAdapter(context, status.idstr);
+        adapter = new WeiboCommentAdapter(context, status.getIdstr());
         if (headerView != null) {
             ViewParent parent = headerView.getParent();
             if (parent != null) {
@@ -271,7 +271,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                                 intent.setClass(v.getContext(), PublishActivity.class);
                                 intent.putExtra("type", PublishActivity.REPLY_COMMENT);
                                 intent.putExtra("cid", comment.idstr);
-                                intent.putExtra("idstr", status.idstr);
+                                intent.putExtra("idstr", status.getIdstr());
                                 v.getContext().startActivity(intent);
                                 return true;
                             case R.id.overflow_copy:
@@ -318,15 +318,15 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void initWeiboData(Status status) {
         if (SharePrefUtil.getBoolean(context, "user_remark", true)) {
-            tv_screen_name.setText(status.user.getName());
+            tv_screen_name.setText(status.getUser().getName());
         } else {
-            tv_screen_name.setText(status.user.getScreen_name());
+            tv_screen_name.setText(status.getUser().getScreen_name());
         }
-        imageLoader.displayImage(status.user.getProfile_image_url(), iv_avatar, options);
-        tv_time.setText(DateUtils.getWeiboDate(status.created_at));
-        tv_device.setText(Html.fromHtml(status.source));
+        imageLoader.displayImage(status.getUser().getProfile_image_url(), iv_avatar, options);
+        tv_time.setText(DateUtils.getWeiboDate(status.getCreated_at()));
+        tv_device.setText(Html.fromHtml(status.getSource()));
         //设置认证图标
-        switch (status.user.getVerified_type()) {
+        switch (status.getUser().getVerified_type()) {
             case 0:
                 iv_verified.setImageResource(R.drawable.avatar_vip);
                 break;
@@ -346,22 +346,22 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         iv_overflow.setVisibility(View.GONE);
 
         //设置微博内容
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.text, tv_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.getText(), tv_text);
         tv_text.setText(weiBoContent);
 
-        if (status.pic_urls != null && status.pic_urls.size() > 0) {
-            initImageView(rl_pics, iv_arrays, status.pic_urls);
+        if (status.getPic_urls() != null && status.getPic_urls().size() > 0) {
+            initImageView(rl_pics, iv_arrays, status.getPic_urls());
         }
         //设置被转发的内容
-        if (status.retweeted_status != null) {
+        if (status.getRetweeted_status() != null) {
             processRetweeted();
             ll_item.addView(view_retweeted);
         }
-        String comments = getResources().getString(R.string.rb_comment) + CommonUtil.getNumString(status.comments_count);
+        String comments = getResources().getString(R.string.rb_comment) + CommonUtil.getNumString(status.getComments_count());
         rb_comment.setText(comments);
-        String reposts = getResources().getString(R.string.rb_repost) + CommonUtil.getNumString(status.reposts_count);
+        String reposts = getResources().getString(R.string.rb_repost) + CommonUtil.getNumString(status.getReposts_count());
         rb_repost.setText(reposts);
-        tv_favorite.setText(CommonUtil.getNumString(status.attitudes_count));
+        tv_favorite.setText(CommonUtil.getNumString(status.getAttitudes_count()));
         rb_comment.setOnCheckedChangeListener(onCheckedChangeListener);
         rb_repost.setOnCheckedChangeListener(onCheckedChangeListener);
 
@@ -376,7 +376,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                 case R.id.tv_screen_name: //点击用户昵称
 
                 case R.id.iv_avatar: //点击用户头像事件
-                    UserDetailsActivity.actionStart(context, status.user.getScreen_name());
+                    UserDetailsActivity.actionStart(context, status.getUser().getScreen_name());
                     break;
             }
         }
@@ -386,11 +386,11 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     private void processRetweeted() {
         view_retweeted = LayoutInflater.from(context).inflate(R.layout.weibo_retweeted_item, null);
         initRetweetedView();
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.retweeted_status.user.getScreen_name() + context.getResources().getString(R.string.colon) + status.retweeted_status.text, tv_retweeted_name_text);
+        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, AT + status.getRetweeted_status().getUser().getScreen_name() + context.getResources().getString(R.string.colon) + status.getRetweeted_status().getText(), tv_retweeted_name_text);
         tv_retweeted_name_text.setText(weiBoContent);
 
-        if (status.retweeted_status.pic_urls != null && status.retweeted_status.pic_urls.size() > 0) {
-            initImageView(rl_retweeted_pics, iv_retweeted_arrays, status.retweeted_status.pic_urls);
+        if (status.getRetweeted_status().getPic_urls() != null && status.getRetweeted_status().getPic_urls().size() > 0) {
+            initImageView(rl_retweeted_pics, iv_retweeted_arrays, status.getRetweeted_status().getPic_urls());
         }
     }
 
@@ -404,8 +404,8 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             iv_retweeted_arrays.add(iv);
         }
         //设置被转发微博 转发数和评论数
-        tv_retweeted_repost_count.setText(CommonUtil.getNumString(status.retweeted_status.reposts_count));
-        tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.retweeted_status.comments_count));
+        tv_retweeted_repost_count.setText(CommonUtil.getNumString(status.getRetweeted_status().getReposts_count()));
+        tv_retweeted_comment_count.setText(CommonUtil.getNumString(status.getRetweeted_status().getComments_count()));
     }
 
     private void initImageView(RelativeLayout rl, List<ImageView> iv_arrays, final List<Pic_urls> pic_urls) {

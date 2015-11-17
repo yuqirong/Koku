@@ -59,23 +59,25 @@ public class CheckUnreadService extends Service {
 //        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
 //        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
         String action = intent.getAction();
-        if (STOP_TIMER.equals(action)) {
-            if (mTimer != null) {
-                mTimer.cancel();
-                mTimer.purge();
-                mTimer = null;
-            }
-        } else if (START_TIMER.equals(action)) {
-            if (mTimer == null) {
-                mTimer = new Timer();
-            }
-            int anHour = 60 * 1000; //60s
-            mTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    checkUpdate();
+        if (action != null) {
+            if (STOP_TIMER.equals(action)) {
+                if (mTimer != null) {
+                    mTimer.cancel();
+                    mTimer.purge();
+                    mTimer = null;
                 }
-            }, 0, anHour);
+            } else if (START_TIMER.equals(action)) {
+                if (mTimer == null) {
+                    mTimer = new Timer();
+                }
+                int anHour = 60 * 1000; //60s
+                mTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        checkUpdate();
+                    }
+                }, 0, anHour);
+            }
         }
         return super.onStartCommand(intent, flags, startId);
     }

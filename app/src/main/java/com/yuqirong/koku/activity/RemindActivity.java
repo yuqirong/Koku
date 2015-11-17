@@ -16,6 +16,7 @@ import com.yuqirong.koku.adapter.FragmentAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.fragment.CommentRemindFragment;
 import com.yuqirong.koku.fragment.FragmentFactory;
+import com.yuqirong.koku.fragment.WeiboRemindFragment;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
@@ -47,6 +48,7 @@ public class RemindActivity extends SwipeBackActivity {
     @Override
     protected void initToolBar() {
         mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setTitle(R.string.notify);
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -69,15 +71,17 @@ public class RemindActivity extends SwipeBackActivity {
     private void setViewPager(ViewPager mViewPager) {
         adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(new CommentRemindFragment(), getResources().getString(R.string.comment));
-        adapter.addFragment(FragmentFactory.newInstance(AppConstant.STATUSES_BILATERAL_TIMELINE_URL), getResources().getString(R.string.refer_to));
+        adapter.addFragment(new WeiboRemindFragment(), getResources().getString(R.string.refer_to));
+        adapter.addFragment(FragmentFactory.newInstance(AppConstant.STATUSES_BILATERAL_TIMELINE_URL), getResources().getString(R.string.private_letter));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
 
     private void setupTabLayoutContent(TabLayout mTabLayout) {
+        mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
-        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
+        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 2));
         mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(android.R.color.white));
     }
 

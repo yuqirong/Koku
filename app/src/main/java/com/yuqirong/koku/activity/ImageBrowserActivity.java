@@ -9,8 +9,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bm.library.Info;
+import com.bm.library.PhotoView;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.ImagePagerAdapter;
+import com.yuqirong.koku.util.LogUtils;
+import com.yuqirong.koku.util.SharePrefUtil;
 import com.yuqirong.koku.view.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.view.swipeback.app.SwipeBackActivity;
 
@@ -107,7 +111,15 @@ public class ImageBrowserActivity extends SwipeBackActivity {
                     finish();
                     break;
                 case R.id.tv_save:
-
+                    String url = imgUrls.get(mViewPager.getCurrentItem());
+                    if (url != null) {
+                        if (SharePrefUtil.getBoolean(ImageBrowserActivity.this, "load_hd_pic", false)) {
+                            url = url.replace("thumbnail", "large");
+                        } else {
+                            url = url.replace("thumbnail", "bmiddle");
+                        }
+                        adapter.savePicture(url);
+                    }
                     break;
             }
         }

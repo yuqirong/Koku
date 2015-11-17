@@ -1,19 +1,16 @@
 package com.yuqirong.koku.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alibaba.fastjson.JSON;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.CommentRemindAdapter;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
-import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.RemindComment;
 import com.yuqirong.koku.util.JsonUtils;
@@ -28,42 +25,29 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
- * 提醒中关于我的评论
+ * 提醒中@我的微博
  * Created by Administrator on 2015/11/12.
  */
-public class CommentRemindFragment extends BaseFragment {
+public class WeiboRemindFragment extends BaseFragment {
 
     private AutoLoadRecyclerView mRecyclerView;
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
     private CommentRemindAdapter adapter;
     private int max_id;
-    private static Handler mHandler = new Handler();
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        String url = AppConstant.COMMENTS_TO_ME_URL + "?access_token="+ SharePrefUtil.getString(context, "access_token", "")+"&count=20";
+        String url = AppConstant.COMMENTS_MENTIONS_URL + "?access_token="+ SharePrefUtil.getString(context, "access_token", "")+"&count=20";
         LogUtils.i(url);
         getData(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String result) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    final String comments = jsonObject.getString("comments");
-                    MyApplication.getExecutor().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            final List<RemindComment> remindComments = JsonUtils.getListFromJson(comments, RemindComment.class);
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.getList().addAll(0, remindComments);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                        }
-                    });
-
-
+                    String comments = jsonObject.getString("comments");
+                    List<RemindComment> remindComments = JsonUtils.getListFromJson(comments, RemindComment.class);
+                    adapter.getList().addAll(0,remindComments);
+                    adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
