@@ -163,12 +163,11 @@ public class WeiboTimeLineFragment extends BaseFragment {
     private void processData(final String statuses) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             adapter.getList().clear();
-            adapter.getList().add(new Status());
         }
         MyApplication.getExecutor().execute(new Runnable() {
             @Override
             public void run() {
-                adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
+                adapter.getList().addAll(JsonUtils.getListFromJson(statuses, Status.class));
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -177,7 +176,7 @@ public class WeiboTimeLineFragment extends BaseFragment {
                         if (load) {
                             adapter.completeLoadMore(true);
                             if ("0".equals(max_id)) {
-                                adapter.setNoMoreWeibo();
+                                adapter.setEndText(context.getString(R.string.no_more_weibo));
                             }
                             load = false;
                         }

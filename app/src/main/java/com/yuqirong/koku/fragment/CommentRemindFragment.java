@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alibaba.fastjson.JSON;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.CommentRemindAdapter;
-import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.RemindComment;
@@ -56,7 +54,7 @@ public class CommentRemindFragment extends BaseFragment {
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    adapter.getList().addAll(0, remindComments);
+                                    adapter.getList().addAll(remindComments);
                                     adapter.notifyDataSetChanged();
                                 }
                             });
@@ -91,7 +89,6 @@ public class CommentRemindFragment extends BaseFragment {
     private void setupRecyclerView(AutoLoadRecyclerView mRecyclerView) {
         adapter = new CommentRemindAdapter();
 //        adapter.setOnLoadingMoreListener(loadingMoreListener);
-        adapter.getList().add(new RemindComment());
         mRecyclerView.setAdapter(adapter);
     }
 

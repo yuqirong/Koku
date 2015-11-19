@@ -48,17 +48,6 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
         options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, false);
     }
 
-    /**
-     * 设置成 “没有更多评论了”
-     */
-    public void setLoadFinish() {
-        completeLoadMore(false);
-        loadSuccess = true;
-        if (mFooterViewHolder != null) {
-            mFooterViewHolder.tv_load_fail.setText(context.getResources().getString(R.string.load_finish));
-        }
-    }
-
     public void initFooterViewHolder() {
         if (mFooterViewHolder != null) {
             mFooterViewHolder.tv_load_fail.setVisibility(View.INVISIBLE);

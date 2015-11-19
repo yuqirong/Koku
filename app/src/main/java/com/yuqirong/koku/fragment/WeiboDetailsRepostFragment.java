@@ -62,7 +62,7 @@ public class WeiboDetailsRepostFragment extends BaseFragment {
         public void onResponse(JSONObject object) {
             try {
                 String str = object.getString("reposts");
-                adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(str, Comment.class));
+                adapter.getList().addAll(JsonUtils.getListFromJson(str, Comment.class));
                 adapter.notifyDataSetChanged();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -88,10 +88,8 @@ public class WeiboDetailsRepostFragment extends BaseFragment {
                 ViewGroup group = (ViewGroup) parent;
                 group.removeView(headerView);
             }
-            adapter.addHeaderView(true, headerView);
+            adapter.addHeaderView(headerView);
         }
-        adapter.getList().add(new Comment());
-        adapter.getList().add(new Comment());
         mAutoLoadRecyclerView.setAdapter(adapter);
         return mAutoLoadRecyclerView;
     }

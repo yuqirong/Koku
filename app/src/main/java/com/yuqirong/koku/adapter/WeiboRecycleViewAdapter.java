@@ -71,7 +71,6 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         imageLoader = ImageLoader.getInstance();
         options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, true);
         ninepic_options = BitmapUtil.getDisplayImageOptions(R.drawable.thumbnail_default, true, true);
-        list.add(new Status());
     }
 
     @Override
@@ -357,15 +356,15 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         }
     }
 
-    /**
-     * 设置成 “没有更多微博了”
-     */
-    public void setNoMoreWeibo() {
-        completeLoadMore(false);
-        loadSuccess = true;
-        if (mFooterViewHolder != null)
-            mFooterViewHolder.tv_load_fail.setText(context.getResources().getString(R.string.no_more_weibo));
-    }
+//    /**
+//     * 设置成 “没有更多微博了”
+//     */
+//    public void setNoMoreWeibo() {
+//        completeLoadMore(false);
+//        loadSuccess = true;
+//        if (mFooterViewHolder != null)
+//            mFooterViewHolder.tv_load_fail.setText(context.getResources().getString(R.string.no_more_weibo));
+//    }
 
     public void initFooterViewHolder() {
         if (mFooterViewHolder != null) {

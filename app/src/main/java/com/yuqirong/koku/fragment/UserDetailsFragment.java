@@ -160,15 +160,14 @@ public class UserDetailsFragment extends BaseFragment {
         }
         if (mSwipeRefreshLayout.isRefreshing()) {
             adapter.clearData();
-            adapter.getList().add(new Status());
         }
-        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
+        adapter.getList().addAll(JsonUtils.getListFromJson(statuses, Status.class));
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
             adapter.completeLoadMore(true);
             if ("0".equals(max_id)) {
-                adapter.setNoMoreWeibo();
+                adapter.setEndText(context.getString(R.string.no_more_weibo));
             }
             load = false;
         }

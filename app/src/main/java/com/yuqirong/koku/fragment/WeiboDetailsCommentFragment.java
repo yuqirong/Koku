@@ -124,7 +124,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         super.onResume();
         if (status.getComments_count() == 0) {
             adapter.setIsLoadingMore(true);
-            adapter.setLoadFinish();
+            adapter.setEndText(context.getString(R.string.load_finish));
         }
     }
 
@@ -181,8 +181,6 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         try {
             if (refresh) {
                 adapter.getList().clear();
-                adapter.getList().add(new Comment());
-                adapter.getList().add(new Comment());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
             final String str = object.getString("comments");
@@ -190,7 +188,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             MyApplication.getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
-                    adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(str, Comment.class));
+                    adapter.getList().addAll(JsonUtils.getListFromJson(str, Comment.class));
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -200,7 +198,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                             }
                             if (next_cursor == 0 && !refresh) {
                                 adapter.setIsLoadingMore(true);
-                                adapter.setLoadFinish();
+                                adapter.setEndText(context.getString(R.string.load_finish));
                             }
                             refresh = false;
                             adapter.notifyDataSetChanged();
@@ -247,10 +245,8 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                 ViewGroup group = (ViewGroup) parent;
                 group.removeView(headerView);
             }
-            adapter.addHeaderView(true, headerView);
+            adapter.addHeaderView(headerView);
         }
-        adapter.getList().add(new Comment());
-        adapter.getList().add(new Comment());
         adapter.setOnLoadingMoreListener(new LoadMoreAdapter.OnLoadingMoreListener() {
             @Override
             public void onLoadingMore() {

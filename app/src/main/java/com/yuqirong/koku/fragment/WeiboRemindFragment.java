@@ -46,7 +46,7 @@ public class WeiboRemindFragment extends BaseFragment {
                     JSONObject jsonObject = new JSONObject(result);
                     String comments = jsonObject.getString("comments");
                     List<RemindComment> remindComments = JsonUtils.getListFromJson(comments, RemindComment.class);
-                    adapter.getList().addAll(0,remindComments);
+                    adapter.getList().addAll(remindComments);
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -75,7 +75,6 @@ public class WeiboRemindFragment extends BaseFragment {
     private void setupRecyclerView(AutoLoadRecyclerView mRecyclerView) {
         adapter = new CommentRemindAdapter();
 //        adapter.setOnLoadingMoreListener(loadingMoreListener);
-        adapter.getList().add(new RemindComment());
         mRecyclerView.setAdapter(adapter);
     }
 

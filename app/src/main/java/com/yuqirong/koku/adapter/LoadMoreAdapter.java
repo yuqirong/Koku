@@ -8,8 +8,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yuqirong.koku.R;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.util.LogUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,16 +23,24 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     private static final int TYPE_FOOTER = 1001;
     private static final int TYPE_HEADER = 1002;
+    // 头ViewHolder
     protected FooterViewHolder mFooterViewHolder;
+    // 尾ViewHolder
     protected HeaderViewHolder mHeaderViewHolder;
-    private View mHeaderView;
-    private boolean headerMode;
+    /**
+     * 头view
+     */
+    protected View mHeaderView;
+    /**
+     * 尾view
+     */
+    protected View mFooterView;
 
     public List<T> getList() {
         return list;
     }
 
-    protected List<T> list = new LinkedList<>();
+    protected List<T> list = new ArrayList<>();
     protected boolean loadSuccess = true;
 
     // 是否为加载更多
@@ -44,21 +54,21 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         return isLoadingMore;
     }
 
-    public void addHeaderView(boolean headerMode, View view) {
+    public void addHeaderView(View view) {
         this.mHeaderView = view;
-        this.headerMode = headerMode;
+    }
+
+    public LoadMoreAdapter(){
+        mFooterView = LayoutInflater.from(MyApplication.getContext()).inflate(R.layout.layout_footer,null);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
-            if (mHeaderView != null) {
-                mHeaderViewHolder = new HeaderViewHolder(mHeaderView);
-            }
+        if (viewType == TYPE_HEADER && mHeaderView != null) {
+            mHeaderViewHolder = new HeaderViewHolder(mHeaderView);
             return mHeaderViewHolder;
-        } else if (viewType == TYPE_FOOTER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
-            mFooterViewHolder = new FooterViewHolder(view);
+        } else if (viewType == TYPE_FOOTER && mFooterView != null) {
+           mFooterViewHolder = new FooterViewHolder(mFooterView);
             return mFooterViewHolder;
         } else {
             return createCustomViewHolder(parent, viewType);
@@ -71,9 +81,9 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder.getItemViewType() == TYPE_HEADER) {
+        if (mHeaderView != null && holder.getItemViewType() == TYPE_HEADER) {
             return;
-        } else if (holder.getItemViewType() == TYPE_FOOTER) {
+        } else if (mFooterView != null && holder.getItemViewType() == TYPE_FOOTER) {
             final FooterViewHolder viewHolder = (FooterViewHolder) holder;
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -89,17 +99,24 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
                 }
             });
         } else {
+            if (mHeaderView != null) {
+                position--;
+            }
             bindCustomViewHolder(holder, position);
         }
     }
 
     @Override
     public int getItemCount() {
-        if (headerMode) {
-            return list.size();
-        } else {
-            return list.size();
+        int exViewNum = 0;
+        //如果有头View或尾View
+        if (mHeaderView != null) {
+            exViewNum++;
         }
+        if (mFooterView != null) {
+            exViewNum++;
+        }
+        return list.size() + exViewNum;
     }
 
     @Override
@@ -110,13 +127,16 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && headerMode) {
+        if (mHeaderView != null && position == 0) {
             return TYPE_HEADER;
-        }
-        if (position + 1 == getItemCount()) {
+        } else if (mFooterView != null && position == getItemCount() - 1) {
             return TYPE_FOOTER;
+        } else {
+            if (mHeaderView != null) {
+                return super.getItemViewType(position - 1);
+            }
+            return super.getItemViewType(position);
         }
-        return super.getItemViewType(position);
     }
 
     /**
@@ -124,7 +144,7 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     public void completeLoadMore(boolean success) {
         loadSuccess = success;
-        LogUtils.i("isLoadingMore : "+isLoadingMore);
+        LogUtils.i("isLoadingMore : " + isLoadingMore);
         if (mFooterViewHolder == null) {
             return;
         }
@@ -135,6 +155,16 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         } else {
             isLoadingMore = false;
         }
+    }
+
+    /**
+     * 设置列表到底的文字提示，例如 “没有更多微博了”
+     */
+    public void setEndText(String endText) {
+        completeLoadMore(false);
+        loadSuccess = true;
+        if (mFooterViewHolder != null)
+            mFooterViewHolder.tv_load_fail.setText(endText);
     }
 
     /**
@@ -166,8 +196,8 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         notifyDataSetChanged();
     }
 
-    //footer viewHolder
-    static class FooterViewHolder extends RecyclerView.ViewHolder {
+    //footer viewholder
+    public static class FooterViewHolder extends RecyclerView.ViewHolder {
 
         public LinearLayout ll_load_more;
         public TextView tv_load_fail;
@@ -179,7 +209,8 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    //header viewhoder
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         public HeaderViewHolder(View itemView) {
             super(itemView);
         }

@@ -149,11 +149,10 @@ public class MyFavoriteFragment extends BaseFragment {
     private void processData(String statuses) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             adapter.clearData();
-            adapter.getList().add(new Status());
         }
         List<Favorite> favoritesList = JsonUtils.getListFromJson(statuses, Favorite.class);
         for (Favorite f : favoritesList) {
-            adapter.getList().add(adapter.getList().size() - 1, f.status);
+            adapter.getList().add(f.status);
         }
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);

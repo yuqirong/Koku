@@ -147,9 +147,8 @@ public class PublicWeiboFragment extends BaseFragment {
     private void processData(String statuses) {
         if (mSwipeRefreshLayout.isRefreshing()) {
             adapter.clearData();
-            adapter.getList().add(new Status());
         }
-        adapter.getList().addAll(adapter.getList().size() - 1, JsonUtils.getListFromJson(statuses, Status.class));
+        adapter.getList().addAll(JsonUtils.getListFromJson(statuses, Status.class));
         adapter.notifyDataSetChanged();
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {

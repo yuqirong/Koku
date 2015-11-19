@@ -165,7 +165,7 @@ public class UserDetailsActivity extends SwipeBackActivity {
 
     private void setupTabLayoutContent(TabLayout mTabLayout) {
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.Indigo_colorPrimary));
-        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 4));
+        mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 2));
         mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(R.color.Indigo_colorPrimary));
     }
 

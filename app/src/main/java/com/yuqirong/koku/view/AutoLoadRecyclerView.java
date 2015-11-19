@@ -45,7 +45,7 @@ public class AutoLoadRecyclerView extends RecyclerView {
         final LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext());
         this.setLayoutManager(mLinearLayoutManager);
 //        this.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST));
-        this.setOnScrollListener(new OnScrollListener() {
+        this.addOnScrollListener(new OnScrollListener() {
             private int lastVisibleItem;
 
             @Override
