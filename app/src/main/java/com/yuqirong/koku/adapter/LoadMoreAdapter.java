@@ -168,6 +168,16 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
     /**
+     * 初始化FooterView
+     */
+    public void initFooterViewHolder() {
+        if (mFooterViewHolder != null) {
+            mFooterViewHolder.tv_load_fail.setVisibility(View.INVISIBLE);
+            mFooterViewHolder.ll_load_more.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
      * 增加一条数据
      *
      * @param position

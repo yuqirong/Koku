@@ -10,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.CommentRemindAdapter;
-import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.RemindComment;
 import com.yuqirong.koku.util.JsonUtils;
@@ -33,12 +32,18 @@ public class WeiboRemindFragment extends BaseFragment {
     private AutoLoadRecyclerView mRecyclerView;
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
     private CommentRemindAdapter adapter;
-    private int max_id;
+    private String max_id;
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        String url = AppConstant.COMMENTS_MENTIONS_URL + "?access_token="+ SharePrefUtil.getString(context, "access_token", "")+"&count=20";
-        LogUtils.i(url);
+        getDataFromServer();
+
+    }
+
+    private void getDataFromServer() {
+        String url = AppConstant.COMMENTS_MENTIONS_URL + "?access_token="
+                + SharePrefUtil.getString(context, "access_token", "") + "&count=20&max_id=" + max_id;
+        LogUtils.i("获取@我的微博列表" + url);
         getData(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String result) {
@@ -58,12 +63,11 @@ public class WeiboRemindFragment extends BaseFragment {
 
             }
         });
-
     }
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comment_remind,null);
+        View view = inflater.inflate(R.layout.fragment_comment_remind, null);
         mRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mRecyclerView);
         setupRecyclerView(mRecyclerView);
         mSwipeRefreshLayout = (FixedSwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);

@@ -366,12 +366,12 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
 //            mFooterViewHolder.tv_load_fail.setText(context.getResources().getString(R.string.no_more_weibo));
 //    }
 
-    public void initFooterViewHolder() {
-        if (mFooterViewHolder != null) {
-            mFooterViewHolder.tv_load_fail.setVisibility(View.INVISIBLE);
-            mFooterViewHolder.ll_load_more.setVisibility(View.VISIBLE);
-        }
-    }
+//    public void initFooterViewHolder() {
+//        if (mFooterViewHolder != null) {
+//            mFooterViewHolder.tv_load_fail.setVisibility(View.INVISIBLE);
+//            mFooterViewHolder.ll_load_more.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     // weibo item ViewHolder
     public class WeiboViewHolder extends RecyclerView.ViewHolder {

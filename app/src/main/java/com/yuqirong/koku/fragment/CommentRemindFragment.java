@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.CommentRemindAdapter;
+import com.yuqirong.koku.adapter.LoadMoreAdapter.OnLoadingMoreListener;
 import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.RemindComment;
@@ -34,34 +35,26 @@ public class CommentRemindFragment extends BaseFragment {
     private AutoLoadRecyclerView mRecyclerView;
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
     private CommentRemindAdapter adapter;
-    private int max_id;
+    private String max_id;
     private static Handler mHandler = new Handler();
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        String url = AppConstant.COMMENTS_TO_ME_URL + "?access_token="+ SharePrefUtil.getString(context, "access_token", "")+"&count=20";
-        LogUtils.i(url);
+        getDataFromServer();
+    }
+
+    private void getDataFromServer() {
+        String url = AppConstant.COMMENTS_TO_ME_URL + "?access_token="
+                + SharePrefUtil.getString(context, "access_token", "") + "&count=20&max_id=" + max_id;
+        LogUtils.i("获取当前登录用户所接收到的评论列表url:" + url);
         getData(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String result) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    final String comments = jsonObject.getString("comments");
-                    MyApplication.getExecutor().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            final List<RemindComment> remindComments = JsonUtils.getListFromJson(comments, RemindComment.class);
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.getList().addAll(remindComments);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                        }
-                    });
-
-
+                    max_id = jsonObject.getString("next_cursor");
+                    String comments = jsonObject.getString("comments");
+                    processData(comments);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -72,12 +65,39 @@ public class CommentRemindFragment extends BaseFragment {
 
             }
         });
+    }
 
+    private void processData(final String comments) {
+        MyApplication.getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<RemindComment> remindComments = JsonUtils.getListFromJson(comments, RemindComment.class);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            adapter.getList().clear();
+                        }
+                        adapter.getList().addAll(remindComments);
+                        adapter.notifyDataSetChanged();
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        } else if (adapter.isLoadingMore()) {
+                            if (max_id.equals("0")) {
+                                adapter.setEndText(context.getString(R.string.load_finish));
+                            } else {
+                                adapter.completeLoadMore(true);
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_comment_remind,null);
+        View view = inflater.inflate(R.layout.fragment_comment_remind, null);
         mRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mRecyclerView);
         setupRecyclerView(mRecyclerView);
         mSwipeRefreshLayout = (FixedSwipeRefreshLayout) view.findViewById(R.id.mSwipeRefreshLayout);
@@ -88,9 +108,17 @@ public class CommentRemindFragment extends BaseFragment {
 
     private void setupRecyclerView(AutoLoadRecyclerView mRecyclerView) {
         adapter = new CommentRemindAdapter();
-//        adapter.setOnLoadingMoreListener(loadingMoreListener);
+        adapter.setOnLoadingMoreListener(loadingMoreListener);
         mRecyclerView.setAdapter(adapter);
     }
+
+    OnLoadingMoreListener loadingMoreListener = new OnLoadingMoreListener() {
+
+        @Override
+        public void onLoadingMore() {
+            getDataFromServer();
+        }
+    };
 
     /**
      * 下拉刷新Listener
@@ -98,7 +126,9 @@ public class CommentRemindFragment extends BaseFragment {
     SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-
+            max_id = null;
+            adapter.initFooterViewHolder();
+            getDataFromServer();
         }
     };
 
