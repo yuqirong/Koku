@@ -105,6 +105,8 @@
     <string name="save_success">保存成功！图片路径:%1$s</string>
     <string name="save_fail">保存失败</string>
     <string name="no_sd_card">没有SD卡或SD卡已卸载</string>
+    <string name="fail_to_locate">获取位置信息失败</string>
+    <string name="clear_success">清理成功！</string>
     <array name="fab_function">
         <item>发微博</item>
         <item>刷新</item>

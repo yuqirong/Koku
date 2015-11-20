@@ -20,11 +20,9 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
@@ -88,89 +86,93 @@ public class WeiboRecycleViewAdapter extends LoadMoreAdapter<Status> {
         //创建监听器实例
         viewHolder.onMenuItemClickListener = new MyOnMenuItemClickListener(position);
         viewHolder.onClickListener = new WeiboWidghtOnClickListener(position, viewHolder.onMenuItemClickListener);
-        if (SharePrefUtil.getBoolean(context, "user_remark", true)) {
-            viewHolder.tv_screen_name.setText(status.getUser().getName());
+        if (!TextUtils.isEmpty(status.getDeleted()) && status.getDeleted().equals("1")) {
+            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.getText(), viewHolder.tv_text);
+            viewHolder.tv_text.setText(weiBoContent);
         } else {
-            viewHolder.tv_screen_name.setText(status.getUser().getScreen_name());
-        }
-        imageLoader.displayImage(status.getUser().getProfile_image_url(), viewHolder.iv_avatar, options);
-        viewHolder.tv_time.setText(DateUtils.getWeiboDate(status.getCreated_at()));
-        viewHolder.tv_device.setText(Html.fromHtml(status.getSource()));
-        //设置认证图标
-        switch (status.getUser().getVerified_type()) {
-            case 0:
-                viewHolder.iv_verified.setImageResource(R.drawable.avatar_vip);
-                break;
-            case -1:
-                viewHolder.iv_verified.setImageResource(android.R.color.transparent);
-                break;
-            case 220:
-                viewHolder.iv_verified.setImageResource(R.drawable.avatar_grassroot);
-                break;
-            default:
-                viewHolder.iv_verified.setImageResource(R.drawable.avatar_enterprise_vip);
-                break;
-        }
-        //设置微博 转发数和评论数
-        viewHolder.tv_repost_count.setText(CommonUtil.getNumString(status.getReposts_count()));
-        viewHolder.tv_comment_count.setText(CommonUtil.getNumString(status.getComments_count()));
-        //设置微博内容
-        SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.getText(), viewHolder.tv_text);
-        viewHolder.tv_text.setText(weiBoContent);
-        //判断此微博是否包含图片
-        if (status.getPic_urls() != null && status.getPic_urls().size() > 0) {
-            viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, status.getPic_urls());
-        } else {
-            if (viewHolder.iv_arrays != null)
-                viewHolder.rl_pics.setVisibility(View.GONE);
-        }
-        //判断此微博是否为转发微博
-        if (status.getRetweeted_status() != null) {
-            processRetweeted(viewHolder, status);
-            viewHolder.ll_item.addView(viewHolder.view_retweeted);
+            if (SharePrefUtil.getBoolean(context, "user_remark", true)) {
+                viewHolder.tv_screen_name.setText(status.getUser().getName());
+            } else {
+                viewHolder.tv_screen_name.setText(status.getUser().getScreen_name());
+            }
+            imageLoader.displayImage(status.getUser().getProfile_image_url(), viewHolder.iv_avatar, options);
+            viewHolder.tv_time.setText(DateUtils.getWeiboDate(status.getCreated_at()));
+            viewHolder.tv_device.setText(Html.fromHtml(status.getSource()));
+            //设置认证图标
+            switch (status.getUser().getVerified_type()) {
+                case 0:
+                    viewHolder.iv_verified.setImageResource(R.drawable.avatar_vip);
+                    break;
+                case -1:
+                    viewHolder.iv_verified.setImageResource(android.R.color.transparent);
+                    break;
+                case 220:
+                    viewHolder.iv_verified.setImageResource(R.drawable.avatar_grassroot);
+                    break;
+                default:
+                    viewHolder.iv_verified.setImageResource(R.drawable.avatar_enterprise_vip);
+                    break;
+            }
+            //设置微博 转发数和评论数
+            viewHolder.tv_repost_count.setText(CommonUtil.getNumString(status.getReposts_count()));
+            viewHolder.tv_comment_count.setText(CommonUtil.getNumString(status.getComments_count()));
+            //设置微博内容
+            SpannableString weiBoContent = StringUtils.getWeiBoContent(context, status.getText(), viewHolder.tv_text);
+            viewHolder.tv_text.setText(weiBoContent);
+            //判断此微博是否包含图片
+            if (status.getPic_urls() != null && status.getPic_urls().size() > 0) {
+                viewHolder.initImageView(viewHolder.rl_pics, viewHolder.iv_arrays, status.getPic_urls());
+            } else {
+                if (viewHolder.iv_arrays != null)
+                    viewHolder.rl_pics.setVisibility(View.GONE);
+            }
+            //判断此微博是否为转发微博
+            if (status.getRetweeted_status() != null) {
+                processRetweeted(viewHolder, status);
+                viewHolder.ll_item.addView(viewHolder.view_retweeted);
+                //设置监听器
+                viewHolder.tv_retweeted_comment_count.setOnClickListener(viewHolder.onClickListener);
+                viewHolder.tv_retweeted_repost_count.setOnClickListener(viewHolder.onClickListener);
+            } else {
+                if (viewHolder.view_retweeted != null)
+                    viewHolder.ll_item.removeView(viewHolder.view_retweeted);
+            }
+            //判断此微博有没有地理位置
+            if (status.getAnnotations() != null && status.getAnnotations().get(0).getPlace() != null
+                    && status.getAnnotations().get(0).getPlace().getTitle() != null) {
+                viewHolder.tv_location.setVisibility(View.VISIBLE);
+                viewHolder.tv_location.setText(status.getAnnotations().get(0).getPlace().getTitle());
+            } else {
+                viewHolder.tv_location.setVisibility(View.GONE);
+            }
             //设置监听器
-            viewHolder.tv_retweeted_comment_count.setOnClickListener(viewHolder.onClickListener);
-            viewHolder.tv_retweeted_repost_count.setOnClickListener(viewHolder.onClickListener);
-        } else {
-            if (viewHolder.view_retweeted != null)
-                viewHolder.ll_item.removeView(viewHolder.view_retweeted);
-        }
-        //判断此微博有没有地理位置
-        if (status.getAnnotations() != null && status.getAnnotations().get(0).getPlace() != null
-                && status.getAnnotations().get(0).getPlace().getTitle() != null) {
-            viewHolder.tv_location.setVisibility(View.VISIBLE);
-            viewHolder.tv_location.setText(status.getAnnotations().get(0).getPlace().getTitle());
-        } else {
-            viewHolder.tv_location.setVisibility(View.GONE);
-        }
-        //设置监听器
-        viewHolder.tv_screen_name.setOnClickListener(viewHolder.onClickListener);
-        viewHolder.iv_avatar.setOnClickListener(viewHolder.onClickListener);
+            viewHolder.tv_screen_name.setOnClickListener(viewHolder.onClickListener);
+            viewHolder.iv_avatar.setOnClickListener(viewHolder.onClickListener);
 
-        viewHolder.tv_comment_count.setOnClickListener(viewHolder.onClickListener);
-        viewHolder.tv_repost_count.setOnClickListener(viewHolder.onClickListener);
-        viewHolder.iv_overflow.setOnClickListener(viewHolder.onClickListener);
+            viewHolder.tv_comment_count.setOnClickListener(viewHolder.onClickListener);
+            viewHolder.tv_repost_count.setOnClickListener(viewHolder.onClickListener);
+            viewHolder.iv_overflow.setOnClickListener(viewHolder.onClickListener);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onItemClick(v, position);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(v, position);
+                    }
                 }
-            }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 
-            @Override
-            public boolean onLongClick(View v) {
-                if (listener != null) {
-                    listener.onItemLongClick(v, position);
-                    return true;
+                @Override
+                public boolean onLongClick(View v) {
+                    if (listener != null) {
+                        listener.onItemLongClick(v, position);
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-
+            });
+        }
     }
 
     // item上各组件的点击事件监听器

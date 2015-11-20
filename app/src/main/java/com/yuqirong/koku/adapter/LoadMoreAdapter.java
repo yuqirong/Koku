@@ -12,7 +12,6 @@ import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.util.LogUtils;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      */
     protected View mFooterView;
 
-    public List<T> getList() {
+    public synchronized List<T> getList() {
         return list;
     }
 
@@ -149,6 +148,7 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
             return;
         }
         if (!success) {
+            isLoadingMore = true;
             mFooterViewHolder.ll_load_more.setVisibility(View.INVISIBLE);
             mFooterViewHolder.tv_load_fail.setText(mFooterViewHolder.itemView.getContext().getResources().getString(R.string.load_fail));
             mFooterViewHolder.tv_load_fail.setVisibility(View.VISIBLE);

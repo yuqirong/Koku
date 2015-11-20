@@ -60,6 +60,8 @@ public class MyFavoriteFragment extends BaseFragment {
     protected ACache aCache;
     //返回结果的页码，默认为1。
     private int page = 1;
+    //总数
+    private int total_number;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,6 +137,7 @@ public class MyFavoriteFragment extends BaseFragment {
             String statuses = null;
             try {
                 JSONObject jsonObject = new JSONObject(stringResult);
+                total_number = jsonObject.getInt("total_number");
                 statuses = jsonObject.getString("favorites");
                 if (mSwipeRefreshLayout.isRefreshing()) {
                     aCache.put(TIME_LINE_CACHE_NAME, stringResult);
@@ -155,6 +158,9 @@ public class MyFavoriteFragment extends BaseFragment {
             adapter.getList().add(f.status);
         }
         adapter.notifyDataSetChanged();
+        if(total_number == adapter.getList().size()){
+            adapter.setEndText(context.getString(R.string.no_more_weibo));
+        }
         mSwipeRefreshLayout.setRefreshing(false);
         if (load) {
             adapter.completeLoadMore(true);

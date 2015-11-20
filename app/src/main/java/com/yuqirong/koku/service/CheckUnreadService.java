@@ -1,19 +1,14 @@
 package com.yuqirong.koku.service;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.yuqirong.koku.activity.AuthorizeActivity;
 import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver;
@@ -58,8 +53,8 @@ public class CheckUnreadService extends Service {
 //        Intent i = new Intent(this, RefreshWeiboTimelineReceiver.class);
 //        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
 //        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
-        String action = intent.getAction();
-        if (action != null) {
+        if (intent != null) {
+            String action = intent.getAction();
             if (STOP_TIMER.equals(action)) {
                 if (mTimer != null) {
                     mTimer.cancel();

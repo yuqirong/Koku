@@ -93,12 +93,13 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private long next_cursor;
     private boolean load; //是否正在加载
-    private boolean refresh; //是否正在刷新
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Status status;
     private View headerView;
     private Handler mHandler = new Handler();
+    //评论总条数
+    private int total_number;
 
     private static ImageLoader imageLoader = ImageLoader.getInstance();
     private static DisplayImageOptions options = BitmapUtil.getDisplayImageOptions(R.drawable.img_empty_avatar, true, true);
@@ -158,11 +159,6 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void getDataFromServer() {
         if (!TextUtils.isEmpty(status.getIdstr())) {
-            if (refresh) {
-                next_cursor = 0;
-                adapter.initFooterViewHolder();
-                adapter.setIsLoadingMore(false);
-            }
             String url = AppConstant.COMMENTS_SHOW_URL + "?count=20&id=" + status.getIdstr() +
                     "&access_token=" + SharePrefUtil.getString(context, "access_token", "") + "&max_id=" + next_cursor;
             LogUtils.i("评论url ：" + url);
@@ -179,12 +175,18 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
 
     private void processData(JSONObject object) {
         try {
-            if (refresh) {
+            if (mSwipeRefreshLayout.isRefreshing()) {
                 adapter.getList().clear();
-                mSwipeRefreshLayout.setRefreshing(false);
             }
             final String str = object.getString("comments");
+            total_number = object.getInt("total_number");
+            if (total_number == adapter.getList().size()) {
+                adapter.setEndText(context.getString(R.string.load_finish));
+            }
             next_cursor = object.getLong("next_cursor");
+            if (next_cursor == 0l) {
+                adapter.setEndText(context.getString(R.string.load_finish));
+            }
             MyApplication.getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -192,15 +194,12 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (load) {
+                            if (mSwipeRefreshLayout.isRefreshing()) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            } else if (load) {
                                 adapter.completeLoadMore(true);
                                 load = false;
                             }
-                            if (next_cursor == 0 && !refresh) {
-                                adapter.setIsLoadingMore(true);
-                                adapter.setEndText(context.getString(R.string.load_finish));
-                            }
-                            refresh = false;
                             adapter.notifyDataSetChanged();
                         }
                     });
@@ -229,8 +228,11 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 getStatusesCountData();
-                refresh = true;
+                next_cursor = 0;
+                adapter.setIsLoadingMore(false);
+                adapter.initFooterViewHolder();
                 getDataFromServer();
+
             }
         });
         mAutoLoadRecyclerView = (AutoLoadRecyclerView) view.findViewById(R.id.mAutoLoadRecyclerView);
@@ -250,8 +252,10 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
         adapter.setOnLoadingMoreListener(new LoadMoreAdapter.OnLoadingMoreListener() {
             @Override
             public void onLoadingMore() {
-                load = true;
-                getDataFromServer();
+                if (total_number != adapter.getList().size() && next_cursor != 0l) {
+                    load = true;
+                    getDataFromServer();
+                }
             }
         });
         adapter.setOnItemClickListener(new WeiboRecycleViewAdapter.OnItemClickListener() {
@@ -368,7 +372,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.tv_screen_name: //点击用户昵称
 
                 case R.id.iv_avatar: //点击用户头像事件

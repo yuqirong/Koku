@@ -129,6 +129,8 @@ public class NearlyDynamicFragment extends BaseFragment {
                 String url = AppConstant.PLACE_NEARBY_TIMELINE_URL + "?access_token=" + access_token + "&lat=" + latitude + "&long=" + longitude+"&count=20&page="+page;
                 LogUtils.i("周边动态 url ：" + url);
                 getData(url, listener, errorListener);
+            }else{
+                CommonUtil.showToast(context, context.getString(R.string.fail_to_locate));
             }
 
         }

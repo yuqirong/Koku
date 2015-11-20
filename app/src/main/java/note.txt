@@ -17,7 +17,7 @@ todo:
 关闭屏幕时禁止查询新微博           done
 保存图片                        done
 发带图片的微博
-评论和@
+评论和@                         done
 新微博提醒                       done
 drawerlayout里的item的列表要有末尾记号
 

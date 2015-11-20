@@ -121,7 +121,7 @@ public class PublicWeiboFragment extends BaseFragment {
                 page = 1;
                 adapter.initFooterViewHolder();
             }
-            String url = AppConstant.STATUSES_PUBLIC_TIMELINE_URL + "?access_token=" + access_token + "&count=20&page=" + page;
+            String url = AppConstant.STATUSES_PUBLIC_TIMELINE_URL + "?access_token=" + access_token + "&count=40&page=" + page;
             LogUtils.i("公共微博 url ：" + url);
             getData(url, listener, errorListener);
         }

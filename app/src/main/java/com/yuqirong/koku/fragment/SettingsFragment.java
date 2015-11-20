@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.CompoundButton;
-import android.widget.RelativeLayout;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -194,6 +193,7 @@ public class SettingsFragment extends BaseFragment {
                 double size = getCacheSize(mImageLoader.getDiskCache().getDirectory());
                 String content = String.format(context.getString(R.string.clear_cache), String.valueOf(size));
                 atv_clear_cache.setContent(content);
+                CommonUtil.showToast(context, context.getString(R.string.clear_success));
             }
         }, true);
     }

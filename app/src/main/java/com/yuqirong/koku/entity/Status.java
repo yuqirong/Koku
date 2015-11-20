@@ -243,6 +243,9 @@ public class Status implements Serializable {
     //缩略图片地址，没有时不返回此字段
     private String thumbnail_pic;
     private List<Annotations> annotations;
+    //被转发微博是否被删除  "1"为是
+    private String deleted;
+
 
     public String getIdstr() {
         return idstr;
@@ -394,6 +397,14 @@ public class Status implements Serializable {
 
     public void setAnnotations(List<Annotations> annotations) {
         this.annotations = annotations;
+    }
+
+    public String getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(String deleted) {
+        this.deleted = deleted;
     }
 
     public class Retweeted_status implements Serializable {

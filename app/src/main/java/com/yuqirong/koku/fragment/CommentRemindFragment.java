@@ -53,6 +53,9 @@ public class CommentRemindFragment extends BaseFragment {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     max_id = jsonObject.getString("next_cursor");
+                    if (max_id.equals("0")) {
+                        adapter.setEndText(context.getString(R.string.load_finish));
+                    }
                     String comments = jsonObject.getString("comments");
                     processData(comments);
                 } catch (JSONException e) {

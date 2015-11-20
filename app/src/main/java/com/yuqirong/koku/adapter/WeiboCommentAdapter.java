@@ -22,7 +22,6 @@ import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.util.BitmapUtil;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.DateUtils;
-import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.StringUtils;
 
 /**
@@ -64,7 +63,7 @@ public class WeiboCommentAdapter extends LoadMoreAdapter<Comment> {
 
     @Override
     public void bindCustomViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        LogUtils.i("position : " + position);
+//        LogUtils.i("position : " + position);
         Comment comment = getList().get(position);
         ViewHolder mViewHolder = (ViewHolder) holder;
         ViewOnClickListener onClickListener = new ViewOnClickListener(comment, weiboId);

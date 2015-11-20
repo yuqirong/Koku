@@ -1,6 +1,7 @@
 package com.yuqirong.koku.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.CommentRemindAdapter;
+import com.yuqirong.koku.adapter.LoadMoreAdapter;
+import com.yuqirong.koku.application.MyApplication;
 import com.yuqirong.koku.constant.AppConstant;
 import com.yuqirong.koku.entity.RemindComment;
 import com.yuqirong.koku.util.JsonUtils;
@@ -33,11 +36,11 @@ public class WeiboRemindFragment extends BaseFragment {
     private FixedSwipeRefreshLayout mSwipeRefreshLayout;
     private CommentRemindAdapter adapter;
     private String max_id;
+    private static Handler mHandler = new Handler();
 
     @Override
     public void initData(Bundle savedInstanceState) {
         getDataFromServer();
-
     }
 
     private void getDataFromServer() {
@@ -49,10 +52,12 @@ public class WeiboRemindFragment extends BaseFragment {
             public void onResponse(String result) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
+                    max_id = jsonObject.getString("next_cursor");
+                    if (max_id.equals("0")) {
+                        adapter.setEndText(context.getString(R.string.load_finish));
+                    }
                     String comments = jsonObject.getString("comments");
-                    List<RemindComment> remindComments = JsonUtils.getListFromJson(comments, RemindComment.class);
-                    adapter.getList().addAll(remindComments);
-                    adapter.notifyDataSetChanged();
+                    processData(comments);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -61,6 +66,34 @@ public class WeiboRemindFragment extends BaseFragment {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
 
+            }
+        });
+    }
+
+    private void processData(final String comments) {
+        MyApplication.getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                final List<RemindComment> remindComments = JsonUtils.getListFromJson(comments, RemindComment.class);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            adapter.getList().clear();
+                        }
+                        adapter.getList().addAll(remindComments);
+                        adapter.notifyDataSetChanged();
+                        if (mSwipeRefreshLayout.isRefreshing()) {
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        } else if (adapter.isLoadingMore()) {
+                            if (max_id.equals("0")) {
+                                adapter.setEndText(context.getString(R.string.load_finish));
+                            } else {
+                                adapter.completeLoadMore(true);
+                            }
+                        }
+                    }
+                });
             }
         });
     }
@@ -78,9 +111,17 @@ public class WeiboRemindFragment extends BaseFragment {
 
     private void setupRecyclerView(AutoLoadRecyclerView mRecyclerView) {
         adapter = new CommentRemindAdapter();
-//        adapter.setOnLoadingMoreListener(loadingMoreListener);
+        adapter.setOnLoadingMoreListener(loadingMoreListener);
         mRecyclerView.setAdapter(adapter);
     }
+
+    LoadMoreAdapter.OnLoadingMoreListener loadingMoreListener = new LoadMoreAdapter.OnLoadingMoreListener() {
+
+        @Override
+        public void onLoadingMore() {
+            getDataFromServer();
+        }
+    };
 
     /**
      * 下拉刷新Listener
@@ -88,7 +129,9 @@ public class WeiboRemindFragment extends BaseFragment {
     SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-
+            max_id = null;
+            adapter.initFooterViewHolder();
+            getDataFromServer();
         }
     };
 
