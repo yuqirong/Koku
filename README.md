@@ -1,7 +1,19 @@
 # 新浪微博第三方客户端 Koku
+![icon](https://github.com/yuqirong/Koku/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png) 
+
 Koku，够酷！
+
 ##应用介绍 Introduction
 Koku是一款新型的微博客户端， 遵循Material Design设计规范。漂亮简洁的界面，给你带来不同的视角效果和体验！ 
+
+全部微博：展现你关注的微博时间线。  
+互相关注：互粉的通通看个清楚！  
+搜索用户：想搜索某人，那还等什么！  
+周边动态：知道周边有谁发布微博了吗？  
+公共微博：看看公共微博到底在讨论什么吧！  
+我的收藏：经典的微博我一定要收藏！  
+
+PS：部分功能因新浪微博接口的限制，无法得到数据。如察看用户的微博列表时，无法得到微博列表的数据。
 
 ##截图 ScreenShots
 ![img1](https://github.com/yuqirong/Koku/blob/master/screenshots/Screenshot_2015-11-25-10-34-43.png)![img2](https://github.com/yuqirong/Koku/blob/master/screenshots/Screenshot_2015-11-25-10-34-36.png)![img3](https://github.com/yuqirong/Koku/blob/master/screenshots/Screenshot_2015-11-25-10-39-52.png)![img4](https://github.com/yuqirong/Koku/blob/master/screenshots/Screenshot_2015-11-25-10-35-03.png) 
