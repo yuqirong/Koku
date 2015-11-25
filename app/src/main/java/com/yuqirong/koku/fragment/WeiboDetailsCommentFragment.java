@@ -180,13 +180,7 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             }
             final String str = object.getString("comments");
             total_number = object.getInt("total_number");
-            if (total_number == adapter.getList().size()) {
-                adapter.setEndText(context.getString(R.string.load_finish));
-            }
             next_cursor = object.getLong("next_cursor");
-            if (next_cursor == 0l) {
-                adapter.setEndText(context.getString(R.string.load_finish));
-            }
             MyApplication.getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -207,6 +201,12 @@ public class WeiboDetailsCommentFragment extends BaseFragment {
             });
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        if (total_number == adapter.getList().size()) {
+            adapter.setEndText(context.getString(R.string.load_finish));
+        }
+        if (next_cursor == 0l) {
+            adapter.setEndText(context.getString(R.string.load_finish));
         }
     }
 
