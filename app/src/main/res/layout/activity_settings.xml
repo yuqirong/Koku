@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/SettingsFragment"
-        class="com.yuqirong.koku.fragment.SettingsFragment"
+        class="com.yuqirong.koku.module.ui.fragment.SettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

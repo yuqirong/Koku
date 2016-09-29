@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/nearlyDynamicFragment"
-        class="com.yuqirong.koku.fragment.NearlyDynamicFragment"
+        class="com.yuqirong.koku.module.ui.fragment.NearlyDynamicFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

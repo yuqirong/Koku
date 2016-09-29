@@ -15,7 +15,7 @@
         android:text="关于"
         android:textColor="@color/Teal_colorPrimary"/>
 
-    <com.yuqirong.koku.view.AboutTextView
+    <com.yuqirong.koku.module.ui.weidgt.AboutTextView
         android:id="@+id/atv_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         android:layout_marginRight="10dp"
         android:background="#cccccc" />
 
-    <com.yuqirong.koku.view.AboutTextView
+    <com.yuqirong.koku.module.ui.weidgt.AboutTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_about_item"
@@ -44,7 +44,7 @@
         android:layout_marginRight="10dp"
         android:background="#cccccc" />
 
-    <com.yuqirong.koku.view.AboutTextView
+    <com.yuqirong.koku.module.ui.weidgt.AboutTextView
         android:id="@+id/atv_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
         android:text="分享与评分"
         android:textColor="@color/Teal_colorPrimary"/>
 
-    <com.yuqirong.koku.view.AboutTextView
+    <com.yuqirong.koku.module.ui.weidgt.AboutTextView
         android:id="@+id/atv_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
         android:layout_marginRight="10dp"
         android:background="#cccccc" />
 
-    <com.yuqirong.koku.view.AboutTextView
+    <com.yuqirong.koku.module.ui.weidgt.AboutTextView
         android:id="@+id/atv_grade"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -14,13 +14,13 @@
     <uses-feature android:name="android.hardware.camera" />
 
     <application
-        android:name=".application.MyApplication"
+        android:name=".app.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".module.ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -30,85 +30,85 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".module.ui.activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/DrawerLayoutTheme">
         </activity>
         <activity
-            android:name=".activity.AuthorizeActivity"
+            android:name=".module.ui.activity.AuthorizeActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.PublishActivity"
+            android:name=".module.ui.activity.PublishActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden|adjustResize"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.WeiboDetailsActivity"
+            android:name=".module.ui.activity.WeiboDetailsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.UserDetailsActivity"
+            android:name=".module.ui.activity.UserDetailsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.SearchUserActivity"
+            android:name=".module.ui.activity.SearchUserActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.NearlyDynamicActivity"
+            android:name=".module.ui.activity.NearlyDynamicActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.PublicWeiboActivity"
+            android:name=".module.ui.activity.PublicWeiboActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.MyFavoriteActivity"
+            android:name=".module.ui.activity.MyFavoriteActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.DraftActivity"
+            android:name=".module.ui.activity.DraftActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.WebViewActivity"
+            android:name=".module.ui.activity.WebViewActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.RemindActivity"
+            android:name=".module.ui.activity.RemindActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.ImageBrowserActivity"
+            android:name=".module.ui.activity.ImageBrowserActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".module.ui.activity.SettingsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
         <activity
-            android:name=".activity.AboutActivity"
+            android:name=".module.ui.activity.AboutActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.Transparent">
         </activity>
 
-        <activity android:name=".activity.GridImageActivity"/>
-        <activity android:name=".activity.ClipImageActivity"/>
+        <activity android:name=".module.ui.activity.GridImageActivity"/>
+        <activity android:name=".module.ui.activity.ClipImageActivity"/>
 
         <service android:name=".service.CheckUnreadService" />
 

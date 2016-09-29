@@ -25,7 +25,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.entity.Status;
+import com.yuqirong.koku.module.model.entity.Status;
 
 import java.util.List;
 

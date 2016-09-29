@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.yuqirong.koku.application.MyApplication;
+import com.yuqirong.koku.app.MyApplication;
 import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver;
 import com.yuqirong.koku.util.LogUtils;

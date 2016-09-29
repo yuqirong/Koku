@@ -1,15 +1,16 @@
 package com.yuqirong.koku.app;
 
+import com.yuqirong.koku.module.model.entity.AccessTokenInfo;
+
 import java.util.Map;
 
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
-
-import static com.yuqirong.koku.app.AppConstant.GET_TOKEN_INFO_URL;
 
 /**
  * Created by Administrator on 2016-9-29.
@@ -42,21 +43,26 @@ public interface WeiboApi {
      * 查询用户access_token的授权相关信息，包括授权时间，过期时间和scope权限。
      */
     @GET("/oauth2/get_token_info")
-    Observable<String> getAccessTokenInfo(@Query("access_token")String accessToken);
+    Observable<AccessTokenInfo> getAccessTokenInfo(@Field("access_token") String accessToken);
+
     /**
      * 获取当前登录用户及其所关注用户的最新微博
      */
-    public static final String HOME_TIMELINE_URL = "https://api.weibo.com";
     @GET("/2/statuses/home_timeline.json")
-    Observable<String> getHomeTimeLine(@Query("access_token")String accessToken,@Query("max_id")String maxId);
+    Observable<String> getHomeTimeLine(@Query("access_token") String accessToken, @Query("max_id") String maxId);
+
     /**
      * 搜索用户时的联想搜索建议
      */
-    public static final String SEARCH_USER_URL = "https://api.weibo.com/2/search/suggestions/users.json";
+    @GET("/2/search/suggestions/users.json")
+    Observable<String> getSearchUser(@Query("count") String count, @Query("q") String q, @Query("access_token") String accessToken);
+
     /**
      * 根据地理信息坐标返回实际地址
      */
-    public static final String GEO_TO_ADDRESS_URL = "https://api.weibo.com/2/location/geo/geo_to_address.json";
+    @GET("/2/location/geo/geo_to_address.json")
+    Observable<String> getAddress(@Query("access_token")String accessToken, @Query("coordinate")String coordinate);
+
     /**
      * 发布一条新微博
      */

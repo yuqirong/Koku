@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.yuqirong.koku.application.MyApplication;
-import com.yuqirong.koku.entity.Draft;
+import com.yuqirong.koku.app.MyApplication;
+import com.yuqirong.koku.module.model.entity.Draft;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.StringUtils;
 

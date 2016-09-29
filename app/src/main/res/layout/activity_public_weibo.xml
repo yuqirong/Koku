@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/MyFavoriteFragment"
-        class="com.yuqirong.koku.fragment.PublicWeiboFragment"
+        class="com.yuqirong.koku.module.ui.fragment.PublicWeiboFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

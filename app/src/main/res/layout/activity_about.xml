@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/AboutFragment"
-        class="com.yuqirong.koku.fragment.AboutFragment"
+        class="com.yuqirong.koku.module.ui.fragment.AboutFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

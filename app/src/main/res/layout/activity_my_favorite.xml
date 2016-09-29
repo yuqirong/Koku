@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/MyFavoriteFragment"
-        class="com.yuqirong.koku.fragment.MyFavoriteFragment"
+        class="com.yuqirong.koku.module.ui.fragment.MyFavoriteFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -99,7 +99,7 @@
                 tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
         </RelativeLayout>
 
-        <com.yuqirong.koku.view.CircleImageView
+        <com.yuqirong.koku.module.ui.weidgt.CircleImageView
             android:id="@+id/civ_avatar"
             android:layout_width="100dp"
             android:layout_height="100dp"

@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/mWeiboDetailsFragment"
-        class="com.yuqirong.koku.fragment.WeiboDetailsFragment"
+        class="com.yuqirong.koku.module.ui.fragment.WeiboDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

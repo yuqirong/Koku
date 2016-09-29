@@ -5,8 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 
-import com.yuqirong.koku.application.MyApplication;
-import com.yuqirong.koku.entity.Emotion;
+import com.yuqirong.koku.app.MyApplication;
+import com.yuqirong.koku.module.model.entity.Emotion;
 import com.yuqirong.koku.util.FileUtils;
 import com.yuqirong.koku.util.LogUtils;
 

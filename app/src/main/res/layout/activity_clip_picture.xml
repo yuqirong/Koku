@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F2F2F2">
-        <com.yuqirong.koku.view.CropImageView
+        <com.yuqirong.koku.module.ui.weidgt.CropImageView
             android:id="@+id/cropImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

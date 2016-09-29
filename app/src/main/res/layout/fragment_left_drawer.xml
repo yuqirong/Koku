@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:src="@drawable/cover_background" />
 
-    <com.yuqirong.koku.view.CircleImageView
+    <com.yuqirong.koku.module.ui.weidgt.CircleImageView
         android:id="@+id/civ_avatar"
         android:layout_width="80dp"
         android:layout_height="80dp"

@@ -14,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.activity.UserDetailsActivity;
-import com.yuqirong.koku.activity.WebViewActivity;
+import com.yuqirong.koku.module.ui.activity.UserDetailsActivity;
+import com.yuqirong.koku.module.ui.activity.WebViewActivity;
 import com.yuqirong.koku.db.EmotionsDB;
 
 import java.util.ArrayList;

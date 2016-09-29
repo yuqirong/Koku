@@ -6,7 +6,7 @@
     android:background="@android:color/transparent"
     android:orientation="vertical">
 
-    <com.yuqirong.koku.view.RevealBackgroundView
+    <com.yuqirong.koku.module.ui.weidgt.RevealBackgroundView
         android:id="@+id/vRevealBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

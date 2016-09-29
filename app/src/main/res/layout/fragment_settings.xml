@@ -21,7 +21,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/Teal_colorPrimary" />
 
-        <com.yuqirong.koku.view.AboutTextView
+        <com.yuqirong.koku.module.ui.weidgt.AboutTextView
             android:id="@+id/atv_font_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.SettingsView
+        <com.yuqirong.koku.module.ui.weidgt.SettingsView
             android:id="@+id/sv_remark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.SettingsView
+        <com.yuqirong.koku.module.ui.weidgt.SettingsView
             android:id="@+id/sv_hd_pic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/Teal_colorPrimary" />
 
-        <com.yuqirong.koku.view.AboutTextView
+        <com.yuqirong.koku.module.ui.weidgt.AboutTextView
             android:id="@+id/atv_fab_function"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.AboutTextView
+        <com.yuqirong.koku.module.ui.weidgt.AboutTextView
             android:id="@+id/atv_fab_position"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.DoubleTextSettingsView
+        <com.yuqirong.koku.module.ui.weidgt.DoubleTextSettingsView
             android:id="@+id/dsv_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.SettingsView
+        <com.yuqirong.koku.module.ui.weidgt.SettingsView
             android:id="@+id/sv_browser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.DoubleTextSettingsView
+        <com.yuqirong.koku.module.ui.weidgt.DoubleTextSettingsView
             android:id="@+id/dsv_vibrator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/Teal_colorPrimary" />
 
-        <com.yuqirong.koku.view.AboutTextView
+        <com.yuqirong.koku.module.ui.weidgt.AboutTextView
             android:id="@+id/atv_clear_cache"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.AboutTextView
+        <com.yuqirong.koku.module.ui.weidgt.AboutTextView
             android:id="@+id/atv_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
             android:layout_marginRight="10dp"
             android:background="#cccccc" />
 
-        <com.yuqirong.koku.view.AboutTextView
+        <com.yuqirong.koku.module.ui.weidgt.AboutTextView
             android:id="@+id/atv_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
