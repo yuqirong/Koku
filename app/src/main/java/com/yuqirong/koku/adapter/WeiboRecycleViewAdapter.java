@@ -33,7 +33,7 @@ import com.yuqirong.koku.activity.NearlyDynamicActivity;
 import com.yuqirong.koku.activity.PublishActivity;
 import com.yuqirong.koku.activity.UserDetailsActivity;
 import com.yuqirong.koku.application.MyApplication;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.Status;
 import com.yuqirong.koku.util.BitmapUtil;

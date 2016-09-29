@@ -17,7 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.LoadMoreAdapter;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.util.DateUtils;
 import com.yuqirong.koku.util.JsonUtils;

@@ -33,7 +33,7 @@ import com.yuqirong.koku.adapter.LoadMoreAdapter;
 import com.yuqirong.koku.adapter.WeiboCommentAdapter;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
 import com.yuqirong.koku.application.MyApplication;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.entity.Comment;
 import com.yuqirong.koku.entity.Pic_urls;
 import com.yuqirong.koku.entity.Status;

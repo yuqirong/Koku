@@ -15,7 +15,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.UserDetailsActivity;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.entity.User;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;

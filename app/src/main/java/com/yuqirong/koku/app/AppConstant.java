@@ -1,4 +1,4 @@
-package com.yuqirong.koku.constant;
+package com.yuqirong.koku.app;
 
 /**
  * Created by Anyway on 2015/8/29.
@@ -12,6 +12,9 @@ public class AppConstant {
      * App Secret
      */
     public static final String APP_SECRET = "2c990a9d6f2fd0a59a3f76da68663a58";
+
+
+    public static final String BASE_URL = "https://api.weibo.com";
     /**
      * 默认回调页面
      */

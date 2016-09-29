@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.fragment.SearchUserFragment;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;

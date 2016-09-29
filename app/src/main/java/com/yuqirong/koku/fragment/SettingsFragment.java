@@ -20,7 +20,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.AuthorizeActivity;
 import com.yuqirong.koku.activity.PublishActivity;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.receiver.RefreshWeiboTimelineReceiver;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;

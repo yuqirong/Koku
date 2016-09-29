@@ -2,7 +2,7 @@ package com.yuqirong.koku.fragment;
 
 import android.os.Bundle;
 
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 
 /**
  * Created by Anyway on 2015/9/16.

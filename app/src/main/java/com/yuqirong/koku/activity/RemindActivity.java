@@ -9,11 +9,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.FragmentAdapter;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.fragment.CommentRemindFragment;
 import com.yuqirong.koku.fragment.FragmentFactory;
 import com.yuqirong.koku.fragment.WeiboRemindFragment;

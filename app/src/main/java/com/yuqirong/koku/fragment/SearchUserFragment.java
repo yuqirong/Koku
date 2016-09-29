@@ -18,7 +18,7 @@ import com.yuqirong.koku.R;
 import com.yuqirong.koku.activity.SearchUserActivity;
 import com.yuqirong.koku.adapter.SearchUserAdapter;
 import com.yuqirong.koku.adapter.WeiboRecycleViewAdapter;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.entity.User;
 import com.yuqirong.koku.util.JsonUtils;
 import com.yuqirong.koku.util.LogUtils;

@@ -44,7 +44,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.adapter.EmotionAdapter;
 import com.yuqirong.koku.application.MyApplication;
-import com.yuqirong.koku.constant.AppConstant;
+import com.yuqirong.koku.app.AppConstant;
 import com.yuqirong.koku.db.DraftDB;
 import com.yuqirong.koku.entity.Draft;
 import com.yuqirong.koku.entity.Emotion;
