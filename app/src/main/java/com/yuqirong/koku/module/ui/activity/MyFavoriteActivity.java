@@ -13,21 +13,18 @@ import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 
+import butterknife.BindView;
+
+import static android.R.attr.data;
+
 /**
  * 我的收藏Activity
  * Created by Anyway on 2015/9/25.
  */
 public class MyFavoriteActivity extends SwipeBackActivity {
 
-    private SwipeBackLayout mSwipeBackLayout;
+    @BindView(R.id.mToolbar)
     private Toolbar mToolbar;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-    }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -35,7 +32,7 @@ public class MyFavoriteActivity extends SwipeBackActivity {
     }
 
     @Override
-    protected void initToolBar() {
+    protected void initView() {
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setTitle(R.string.my_favorite);
         setSupportActionBar(mToolbar);
@@ -43,12 +40,13 @@ public class MyFavoriteActivity extends SwipeBackActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        SwipeBackLayout mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_my_favorite);
-        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+    public int getContentViewId() {
+        return R.layout.activity_my_favorite;
     }
 
     @Override

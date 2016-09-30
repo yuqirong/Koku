@@ -18,24 +18,24 @@ import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
+import static android.R.attr.id;
+
 /**
  * Created by Anyway on 2015/10/28.
  */
 public class ImageBrowserActivity extends SwipeBackActivity {
 
-    private ViewPager mViewPager;
+    @BindView(R.id.mViewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.tv_pic_num)
+    TextView tv_pic_num;
     private List<String> imgUrls = new ArrayList<>();
     private int position;
     private ImagePagerAdapter adapter;
-    private TextView tv_pic_num;
     private String picNum;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        SwipeBackLayout mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-    }
 
     @Override
     protected void onDestroy() {
@@ -86,41 +86,37 @@ public class ImageBrowserActivity extends SwipeBackActivity {
     };
 
     @Override
-    protected void initToolBar() {
+    protected void initView() {
+        SwipeBackLayout mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_image_browser);
-        mViewPager = (ViewPager) findViewById(R.id.mViewPager);
-        tv_pic_num = (TextView) findViewById(R.id.tv_pic_num);
-        ImageView iv_back = (ImageView) findViewById(R.id.iv_back);
-        TextView tv_save = (TextView) findViewById(R.id.tv_save);
-        iv_back.setOnClickListener(listener);
-        tv_save.setOnClickListener(listener);
+    public int getContentViewId() {
+        return R.layout.activity_image_browser;
     }
 
-    View.OnClickListener listener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.iv_back:
-                    finish();
-                    break;
-                case R.id.tv_save:
-                    String url = imgUrls.get(mViewPager.getCurrentItem());
-                    if (url != null) {
-                        if (SharePrefUtil.getBoolean(ImageBrowserActivity.this, "load_hd_pic", false)) {
-                            url = url.replace("thumbnail", "large");
-                        } else {
-                            url = url.replace("thumbnail", "bmiddle");
-                        }
-                        adapter.savePicture(url);
+
+    @OnClick({R.id.iv_back, R.id.tv_save})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.tv_save:
+                String url = imgUrls.get(mViewPager.getCurrentItem());
+                if (url != null) {
+                    if (SharePrefUtil.getBoolean(ImageBrowserActivity.this, "load_hd_pic", false)) {
+                        url = url.replace("thumbnail", "large");
+                    } else {
+                        url = url.replace("thumbnail", "bmiddle");
                     }
-                    break;
-            }
+                    adapter.savePicture(url);
+                }
+                break;
         }
-    };
+    }
+
 
     public static void actionStart(Context context, ArrayList imgUrls, int position) {
         Intent intent = new Intent(context, ImageBrowserActivity.class);

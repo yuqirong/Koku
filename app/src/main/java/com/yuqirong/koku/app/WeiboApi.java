@@ -1,6 +1,7 @@
 package com.yuqirong.koku.app;
 
 import com.yuqirong.koku.module.model.entity.AccessTokenInfo;
+import com.yuqirong.koku.module.model.entity.OAuthInfo;
 
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public interface WeiboApi {
      */
     @FormUrlEncoded
     @POST("/oauth2/access_token")
-    Observable<String> getOAuthInfo(@FieldMap Map<String, String> filedMap);
+    Observable<OAuthInfo> getOAuthInfo(@FieldMap Map<String, String> filedMap);
 
     /**
      * 根据用户ID获取用户信息
@@ -49,7 +50,7 @@ public interface WeiboApi {
      * 获取当前登录用户及其所关注用户的最新微博
      */
     @GET("/2/statuses/home_timeline.json")
-    Observable<String> getHomeTimeLine(@Query("access_token") String accessToken, @Query("max_id") String maxId);
+    Observable<String> getHomeTimeline(@Query("access_token") String accessToken, @Query("max_id") String maxId);
 
     /**
      * 搜索用户时的联想搜索建议
@@ -61,48 +62,68 @@ public interface WeiboApi {
      * 根据地理信息坐标返回实际地址
      */
     @GET("/2/location/geo/geo_to_address.json")
-    Observable<String> getAddress(@Query("access_token")String accessToken, @Query("coordinate")String coordinate);
+    Observable<String> getAddress(@Query("access_token") String accessToken, @Query("coordinate") String coordinate);
 
     /**
      * 发布一条新微博
      */
-    public static final String STATUSES_UPDATE_URL = "https://api.weibo.com/2/statuses/update.json";
+    @POST("/2/statuses/update.json")
+    Observable<String> sendNewWeibo(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 上传图片并发布一条新微博
      */
-    public static final String STATUSES_UPLOAD_URL = "https://upload.api.weibo.com/2/statuses/upload.json";
+    @POST("/2/statuses/upload.json")
+    Observable<String> sendNewWeiboWithImage(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 获取双向关注用户的最新微博
      */
-    public static final String STATUSES_BILATERAL_TIMELINE_URL = "https://api.weibo.com/2/statuses/bilateral_timeline.json";
+    @POST("/2/statuses/bilateral_timeline.json")
+    Observable<String> getBilateralTimeline(@Query("access_token") String accessToken, @Query("max_id") String maxId);
+
     /**
      * 转发一条微博
      */
-    public static final String STATUSES_REPOST_URL = "https://api.weibo.com/2/statuses/repost.json";
+    @POST("/2/statuses/repost.json")
+    Observable<String> repostWeibo(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 对一条微博进行评论
      */
-    public static final String COMMENTS_CREATE_URL = "https://api.weibo.com/2/comments/create.json";
+    @POST("/2/comments/create.json")
+    Observable<String> commentWeibo(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 获取用户的关注列表
      */
-    public static final String FRIENDSHIPS_FRIENDS_URL = "https://api.weibo.com/2/friendships/friends.json";
+    @POST("/2/friendships/friends.json")
+    Observable<String> getUserFollowList(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 获取某个位置周边的动态
      */
-    public static final String PLACE_NEARBY_TIMELINE_URL = "https://api.weibo.com/2/place/nearby_timeline.json";
+    @POST("/2/place/nearby_timeline.json")
+    Observable<String> getNearbyTimeline(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 获取我的收藏
      */
-    public static final String MY_FAVORITE_URL = "https://api.weibo.com/2/favorites.json";
+    @POST("/2/favorites.json")
+    Observable<String> getMyFavorite(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 添加一条微博到收藏里
      */
-    public static final String FAVORITE_CREATE_URL = "https://api.weibo.com/2/favorites/create.json";
+    @POST("/2/favorites/create.json")
+    Observable<String> addMyFavorite(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 取消收藏一条微博
      */
-    public static final String FAVORITE_DESTROY_URL = "https://api.weibo.com/2/favorites/destroy.json";
+    @POST("/2/favorites/destroy.json")
+    Observable<String> deleteMyFavorite(@FieldMap Map<String, String> fieldMap);
+
     /**
      * 根据微博ID返回某条微博的评论列表
      */

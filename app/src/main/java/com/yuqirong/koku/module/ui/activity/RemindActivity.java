@@ -20,24 +20,22 @@ import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 
+import butterknife.BindView;
+
 /**
  * 通知页面
  * Created by Administrator on 2015/10/19.
  */
 public class RemindActivity extends SwipeBackActivity {
 
-    private Toolbar mToolbar;
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
+    @BindView(R.id.mToolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.mViewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.mTabLayout)
+    TabLayout mTabLayout;
     private SwipeBackLayout swipeBackLayout;
     private FragmentAdapter adapter;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        swipeBackLayout = getSwipeBackLayout();
-        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-    }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -46,6 +44,14 @@ public class RemindActivity extends SwipeBackActivity {
 
     @Override
     protected void initToolBar() {
+
+    }
+
+    @Override
+    protected void initView() {
+        if (mTabLayout != null) {
+            setupTabLayoutContent(mTabLayout);
+        }
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setTitle(R.string.notify);
         setSupportActionBar(mToolbar);
@@ -53,18 +59,14 @@ public class RemindActivity extends SwipeBackActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        swipeBackLayout = getSwipeBackLayout();
+        swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        setViewPager(mViewPager);
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_remind);
-        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
-        mTabLayout = (TabLayout) findViewById(R.id.mTabLayout);
-        if (mTabLayout != null) {
-            setupTabLayoutContent(mTabLayout);
-        }
-        mViewPager = (ViewPager) findViewById(R.id.mViewPager);
-        setViewPager(mViewPager);
+    public int getContentViewId() {
+        return R.layout.activity_remind;
     }
 
     private void setViewPager(ViewPager mViewPager) {

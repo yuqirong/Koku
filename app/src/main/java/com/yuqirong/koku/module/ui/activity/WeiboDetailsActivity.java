@@ -14,31 +14,25 @@ import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 
+import butterknife.BindView;
+
 /**
  * 单条微博详情Activity
  * Created by Anyway on 2015/9/17.
  */
 public class WeiboDetailsActivity extends SwipeBackActivity {
 
-    private SwipeBackLayout mSwipeBackLayout;
-    private Toolbar mToolbar;
+    @BindView(R.id.mToolbar)
+    Toolbar mToolbar;
     private Status status;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+    protected void initData(Bundle savedInstanceState) {
         status = (Status) getIntent().getSerializableExtra("Status");
     }
 
     @Override
-    protected void initData(Bundle savedInstanceState) {
-
-    }
-
-    @Override
-    protected void initToolBar() {
+    protected void initView() {
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setTitle("");
         setSupportActionBar(mToolbar);
@@ -46,12 +40,13 @@ public class WeiboDetailsActivity extends SwipeBackActivity {
         if(actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        SwipeBackLayout mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_weibo_details);
-        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+    public int getContentViewId() {
+        return R.layout.activity_weibo_details;
     }
 
     @Override

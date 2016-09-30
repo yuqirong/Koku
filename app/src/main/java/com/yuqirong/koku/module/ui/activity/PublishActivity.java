@@ -230,7 +230,6 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
 
     @Override
     protected void initView() {
-        setContentView(R.layout.activity_publish);
         mToolbar = (Toolbar) findViewById(R.id.mToolbar);
         mHorizontalScrollView = (HorizontalScrollView) findViewById(R.id.mHorizontalScrollView);
         iv_add = (ImageView) findViewById(R.id.iv_add);
@@ -261,6 +260,11 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
         ib_sharp.setOnClickListener(listener);
         ib_send.setOnClickListener(listener);
         iv_add.setOnClickListener(listener);
+    }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_publish;
     }
 
     TextWatcher watcher = new TextWatcher() {

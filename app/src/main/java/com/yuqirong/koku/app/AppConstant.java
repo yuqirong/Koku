@@ -19,6 +19,8 @@ public class AppConstant {
      * 默认回调页面
      */
     public static final String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html";
+
+    public static final String RESPONSE_URL = "https://api.weibo.com/oauth2/default.html?code=";
     /**
      * OAuth2的authorize接口
      */

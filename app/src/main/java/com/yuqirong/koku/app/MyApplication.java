@@ -26,8 +26,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MyApplication extends Application {
 
-    private static Context context;
+    private static Application context;
     private static ThreadPoolExecutor executor;
+    private static String sAccessToken;
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     private static final int CORE_POOL_SIZE = CPU_COUNT + 1;
     private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 2 + 1;
@@ -51,12 +52,20 @@ public class MyApplication extends Application {
             return mQueue;
     }
 
-    public static Context getContext() {
+    public static Application getContext() {
         return context;
     }
 
     public static ThreadPoolExecutor getExecutor() {
         return executor;
+    }
+
+    public static String getsAccessToken() {
+        return sAccessToken;
+    }
+
+    public static void setsAccessToken(String sAccessToken) {
+        MyApplication.sAccessToken = sAccessToken;
     }
 
     @Override

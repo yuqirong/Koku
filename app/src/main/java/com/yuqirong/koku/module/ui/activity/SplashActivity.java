@@ -12,13 +12,16 @@ import com.yuqirong.koku.db.DraftDB;
 import com.yuqirong.koku.db.EmotionsDB;
 import com.yuqirong.koku.util.SharePrefUtil;
 
+import butterknife.BindView;
+
 /**
  * 闪屏页面Activity
  * Created by Anyway on 2015/9/22.
  */
 public class SplashActivity extends BaseActivity {
 
-    private ImageView iv_splash;
+    @BindView(R.id.iv_splash)
+    ImageView iv_splash;
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -66,14 +69,13 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void initToolBar() {
+    protected void initView() {
 
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_splash);
-        iv_splash = (ImageView) findViewById(R.id.iv_splash);
+    public int getContentViewId() {
+        return R.layout.activity_splash;
     }
 
     @Override

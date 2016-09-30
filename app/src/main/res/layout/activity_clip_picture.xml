@@ -15,7 +15,7 @@
             android:layout_height="match_parent"
             android:drawableLeft="@drawable/userinfo_tabicon_back"
             android:gravity="center"
-            android:onClick="back"
+            android:id="@+id/tv_back"
             android:paddingLeft="8dp"
             android:textColor="#757575"
             android:textSize="14sp" />

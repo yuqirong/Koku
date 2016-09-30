@@ -9,26 +9,24 @@ import android.view.View;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.module.ui.weidgt.CropImageView;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
 /**
  * Created by Administrator on 2015/9/14.
  */
-public class ClipImageActivity extends Activity {
+public class ClipImageActivity extends BaseActivity {
 
-    private CropImageView cropImageView;
+    @BindView(R.id.cropImageView)
+    CropImageView cropImageView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clip_picture);
-        bindViews();
-        initViews();
+    protected void initData(Bundle savedInstanceState) {
+
     }
 
-    private void bindViews() {
-        cropImageView = (CropImageView) findViewById(R.id.cropImageView);
-    }
-
-    private void initViews() {
+    @Override
+    protected void initView() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -38,14 +36,13 @@ public class ClipImageActivity extends Activity {
         }, 100);
     }
 
-
-    public static void launch(Activity activity, String imagePath) {
-        Intent intent = new Intent(activity, ClipImageActivity.class);
-        intent.putExtra("imagePath", imagePath);
-        activity.startActivity(intent);
+    @Override
+    public int getContentViewId() {
+        return R.layout.activity_clip_picture;
     }
 
-    public void back(View view) {
+    @OnClick(R.id.tv_back)
+    public void onClick(View view) {
         onBackPressed();
     }
 

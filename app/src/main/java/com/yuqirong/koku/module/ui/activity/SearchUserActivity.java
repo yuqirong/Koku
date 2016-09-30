@@ -24,6 +24,8 @@ import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import butterknife.BindView;
+
 
 /**
  * 搜索用户
@@ -31,26 +33,16 @@ import java.net.URLEncoder;
  */
 public class SearchUserActivity extends SwipeBackActivity {
 
-    private Toolbar mToolbar;
-    private FrameLayout mFrameLayout;
+    @BindView(R.id.mToolbar)
+    Toolbar mToolbar;
     private FragmentManager fm;
-
     public static final int SEARCH_USER = 1050;
     public static final int AT_USER = 1060;
-    private int type;
     private ActionBar actionBar;
-    private SwipeBackLayout mSwipeBackLayout;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-    }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
-        type = getIntent().getIntExtra("type", 0);
+        int type = getIntent().getIntExtra("type", 0);
         fm = getSupportFragmentManager();
         SearchUserFragment fragment = new SearchUserFragment();
         Bundle bundle = new Bundle();
@@ -67,20 +59,20 @@ public class SearchUserActivity extends SwipeBackActivity {
     }
 
     @Override
-    protected void initToolBar() {
+    protected void initView() {
         mToolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolbar);
         actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        SwipeBackLayout mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_search_user);
-        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
-        mFrameLayout = (FrameLayout) findViewById(R.id.mFrameLayout);
+    public int getContentViewId() {
+        return R.layout.activity_search_user;
     }
 
     @Override

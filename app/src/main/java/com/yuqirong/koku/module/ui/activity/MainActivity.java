@@ -25,14 +25,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.yuqirong.koku.R;
 import com.yuqirong.koku.app.AppConstant;
-import com.yuqirong.koku.app.AppService;
+import com.yuqirong.koku.app.MyApplication;
 import com.yuqirong.koku.module.model.entity.AccessTokenInfo;
 import com.yuqirong.koku.module.presenter.MainPresenter;
 import com.yuqirong.koku.module.ui.adapter.FragmentAdapter;
@@ -44,12 +39,6 @@ import com.yuqirong.koku.service.CheckUnreadService;
 import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.util.LogUtils;
 import com.yuqirong.koku.util.SharePrefUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 
@@ -93,8 +82,10 @@ public class MainActivity extends BaseActivity implements IMainView, RefreshWeib
     @Override
     protected void initData(Bundle savedInstanceState) {
         mMainPresenter = new MainPresenter();
+        mMainPresenter.attachView(this);
         //检查token是否过期
         final String access_token = SharePrefUtil.getString(this, "access_token", "");
+        MyApplication.setsAccessToken(access_token);
         mMainPresenter.checkTokenExpireIn(access_token);
         //开启查询未读微博的service
         Intent intent = new Intent(MainActivity.this, CheckUnreadService.class);
@@ -113,16 +104,18 @@ public class MainActivity extends BaseActivity implements IMainView, RefreshWeib
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         stopService(new Intent(MainActivity.this, CheckUnreadService.class));
         if (receiver != null) {
             unregisterReceiver(receiver);
         }
-        super.onDestroy();
+        mMainPresenter.detachView();
     }
 
     @Override
     public void goToAuthorizeActivity() {
-        AuthorizeActivity.actionStart(this);
+        MyApplication.setsAccessToken("");
+        actionStart(this,AuthorizeActivity.class);
         finish();
     }
 
@@ -139,11 +132,12 @@ public class MainActivity extends BaseActivity implements IMainView, RefreshWeib
 
     @Override
     protected void initView() {
-        mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
         mTabLayout.setSelectedTabIndicatorHeight(CommonUtil.dip2px(this, 2));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white,getTheme()));
             mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color,getTheme()), getResources().getColor(android.R.color.white,getTheme()));
         }else{
+            mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(android.R.color.white));
             mTabLayout.setTabTextColors(getResources().getColor(R.color.unselected_text_color), getResources().getColor(android.R.color.white));
         }
         setupDrawerContent(mNavigationView);

@@ -6,6 +6,4 @@ package com.yuqirong.koku.module.view;
 
 public interface BaseView {
 
-
-
 }

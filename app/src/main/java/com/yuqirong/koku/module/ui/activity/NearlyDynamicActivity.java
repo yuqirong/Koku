@@ -9,9 +9,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.yuqirong.koku.R;
-import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
+import com.yuqirong.koku.util.CommonUtil;
+
+import butterknife.BindView;
+
 
 /**
  * Created by Anyway on 2015/9/25.
@@ -19,14 +22,8 @@ import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 public class NearlyDynamicActivity extends SwipeBackActivity {
 
     private SwipeBackLayout mSwipeBackLayout;
+    @BindView(R.id.mToolbar)
     private Toolbar mToolbar;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-    }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -34,7 +31,7 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
     }
 
     @Override
-    protected void initToolBar() {
+    protected void initView() {
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setTitle(R.string.nearly_dynamic);
         setSupportActionBar(mToolbar);
@@ -42,12 +39,13 @@ public class NearlyDynamicActivity extends SwipeBackActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_nearly_dynamic);
-        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
+    public int getContentViewId() {
+        return R.layout.activity_nearly_dynamic;
     }
 
     @Override

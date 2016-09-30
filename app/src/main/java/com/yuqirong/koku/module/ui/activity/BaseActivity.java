@@ -1,11 +1,9 @@
 package com.yuqirong.koku.module.ui.activity;
 
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,8 +11,6 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.yuqirong.koku.R;
-import com.yuqirong.koku.module.ui.weidgt.SystemBarTintManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void initData(Bundle savedInstanceState);
 
-    protected void initToolBar(){}
+    protected void initToolBar() {
+    }
 
     protected abstract void initView();
 
@@ -84,6 +81,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void getJsonData(String url, Response.Listener listener, Response.ErrorListener errorListener) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, listener, errorListener);
         mQueue.add(jsonObjectRequest);
+    }
+
+    protected void actionStart(Context context, Class clazz) {
+        Intent intent = new Intent(context, clazz);
+        context.startActivity(intent);
+    }
+
+    protected void actionStart(Context context, Class clazz, String bundleName, Bundle bundle) {
+        Intent intent = new Intent(context, clazz);
+        intent.putExtra(bundleName, bundle);
+        context.startActivity(intent);
     }
 
 }

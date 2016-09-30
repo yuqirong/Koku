@@ -25,6 +25,9 @@ import com.yuqirong.koku.util.CommonUtil;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.SwipeBackLayout;
 import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 
+import butterknife.BindString;
+import butterknife.BindView;
+
 /**
  * 网页Activity
  * Created by Anyway on 2015/9/25.
@@ -32,17 +35,13 @@ import com.yuqirong.koku.module.ui.weidgt.swipeback.app.SwipeBackActivity;
 public class WebViewActivity extends SwipeBackActivity {
 
     private SwipeBackLayout mSwipeBackLayout;
-    private Toolbar mToolbar;
-    private WebView mWebView;
+    @BindView(R.id.mToolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.mWebView)
+    WebView mWebView;
+    @BindView(R.id.mProgressBar)
+    ProgressBar mProgressBar;
     private String url;
-    private ProgressBar mProgressBar;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-    }
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -75,7 +74,7 @@ public class WebViewActivity extends SwipeBackActivity {
     }
 
     @Override
-    protected void initToolBar() {
+    protected void initView() {
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setTitle(R.string.load_web);
         setSupportActionBar(mToolbar);
@@ -83,14 +82,13 @@ public class WebViewActivity extends SwipeBackActivity {
         if(actionBar!=null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
-    protected void initView() {
-        setContentView(R.layout.activity_webview);
-        mToolbar = (Toolbar) findViewById(R.id.mToolbar);
-        mProgressBar = (ProgressBar) findViewById(R.id.mProgressBar);
-        mWebView = (WebView) findViewById(R.id.mWebView);
+    public int getContentViewId() {
+        return R.layout.activity_webview;
     }
 
     /**
