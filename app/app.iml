@@ -8,12 +8,12 @@
     </facet>
     <facet type="android" name="Android">
       <configuration>
-        <option name="SELECTED_BUILD_VARIANT" value="debug" />
+        <option name="SELECTED_BUILD_VARIANT" value="googleplayDebug" />
         <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleGoogleplayDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileGoogleplayDebugSources" />
         <afterSyncTasks>
-          <task>generateDebugSources</task>
+          <task>generateGoogleplayDebugSources</task>
         </afterSyncTasks>
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
@@ -24,24 +24,64 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
-    <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/debug" />
+    <output url="file://$MODULE_DIR$/build/intermediates/classes/googleplay/debug" />
+    <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/googleplay/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/debug" isTestSource="false" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/debug" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/debug" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/googleplay/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/googleplay/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/googleplay/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/googleplay/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/googleplay/debug" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/googleplay/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/googleplay/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplayDebug/shaders" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/googleplay/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/googleplay/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/googleplay/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/googleplay/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/apt/androidTest/googleplay/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/googleplay/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/googleplay/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplayDebug/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/res" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/assets" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/aidl" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/jni" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/rs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/googleplay/shaders" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/androidTestGoogleplay/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGoogleplay/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
@@ -91,6 +131,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.bm.photoview/library/1.3.6/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jakewharton.rxbinding/rxbinding/0.4.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jakewharton/butterknife/8.4.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.squareup.leakcanary/leakcanary-android/1.5/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.2.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
@@ -128,5 +169,7 @@
     <orderEntry type="library" exported="" name="support-annotations-24.2.1" level="project" />
     <orderEntry type="library" exported="" name="rxbinding-0.4.0" level="project" />
     <orderEntry type="library" exported="" name="okhttp-3.3.0" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-annotations-8.4.0" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-8.4.0" level="project" />
   </component>
 </module>

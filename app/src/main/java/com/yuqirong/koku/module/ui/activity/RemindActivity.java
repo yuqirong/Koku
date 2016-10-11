@@ -34,8 +34,6 @@ public class RemindActivity extends SwipeBackActivity {
     ViewPager mViewPager;
     @BindView(R.id.mTabLayout)
     TabLayout mTabLayout;
-    private SwipeBackLayout swipeBackLayout;
-    private FragmentAdapter adapter;
 
     @Override
     protected void initData(Bundle savedInstanceState) {
@@ -59,7 +57,7 @@ public class RemindActivity extends SwipeBackActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        swipeBackLayout = getSwipeBackLayout();
+        SwipeBackLayout swipeBackLayout = getSwipeBackLayout();
         swipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         setViewPager(mViewPager);
     }
@@ -70,7 +68,7 @@ public class RemindActivity extends SwipeBackActivity {
     }
 
     private void setViewPager(ViewPager mViewPager) {
-        adapter = new FragmentAdapter(getSupportFragmentManager());
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(new CommentRemindFragment(), getResources().getString(R.string.comment));
         adapter.addFragment(new WeiboRemindFragment(), getResources().getString(R.string.refer_to));
         adapter.addFragment(FragmentFactory.newInstance(AppConstant.STATUSES_BILATERAL_TIMELINE_URL), getResources().getString(R.string.private_letter));

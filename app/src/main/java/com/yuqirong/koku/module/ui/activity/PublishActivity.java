@@ -217,7 +217,6 @@ public class PublishActivity extends BaseActivity implements RevealBackgroundVie
             default:
                 break;
         }
-
     }
 
     @Override

@@ -6,7 +6,7 @@ package com.yuqirong.koku.app;
 
 public class AppService {
 
-    private static AppService sAppService;
+    private static volatile AppService sAppService;
 
     private final ApiClient mApiClient;
 

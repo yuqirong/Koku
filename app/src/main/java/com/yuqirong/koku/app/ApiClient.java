@@ -11,17 +11,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ApiClient {
 
-    private static ApiClient sApiClient;
+    private static volatile ApiClient sApiClient;
 
-    private Gson mGson = new Gson();
+    private Gson mGson;
 
     private final WeiboApi mWeiboApi;
 
     private ApiClient() {
+        mGson = new Gson();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(AppConstant.BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(mGson)).build();
         mWeiboApi = retrofit.create(WeiboApi.class);
+        mGson = new Gson();
     }
 
     public static ApiClient getInstance() {
