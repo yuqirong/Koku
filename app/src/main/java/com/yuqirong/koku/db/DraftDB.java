@@ -25,7 +25,7 @@ public class DraftDB {
 
     // 创建表情库
     static {
-        File dbf = MyApplication.getContext().getDatabasePath("draft.db");
+        File dbf = MyApplication.getsContext().getDatabasePath("draft.db");
         if (!dbf.exists()) {
             LogUtils.i("新建草稿箱DB");
             dbf.getParentFile().mkdirs();

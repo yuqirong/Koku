@@ -30,7 +30,7 @@ public class EmotionsDB {
 
     // 创建表情库
     static {
-        File dbf = MyApplication.getContext().getDatabasePath("emotions_v5.db");
+        File dbf = MyApplication.getsContext().getDatabasePath("emotions_v5.db");
         if (!dbf.exists()) {
             LogUtils.i("新建表情DB");
             dbf.getParentFile().mkdirs();
@@ -101,7 +101,7 @@ public class EmotionsDB {
                 protected Void doInBackground(Void... params) {
                     InputStream in;
                     try {
-                        in = MyApplication.getContext().getAssets().open("emotions.properties");
+                        in = MyApplication.getsContext().getAssets().open("emotions.properties");
                         Properties properties = new Properties();
                         properties.load(new InputStreamReader(in, "utf-8"));
                         Set<Object> keySet = properties.keySet();
@@ -116,7 +116,7 @@ public class EmotionsDB {
                             ContentValues values = new ContentValues();
                             values.put(EmotionTable.key, key.toString());
 
-                            byte[] emotion = FileUtils.readStreamToBytes(MyApplication.getContext().getAssets().open(value));
+                            byte[] emotion = FileUtils.readStreamToBytes(MyApplication.getsContext().getAssets().open(value));
                             values.put(EmotionTable.value, emotion);
                             values.put(EmotionTable.file, value);
 

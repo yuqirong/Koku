@@ -384,7 +384,7 @@ public class SwipeBackLayout extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         mInLayout = true;
-//        mContentTop = SystemBarUtils.getStatusBarHeight(getContext());
+//        mContentTop = SystemBarUtils.getStatusBarHeight(getsContext());
         if (mContentView != null)
             mContentView.layout(mContentLeft, mContentTop,
                     mContentLeft + mContentView.getMeasuredWidth(),

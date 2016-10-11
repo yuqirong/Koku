@@ -16,7 +16,6 @@ import rx.Observable;
 /**
  * Created by Administrator on 2016-9-29.
  */
-
 public interface WeiboApi {
 
     /**
@@ -127,7 +126,9 @@ public interface WeiboApi {
     /**
      * 根据微博ID返回某条微博的评论列表
      */
-    public static final String COMMENTS_SHOW_URL = "https://api.weibo.com/2/comments/show.json";
+    @POST("/2/comments/show.json")
+    Observable<String> showComments(@FieldMap Map<String,String> fieldMap);
+
     /**
      * 获取指定微博的转发微博列表
      */

@@ -1,18 +1,10 @@
 package com.yuqirong.koku.app;
 
 import android.app.Application;
-import android.content.Context;
-import android.os.AsyncTask;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MyApplication extends Application {
 
-    private static Application context;
+    private static Application sContext;
     private static ThreadPoolExecutor executor;
     private static String sAccessToken;
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
@@ -53,35 +45,28 @@ public class MyApplication extends Application {
     }
 
     public static Application getContext() {
-        return context;
+        return sContext;
     }
 
     public static ThreadPoolExecutor getExecutor() {
         return executor;
     }
 
-    public static String getsAccessToken() {
+    public static String getAccessToken() {
         return sAccessToken;
     }
 
-    public static void setsAccessToken(String sAccessToken) {
+    public static void setAccessToken(String sAccessToken) {
         MyApplication.sAccessToken = sAccessToken;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .threadPriority(Thread.NORM_PRIORITY - 1).denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new LruMemoryCache(2 * 1024 * 1024)).memoryCacheSize(2 * 1024 * 1024)
-                .diskCacheFileNameGenerator(new Md5FileNameGenerator()).diskCacheSize(50 * 1024 * 1024)
-                .diskCacheFileCount(300).tasksProcessingOrder(QueueProcessingType.LIFO)
-                .build();
-        ImageLoader.getInstance().init(config);
+        sContext = this;
         executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
                 TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
-        mQueue = Volley.newRequestQueue(context);
+        mQueue = Volley.newRequestQueue(sContext);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.

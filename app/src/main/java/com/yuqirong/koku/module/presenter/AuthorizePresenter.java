@@ -43,16 +43,16 @@ public class AuthorizePresenter extends BasePresenter<IAuthorizeView> {
                     @Override
                     public void onNext(OAuthInfo oAuthInfo) {
                         if (oAuthInfo.getAccessToken() != null) {
-                            SharePrefUtil.saveString(MyApplication.getContext(), "access_token", oAuthInfo.getAccessToken());
+                            SharePrefUtil.saveString(MyApplication.getsContext(), "access_token", oAuthInfo.getAccessToken());
                         }
                         if (oAuthInfo.getExpiresIn() != null) {
-                            SharePrefUtil.saveString(MyApplication.getContext(), "expires_in", oAuthInfo.getExpiresIn());
+                            SharePrefUtil.saveString(MyApplication.getsContext(), "expires_in", oAuthInfo.getExpiresIn());
                         }
                         if (oAuthInfo.getRemindIn() != null) {
-                            SharePrefUtil.saveString(MyApplication.getContext(), "remind_in", oAuthInfo.getRemindIn());
+                            SharePrefUtil.saveString(MyApplication.getsContext(), "remind_in", oAuthInfo.getRemindIn());
                         }
                         if (oAuthInfo.getUid() != null) {
-                            SharePrefUtil.saveString(MyApplication.getContext(), "uid", oAuthInfo.getUid());
+                            SharePrefUtil.saveString(MyApplication.getsContext(), "uid", oAuthInfo.getUid());
                         }
                         mView.goToMainActivity();
                     }

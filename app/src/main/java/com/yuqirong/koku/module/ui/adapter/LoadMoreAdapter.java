@@ -58,7 +58,7 @@ public abstract class LoadMoreAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
     public LoadMoreAdapter(){
-        mFooterView = LayoutInflater.from(MyApplication.getContext()).inflate(R.layout.layout_footer,null);
+        mFooterView = LayoutInflater.from(MyApplication.getsContext()).inflate(R.layout.layout_footer,null);
     }
 
     @Override
